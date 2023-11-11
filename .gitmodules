@@ -1,0 +1,3 @@
+[submodule "external/libp2p"]
+	path = external/libp2p
+	url = https://github.com/libp2p/libp2p.git
