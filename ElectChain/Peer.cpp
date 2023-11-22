@@ -15,7 +15,6 @@ void Peer::startAccept()
     
     while (true)
     {
-        std::cout << "Start accept";
         auto socket = std::make_shared<tcp::socket>(_io_context);
 
         _acceptor.async_accept(*socket, [this, socket](const boost::system::error_code& ec)
