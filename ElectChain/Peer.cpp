@@ -3,14 +3,12 @@
 Peer::Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint)
     : _io_context(io_context), _acceptor(io_context, endpoint), _port(endpoint.port()) 
 {
-    std::thread([&] { _io_context.run(); }).detach();
 }
 
 void Peer::startAccept() 
 {
-    std::cout << "test1";
-
-    while (true) {
+    while (true) 
+    {
         auto socket = std::make_shared<tcp::socket>(_io_context);
 
         _acceptor.async_accept(*socket, [this, socket](const boost::system::error_code& ec) {
@@ -78,7 +76,8 @@ void Peer::startWrite(std::shared_ptr<tcp::socket> socket)
         });
 }
 
-void Peer::findPeer(const PeerStruct& peer)
+void Peer::findPeer(const PeerStruct& peer) 
 {
+    std::cout << "Connecting to peer at: " << peer.peerEndpoint << std::endl;
     connect(peer.peerEndpoint);
 }
