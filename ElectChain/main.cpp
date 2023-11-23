@@ -7,11 +7,15 @@ int main()
     try
     {
         boost::asio::io_context io_context;
+        
+        tcp::endpoint endpoint(boost::asio::ip::make_address("192.168.218.1"), 8888);
 
-        tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), 8888);
         Peer peer(io_context, endpoint);
+        std::thread serverThread([&] { io_context.run(); });
+        serverThread.detach();
 
-        io_context.run();
+        PeerStruct newPeer("192.168.1.163", 8888);
+        peer.findPeer(newPeer);
     }
     catch (const std::exception& e)
     {
