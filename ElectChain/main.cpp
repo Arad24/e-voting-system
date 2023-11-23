@@ -11,11 +11,16 @@ int main()
         tcp::endpoint endpoint(boost::asio::ip::make_address("192.168.218.1"), 8888);
 
         Peer peer(io_context, endpoint);
-        std::thread serverThread([&] { io_context.run(); });
-        serverThread.detach();
 
+        std::thread serverThread([&] { peer.startAccept(); });
+        serverThread.detach();
+        //serverAccept.detach();
+
+        std::cout << "test";
         PeerStruct newPeer("192.168.1.163", 8888);
         peer.findPeer(newPeer);
+
+        io_context.run();
     }
     catch (const std::exception& e)
     {

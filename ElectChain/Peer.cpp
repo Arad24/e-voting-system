@@ -1,11 +1,15 @@
 #include "Peer.h"
 
 Peer::Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint)
-    : _io_context(io_context), _acceptor(io_context, endpoint), _port(endpoint.port()) {
-    startAccept();
+    : _io_context(io_context), _acceptor(io_context, endpoint), _port(endpoint.port()) 
+{
+    std::thread([&] { _io_context.run(); }).detach();
 }
 
-void Peer::startAccept() {
+void Peer::startAccept() 
+{
+    std::cout << "test1";
+
     while (true) {
         auto socket = std::make_shared<tcp::socket>(_io_context);
 
@@ -53,7 +57,8 @@ void Peer::connect(const tcp::endpoint& endpoint) {
         });
 }
 
-void Peer::startWrite(std::shared_ptr<tcp::socket> socket) {
+void Peer::startWrite(std::shared_ptr<tcp::socket> socket) 
+{
     std::string message;
     std::cout << "Enter message to send: ";
     std::getline(std::cin, message);
