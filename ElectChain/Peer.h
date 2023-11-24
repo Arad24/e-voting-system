@@ -35,6 +35,7 @@ class Peer
         std::shared_ptr<tcp::socket> getSocketByEndpoints(PeerStruct peer);
         void sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<boost::asio::streambuf> buffer);
         std::shared_ptr<boost::asio::streambuf> convertMsgIntoBuffer(std::string msg);
+        std::string getMsg();
 
         boost::asio::io_context& _io_context;
         tcp::acceptor _acceptor;

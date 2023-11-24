@@ -75,14 +75,13 @@ void Peer::connect(const tcp::endpoint& endpoint) {
 void Peer::sendMsg(std::shared_ptr<tcp::socket> socket) 
 {
     std::string message = getMsg();
-    
 
     auto buffer = convertMsgIntoBuffer(message);
 
     sendMsgToSocket(socket, buffer);
 }
 
-std::string getMsg()
+std::string Peer::getMsg()
 {
     std::string message = "";
     std::cout << "Enter message to send: ";
