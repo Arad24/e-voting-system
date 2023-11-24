@@ -1,6 +1,5 @@
 # include <iostream>
 # include "Peer.h"
-# include <thread>
 
 int main()
 {
@@ -8,7 +7,7 @@ int main()
     {
         boost::asio::io_context io_context;
 
-        tcp::endpoint endpoint(boost::asio::ip::make_address("192.168.218.1"), 8888);
+        tcp::endpoint endpoint(boost::asio::ip::make_address("10.100.102.72"), 8888);
 
         Peer peer(io_context, endpoint);
 

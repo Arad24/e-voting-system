@@ -25,14 +25,19 @@ class Peer
 
         void connect(const tcp::endpoint& endpoint);
 
-        void startWrite(std::shared_ptr<tcp::socket> socket);
+        void sendMsg(std::shared_ptr<tcp::socket> socket);
         void findPeer(const PeerStruct& peerEndpoints);
 
+        void sendBroadcastMsg(std::string msg);
+
     private:
-
-
+        std::string getMessage(std::shared_ptr<boost::asio::streambuf> buffer);
+        std::shared_ptr<tcp::socket> getSocketByEndpoints(PeerStruct peer);
+        void sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<boost::asio::streambuf> buffer);
+        std::shared_ptr<boost::asio::streambuf> convertMsgIntoBuffer(std::string msg);
 
         boost::asio::io_context& _io_context;
         tcp::acceptor _acceptor;
         int _port;
+        std::vector<std::shared_ptr<tcp::socket>> _sockets;
 };
