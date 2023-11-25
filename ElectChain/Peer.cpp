@@ -16,8 +16,9 @@ void Peer::startAccept()
             {
                 std::cout << "Accepted connection from: " << socket->remote_endpoint() << std::endl;
 
-                // Need to add mutex
+                _locker.lock();
                 _sockets.push_back(socket);
+                _locker.unlock();
 
                 std::thread(&Peer::startRead, this, socket, socket->remote_endpoint()).detach();
             }
@@ -59,8 +60,9 @@ void Peer::connect(const tcp::endpoint& endpoint) {
         if (!ec) 
         {
             
-            // Need to add mutex
+            _locker.lock();
             _sockets.push_back(socket);
+            _locker.unlock();
             std::cout << "Connected to: " << endpoint << std::endl;
 
             this->sendMsg(socket);

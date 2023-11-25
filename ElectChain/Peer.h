@@ -4,6 +4,7 @@
 #include <vector>
 # include <thread>
 #include <boost/asio.hpp>
+#include <mutex>
 
 using boost::asio::ip::tcp;
 
@@ -14,6 +15,8 @@ struct PeerStruct
     PeerStruct(std::string ip, int port)
         : peerEndpoint(boost::asio::ip::address::from_string(ip), port) {}
 };
+
+std::mutex _locker;
 
 class Peer
 {
