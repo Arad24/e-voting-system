@@ -1,0 +1,31 @@
+#pragma once
+# include <iostream>
+#include <chrono>
+
+# define DEFAULT_HASH "0"
+
+class Block
+{
+	public:
+		// Ctor
+		Block(std::string prevHash, std::string hash, std::string data);
+		Block();
+		Block(std::string data);
+
+		// Getters
+		std::string getData();
+		std::string getHash();
+		std::string getPrevHash();
+
+		// Setters
+		void setPrevHash(std::string prevHash);
+		void setData(std::string data);
+
+		// std::string calculateHash();
+
+	private:
+		std::string _prevHash;
+		std::string _hash;
+		std::string _data;
+		std::string _timestamp;
+};
