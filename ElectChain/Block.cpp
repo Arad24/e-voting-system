@@ -10,6 +10,11 @@ Block::Block(std::string prevHash, std::string hash, std::string data)
 
 Block::Block()
 {
+	createBlock();
+}
+
+void Block::createBlock()
+{
 	// this->_hash = calculateHash();
 	this->_prevHash = DEFAULT_HASH;
 	this->_data = "";

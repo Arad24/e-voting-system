@@ -12,6 +12,8 @@ class Block
 		Block();
 		Block(std::string data);
 
+		void createBlock();
+
 		// Getters
 		std::string getData();
 		std::string getHash();
