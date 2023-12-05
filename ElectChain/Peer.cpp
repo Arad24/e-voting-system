@@ -128,6 +128,8 @@ std::shared_ptr<tcp::socket> Peer::getSocketByEndpoints(PeerStruct peer)
             return socket;
         }
     }
+
+    return nullptr;
 }
 
 void Peer::sendBroadcastMsg(std::string msg)
