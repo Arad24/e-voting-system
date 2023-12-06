@@ -5,6 +5,7 @@
 # include <thread>
 #include <boost/asio.hpp>
 #include <mutex>
+#include <openssl/sha.h>
 
 using boost::asio::ip::tcp;
 
