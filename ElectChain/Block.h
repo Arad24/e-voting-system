@@ -1,6 +1,7 @@
 #pragma once
 # include <iostream>
 #include <chrono>
+# include "BlockchainUtils.h"
 
 # define DEFAULT_HASH "0"
 
@@ -23,7 +24,6 @@ class Block
 		void setPrevHash(std::string prevHash);
 		void setData(std::string data);
 
-		// std::string calculateHash();
 
 	private:
 		std::string _prevHash;

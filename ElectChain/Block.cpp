@@ -15,7 +15,7 @@ Block::Block()
 
 void Block::createBlock()
 {
-	// this->_hash = calculateHash();
+	this->_hash = BlockchainUtils::calculateHash();
 	this->_prevHash = DEFAULT_HASH;
 	this->_data = "";
 	this->_timestamp = getCurrentTimestamp();
@@ -23,7 +23,7 @@ void Block::createBlock()
 
 Block::Block(std::string data)
 {
-	// this->_hash = calculateHash();
+	this->_hash = BlockchainUtils::calculateHash();
 	this->_data = data;
 	this->_prevHash = DEFAULT_HASH;
 	this->_timestamp = getCurrentTimestamp();
