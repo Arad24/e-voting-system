@@ -24,10 +24,15 @@ class Block
 		void setPrevHash(std::string prevHash);
 		void setData(std::string data);
 
+		// Hash
+		void mineHash();
 
 	private:
 		std::string _prevHash;
 		std::string _hash;
 		std::string _data;
 		std::string _timestamp;
+		int nonce;
+
+		std::string blockToStr();
 };

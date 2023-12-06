@@ -6,6 +6,7 @@ Block::Block(std::string prevHash, std::string hash, std::string data)
 	this->_prevHash = prevHash;
 	this->_data = data;
 	this->_timestamp = getCurrentTimestamp();
+	this->nonce = 0;
 }
 
 Block::Block()
@@ -59,4 +60,24 @@ void Block::setPrevHash(std::string prevHash)
 void Block::setData(std::string data)
 {
 	this->_data = data;
+}
+
+
+
+void Block::mineHash()
+{
+	std::string blockHash = BlockchainUtils::calculateHash(blockToStr());
+
+	while (!BlockchainUtils::isValidHash(blockHash))
+	{
+		nonce++;
+		blockHash = BlockchainUtils::calculateHash(blockToStr());
+	}
+	
+	this->_hash = blockHash;
+}
+
+std::string Block::blockToStr()
+{
+	return std::string();
 }
