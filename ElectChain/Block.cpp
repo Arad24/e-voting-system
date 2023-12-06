@@ -70,7 +70,7 @@ void Block::mineHash()
 
 	while (!BlockchainUtils::isValidHash(blockHash))
 	{
-		nonce++;
+		_nonce++;
 		blockHash = BlockchainUtils::calculateHash(blockToStr());
 	}
 	
@@ -79,5 +79,5 @@ void Block::mineHash()
 
 std::string Block::blockToStr()
 {
-	return std::string();
+	return _prevHash + _data + _timestamp + std::to_string(_nonce);
 }
