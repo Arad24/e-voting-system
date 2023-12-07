@@ -51,6 +51,11 @@ std::string Block::getPrevHash()
 	return this->_prevHash;
 }
 
+std::string Block::getTimestamp()
+{
+	return this->_timestamp;
+}
+
 void Block::setPrevHash(std::string prevHash)
 {
 	this->_prevHash = prevHash;

@@ -7,4 +7,6 @@ class BlockchainUtils
 {
 public:
 	static std::string calculateHash(const std::string& data);
+	static bool isValidProofOfWork(std::string hash, int targetZeros);
+
 };

@@ -23,3 +23,8 @@ std::string BlockchainUtils::calculateHash(const std::string& data)
 
     return hashStr;
 }
+
+bool BlockchainUtils::isValidProofOfWork(std::string hash, int targetZeros) 
+{
+    return true;
+}
