@@ -136,14 +136,21 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Blockchain.cpp" />
     <ClCompile Include="BlockchainUtils.cpp" />
+    <ClCompile Include="Deserializer.cpp" />
     <ClCompile Include="Peer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Serializer.cpp" />
+    <ClCompile Include="StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
     <ClInclude Include="Blockchain.h" />
     <ClInclude Include="BlockchainUtils.h" />
+    <ClInclude Include="Deserializer.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="Peer.h" />
+    <ClInclude Include="Serializer.h" />
+    <ClInclude Include="StringUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

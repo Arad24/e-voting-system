@@ -1,11 +1,11 @@
 # include "Block.h"
 
-Block::Block(std::string prevHash, std::string hash, std::string data)
+Block::Block(std::string prevHash, std::string hash, std::string data, std::string timestamp)
 {
 	this->_hash = hash;
 	this->_prevHash = prevHash;
 	this->_data = data;
-	this->_timestamp = getCurrentTimestamp();
+	this->_timestamp = timestamp;
 }
 
 Block::Block()
@@ -49,6 +49,11 @@ std::string Block::getHash()
 std::string Block::getPrevHash()
 {
 	return this->_prevHash;
+}
+
+std::string Block::getTimeStamp()
+{
+	return this->_timestamp;
 }
 
 void Block::setPrevHash(std::string prevHash)

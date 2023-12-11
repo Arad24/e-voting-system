@@ -9,7 +9,7 @@ class Block
 {
 	public:
 		// Ctor
-		Block(std::string prevHash, std::string hash, std::string data);
+		Block(std::string prevHash, std::string hash, std::string data, std::string timestamp);
 		Block();
 		Block(std::string data);
 
@@ -19,6 +19,7 @@ class Block
 		std::string getData();
 		std::string getHash();
 		std::string getPrevHash();
+		std::string getTimeStamp();
 
 		// Setters
 		void setPrevHash(std::string prevHash);
