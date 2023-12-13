@@ -1,6 +1,7 @@
 #pragma once
 # include "Block.h"
 # include <vector>
+#include <string>
 
 class Blockchain
 {

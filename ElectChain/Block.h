@@ -20,7 +20,7 @@ class Block
 		std::string getData();
 		std::string getHash();
 		std::string getPrevHash();
-
+		std::string getTimestamp();
 		// Setters
 		void setPrevHash(std::string prevHash);
 		void setData(std::string data);
