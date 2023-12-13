@@ -21,9 +21,6 @@
     <ClCompile Include="Peer.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="Block.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="Blockchain.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -44,10 +41,10 @@
     <ClInclude Include="Peer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Block.h">
+    <ClInclude Include="Blockchain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Blockchain.h">
+    <ClInclude Include="p2pClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BlockchainUtils.h">
