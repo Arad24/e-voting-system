@@ -1,8 +1,9 @@
 # include "Blockchain.h"
 
-void Blockchain::createNewBlock()
+
+void Blockchain::createNewBlock(std::string data)
 {
-	Block newBlock = Block();
+	Block newBlock = Block(data);
 }
 
 bool Blockchain::validateBlock(Block currentBlock, int targetZeros, std::chrono::system_clock::time_point maxTimestamp) 

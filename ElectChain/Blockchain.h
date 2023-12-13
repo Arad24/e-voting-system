@@ -6,8 +6,12 @@
 class Blockchain
 {
 	public:
-		void createNewBlock();
-		bool validateBlock(Block currentBlock, int targetZeros,  std::chrono::system_clock::time_point maxTimestamp);
+		void createNewBlock(std::string data);
+		void addBlock(Block block);
+
+		// Getters
+		Block getLatestBlock();
+		std::vector<Block> getBlocks();
 
 	private:
 		std::vector<Block> _blocks;
