@@ -6,6 +6,8 @@
 # define VALID_STARTWITH_HASH "00"
 
 
+# define VALID_STARTWITH_HASH "00"
+
 class BlockchainUtils
 {
 	public:

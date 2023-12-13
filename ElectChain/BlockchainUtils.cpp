@@ -17,12 +17,13 @@ std::string BlockchainUtils::calculateHash(const std::string& data)
     std::string hashStr;
     for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
         char buf[3];
-        sprintf(buf, "%02x", hash[i]);
+        sprintf_s(buf, "%02x", hash[i]);
         hashStr += buf;
     }
 
     return hashStr;
 }
+
 
 bool BlockchainUtils::isValidHash(std::string blockHash)
 {
