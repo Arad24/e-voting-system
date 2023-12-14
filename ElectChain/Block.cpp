@@ -69,6 +69,20 @@ void Block::setData(std::string data)
 	mineHash();
 }
 
+void Block::mineHash()
+{
+	std::string blockHash = BlockchainUtils::calculateHash(blockToStr());
+
+	while (!BlockchainUtils::isValidHash(blockHash))
+	{
+		_nonce++;
+		blockHash = BlockchainUtils::calculateHash(blockToStr());
+	}
+
+	this->_hash = blockHash;
+
+}
+
 std::string Block::blockToStr()
 {
 	return _prevHash + _data + _timestamp + std::to_string(_nonce);
