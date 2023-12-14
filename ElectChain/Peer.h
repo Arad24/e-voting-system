@@ -5,6 +5,7 @@
 # include <thread>
 #include <boost/asio.hpp>
 #include <mutex>
+#include <atomic> // Include atomic for std::atomic<bool>
 
 using boost::asio::ip::tcp;
 

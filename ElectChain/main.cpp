@@ -7,7 +7,7 @@ int main()
     {
         boost::asio::io_context io_context;
 
-        tcp::endpoint endpoint(boost::asio::ip::make_address("127.0.0.1"), 8888);
+        tcp::endpoint endpoint(boost::asio::ip::make_address("192.168.1.163"), 8888);
 
         Peer peer(io_context, endpoint);
 

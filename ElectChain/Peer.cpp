@@ -9,20 +9,19 @@ Peer::Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint)
 
 void Peer::startAccept()
 {
-    while (true)
-    {
-        auto socket = std::make_shared<tcp::socket>(_io_context);
+    auto socket = std::make_shared<tcp::socket>(_io_context);
 
-        _acceptor.async_accept(*socket, [this, socket](const boost::system::error_code& ec) {
-            if (!ec)
-            {
-                std::cout << "Accepted connection from: " << socket->remote_endpoint() << std::endl;
-                _sockets.push_back(socket);
+    _acceptor.async_accept(*socket, [this, socket](const boost::system::error_code& ec) {
+        if (!ec) {
+            std::cout << "Accepted connection from: " << socket->remote_endpoint() << std::endl;
+            _sockets.push_back(socket);
 
-                createConnectionSocket(socket);
-            }
-            });
-    }
+            createConnectionSocket(socket);
+        }
+
+    // Continue accepting
+    startAccept();
+        });
 }
 
 void Peer::createConnectionSocket(std::shared_ptr<tcp::socket> socket)
