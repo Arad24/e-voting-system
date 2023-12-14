@@ -47,9 +47,6 @@
     <ClInclude Include="Blockchain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="p2pClient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BlockchainUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>

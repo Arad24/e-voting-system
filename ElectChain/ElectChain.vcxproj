@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Alex\e_voting_system\boost_1_83_0;C:\Users\Alex\e_voting_system\openssl;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Alex\e_voting_system\boost_1_83_0;C:\Users\Alex\e_voting_system\out\Lib\x64\Release\include;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\User\Desktop\Magshimim\project\openssl;C:\Users\User\Desktop\Magshimim\project\boost;</IncludePath>
@@ -114,7 +114,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);C:\Users\Alex\e_voting_system\out\Lib\x64\Release\lib\libcrypto.lib;C:\Users\Alex\e_voting_system\out\Lib\x64\Release\lib\libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,7 +149,6 @@
     <ClInclude Include="BlockchainUtils.h" />
     <ClInclude Include="Deserializer.h" />
     <ClInclude Include="json.hpp" />
-    <ClInclude Include="p2pClient.h" />
     <ClInclude Include="Peer.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="StringUtils.h" />

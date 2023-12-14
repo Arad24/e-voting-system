@@ -7,4 +7,5 @@ class StringUtils
 {
     public:
         static std::string vecToString(std::vector<unsigned char> vector);
+
 };

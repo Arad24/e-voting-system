@@ -6,6 +6,9 @@
 #include <boost/asio.hpp>
 #include <mutex>
 #include <atomic> // Include atomic for std::atomic<bool>
+#include "Block.h"
+#include "Serializer.h"
+#include "Deserializer.h"
 
 using boost::asio::ip::tcp;
 
@@ -35,10 +38,14 @@ public:
 
 private:
     std::string getMessage(std::shared_ptr<boost::asio::streambuf> buffer);
+    std::string getMessage(std::shared_ptr<tcp::socket> socket);
     std::shared_ptr<tcp::socket> getSocketByEndpoints(PeerStruct peer);
     void sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<boost::asio::streambuf> buffer);
     std::shared_ptr<boost::asio::streambuf> convertMsgIntoBuffer(std::string msg);
     std::string getMsg();
+
+    void sendBlock(std::shared_ptr<tcp::socket> socket, const Block& block);
+    Block receiveBlock(std::shared_ptr<tcp::socket> socket);
 
     boost::asio::io_context& _io_context;
     tcp::acceptor _acceptor;

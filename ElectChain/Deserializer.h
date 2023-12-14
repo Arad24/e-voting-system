@@ -3,7 +3,7 @@
 # include <vector>
 # include "json.hpp"
 
-class Serializer
+class Deserializer
 {
 	public:
 		static Block deserializeMessage(std::vector<unsigned char> buffer);

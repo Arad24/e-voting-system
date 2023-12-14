@@ -94,6 +94,19 @@ std::string Peer::getMsg()
     return message;
 }
 
+void Peer::sendBlock(std::shared_ptr<tcp::socket> socket, const Block& block)
+{
+    std::string serializedBlock = Serializer::serializeMessage(block);
+    sendMsgToSocket(socket, convertMsgIntoBuffer(serializedBlock));
+}
+
+Block Peer::receiveBlock(std::shared_ptr<tcp::socket> socket)
+{
+    std::string receivedMsg = getMessage(socket);
+    std::vector<unsigned char> byteVector(receivedMsg.begin(), receivedMsg.end());
+    return Deserializer::deserializeMessage(byteVector);
+}
+
 std::shared_ptr<boost::asio::streambuf> Peer::convertMsgIntoBuffer(std::string msg)
 {
     auto buffer = std::make_shared<boost::asio::streambuf>();
@@ -101,6 +114,15 @@ std::shared_ptr<boost::asio::streambuf> Peer::convertMsgIntoBuffer(std::string m
     os << msg << '\n';
 
     return buffer;
+}
+std::string Peer::getMessage(std::shared_ptr<tcp::socket> socket)
+{
+    boost::asio::streambuf buffer;
+    boost::asio::read_until(*socket, buffer, '\n');
+    std::istream is(&buffer);
+    std::string message;
+    std::getline(is, message);
+    return message;
 }
 
 void Peer::sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<boost::asio::streambuf> buffer)
