@@ -21,13 +21,19 @@
     <ClCompile Include="Peer.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="Block.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="Blockchain.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="BlockchainUtils.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Deserializer.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StringUtils.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,13 +41,25 @@
     <ClInclude Include="Peer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Block.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Blockchain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="p2pClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="BlockchainUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deserializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

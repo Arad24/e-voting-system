@@ -3,7 +3,7 @@
 
 int main()
 {
-    try
+   /* try
     {
         boost::asio::io_context io_context;
 
@@ -64,7 +64,7 @@ int main()
     catch (const std::exception &e)
     {
         std::cerr << "Exception: " << e.what() << std::endl;
-    }
+    }*/
 
     return 0;
 }
