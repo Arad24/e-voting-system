@@ -84,10 +84,10 @@ int main()
             default:
                 std::cout << "Invalid choice. Please try again.\n";
             }
+            io_context.run();
 
         } while (choice != 4);
 
-        io_context.run();
     }
     catch (const std::exception& e)
     {
