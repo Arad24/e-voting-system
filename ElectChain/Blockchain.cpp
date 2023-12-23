@@ -6,21 +6,26 @@ void Blockchain::createNewBlock(std::string data)
 	Block newBlock = Block(data);
 }
 
+
 void Blockchain::addBlock(Block block)
 {
+	if (block.isValid())
+	{
+		_blocks.push_back(block);
+	}
 }
 
 Block Blockchain::getLatestBlock()
 {
-    return Block();
+	return _blocks.back();
 }
 
 std::vector<Block> Blockchain::getBlocks()
 {
-    return std::vector<Block>();
+	return this->_blocks;
 }
 
-bool Blockchain::validateBlock(Block currentBlock, int targetZeros, std::chrono::system_clock::time_point maxTimestamp)
+bool Blockchain::validateBlock(Block currentBlock, int targetZeros, std::chrono::system_clock::time_point maxTimestamp) 
 {
     if (_blocks.empty()) {
         std::cout << "Blockchain is empty. Cannot validate block." << std::endl;
