@@ -24,7 +24,6 @@ std::string BlockchainUtils::calculateHash(const std::string& data)
     return hashStr;
 }
 
-
 bool BlockchainUtils::isValidHash(std::string blockHash)
 {
     return (blockHash.substr(0, 2) == VALID_STARTWITH_HASH);

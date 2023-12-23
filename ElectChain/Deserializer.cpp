@@ -7,7 +7,7 @@ nlohmann::json getJSON(std::vector<unsigned char> buffer)
     return nlohmann::json::parse(data);
 }
 
-Block Serializer::deserializeMessage(std::vector<unsigned char> buffer)
+Block Deserializer::deserializeMessage(std::vector<unsigned char> buffer)
 {
     nlohmann::json jsonMsg = getJSON(buffer);
 

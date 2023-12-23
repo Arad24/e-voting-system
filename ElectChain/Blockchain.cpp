@@ -41,11 +41,11 @@ bool Blockchain::validateBlock(Block currentBlock, int targetZeros, std::chrono:
     }
 
     // Validate proof-of-work
-    if (!BlockchainUtils::isValidProofOfWork(currentBlock.getHash(), targetZeros)) {
+    if (!BlockchainUtils::isValidHash(currentBlock.getHash())) {
         std::cout << "Invalid proof-of-work in the block." << std::endl;
         return false;
     }
-    std::chrono::system_clock::time_point currentTimestamp = std::chrono::system_clock::from_time_t(std::stoi(currentBlock.getTimestamp()));
+    std::chrono::system_clock::time_point currentTimestamp = std::chrono::system_clock::from_time_t(std::stoi(currentBlock.getTimeStamp()));
 
     // Validate timestamp
     if (currentTimestamp > maxTimestamp) {
@@ -54,4 +54,3 @@ bool Blockchain::validateBlock(Block currentBlock, int targetZeros, std::chrono:
     }
     return true;
 }
-

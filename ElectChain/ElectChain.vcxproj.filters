@@ -36,15 +36,15 @@
     <ClCompile Include="StringUtils.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Peer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Blockchain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="p2pClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BlockchainUtils.h">
@@ -60,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
