@@ -1,5 +1,8 @@
 # include "BlockchainUtils.h"
 
+std::shared_ptr<KeyPair> BlockchainUtils::pKeys;
+
+
 std::string BlockchainUtils::calculateHash(const std::string& data)
 {
     // Initialize SHA256 context
@@ -35,7 +38,6 @@ std::shared_ptr<KeyPair> BlockchainUtils::generateKeys()
 
 	if (handleGenerateKeys(pKeys)) return pKeys;
 	else throw std::exception("Error generating keys.");
-
 }
 
 bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys)
@@ -96,9 +98,9 @@ bool saveKeys(BIO* bp_public, BIO* bp_private, RSA* r)
 
 void freeAllRsa(BIO* bpPublic, BIO* bpPrivate, RSA* r, BIGNUM* bne)
 {
-	
 	BIO_free_all(bpPublic);
 	BIO_free_all(bpPrivate);
 	RSA_free(r);
 	BN_free(bne);
 }
+ 

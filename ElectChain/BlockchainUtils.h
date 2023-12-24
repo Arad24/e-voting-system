@@ -22,11 +22,11 @@ bool generateRsaKeys(RSA* r, BIGNUM* bne, unsigned long	e);
 bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys);
 
 
-
 class BlockchainUtils
 {
 	public:
 		static std::shared_ptr<KeyPair> pKeys;
+
 		static std::string calculateHash(const std::string& data);
 		static bool isValidHash(std::string blockHash);
 		static std::shared_ptr<KeyPair> generateKeys();
