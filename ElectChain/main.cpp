@@ -64,18 +64,19 @@ int main()
                 std::getline(std::cin, blockData);
                 Block newBlock(blockData);
                 auto maxTimestamp = std::chrono::system_clock::now();
-                //peer.sendBlock(peer.getSocketByEndpoints(PeerStruct("127.0.0.1", 8888)), newBlock);
-                if (blockchain.validateBlock(newBlock, 5, maxTimestamp))
+
+                try
                 {
                     blockchain.addBlock(newBlock);
-                    std::string serializedBlock = Serializer::serializeMessage(newBlock);
-                    peer.sendBroadcastMsg(serializedBlock);
-                    std::cout << "Block is valid and added to the blockchain.\n";
                 }
-                else
+                catch (const std::exception&)
                 {
                     std::cout << "Block is not valid. It won't be added to the blockchain.\n";
                 }
+                
+                std::string serializedBlock = Serializer::serializeMessage(newBlock);
+                peer.sendBroadcastMsg(serializedBlock);
+                std::cout << "Block is valid and added to the blockchain.\n";
 
                 break;
             }
