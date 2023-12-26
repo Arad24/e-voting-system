@@ -17,8 +17,8 @@ struct KeyPair
 
 // Functions
 void freeAllRsa(BIO* bpPublic, BIO* bpPrivate, RSA* r, BIGNUM* bne);
-bool saveKeys(BIO* bp_public, BIO* bp_private, RSA* r);
-bool generateRsaKeys(RSA* r, BIGNUM* bne, unsigned long	e);
+bool saveKeys(BIO** bp_public, BIO** bp_private, RSA* r);
+bool generateRsaKeys(RSA** r, BIGNUM** bne, unsigned long	e);
 bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys);
 
 

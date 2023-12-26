@@ -34,7 +34,7 @@ bool BlockchainUtils::isValidHash(std::string blockHash)
 
 std::shared_ptr<KeyPair> BlockchainUtils::generateKeys()
 {
-	pKeys = std::shared_ptr<KeyPair>();
+	if (pKeys == nullptr) pKeys = std::make_shared<KeyPair>();
 
 	if (handleGenerateKeys(pKeys)) return pKeys;
 	else throw std::exception("Error generating keys.");
@@ -42,55 +42,53 @@ std::shared_ptr<KeyPair> BlockchainUtils::generateKeys()
 
 bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys)
 {
-	int	ret = 1;
+	bool	ret = true;
 	RSA* r = NULL;
 	BIGNUM* bne = NULL;
 	BIO* bpPublic = NULL, * bpPrivate = NULL;
 	unsigned long	e = RSA_F4;
 
-	ret = (generateRsaKeys(r, bne, e)) ? (1) : (0);
-	if (ret == 0) goto free_all;
+	ret = (generateRsaKeys(&r, &bne, e));
+	if (!ret) goto free_all;
 
-	ret = (saveKeys(bpPublic, bpPrivate, r)) ? (1) : (0);
-	if (ret == 0) goto free_all;
+	ret = (saveKeys(&bpPublic, &bpPrivate, r));
+	if (!ret) goto free_all;
 
 	pairKeys->privateKey = PEM_read_bio_RSAPrivateKey(bpPrivate, NULL, NULL, NULL);
 	pairKeys->publicKey = PEM_read_bio_RSA_PUBKEY(bpPublic, NULL, NULL, NULL);
 
-
 	free_all:
 		freeAllRsa(bpPublic, bpPrivate, r, bne);
 
-	return (ret == 1);
+	return ret;
 }
 
-
-bool generateRsaKeys(RSA* r, BIGNUM* bne, unsigned long	e)
+bool generateRsaKeys(RSA** r, BIGNUM** bne, unsigned long	e)
 {
 	int ret = 0;
-	bne = BN_new();
-	ret = BN_set_word(bne, e);
+	*bne = BN_new();
+	ret = BN_set_word(*bne, e);
 	if (ret != 1) return false;
 
-	r = RSA_new();
-	ret = RSA_generate_key_ex(r, BITS, bne, NULL);
+	*r = RSA_new();
+	ret = RSA_generate_key_ex(*r, BITS, *bne, NULL);
 	if (ret != 1) return false;
 
 	return true;
 }
 
-bool saveKeys(BIO* bp_public, BIO* bp_private, RSA* r)
+bool saveKeys(BIO** bp_public, BIO** bp_private, RSA* r)
 {
 	int ret = 0;
 
 	// Save public key
-	bp_public = BIO_new_file("public.pem", "w+");
-	ret = PEM_write_bio_RSAPublicKey(bp_public, r);
+	*bp_public = BIO_new_file("public.pem", "w+");
+	ret = PEM_write_bio_RSAPublicKey(*bp_public, r);
 	if (ret != 1) return false;
 
 	// Save private key
-	bp_private = BIO_new_file("private.pem", "w+");
-	ret = PEM_write_bio_RSAPrivateKey(bp_private, r, NULL, NULL, 0, NULL, NULL);
+	*bp_private = BIO_new_file("private.pem", "w+");
+	ret = PEM_write_bio_RSAPrivateKey(*bp_private, r, NULL, NULL, 0, NULL, NULL);
 	if (ret != 1) return false;
 
 	return true;
