@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Alex\e_voting_system\OpenSSL-Win64\include;C:\Users\Alex\e_voting_system\boost_1_83_0;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)C:\e_voting_system\OpenSSL-Win64\include;C:\e_voting_system\boost_1_83_0;C:\Users\Alex\e_voting_system\OpenSSL-Win64\include;C:\Users\Alex\e_voting_system\boost_1_83_0;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\User\Desktop\Magshimim\project\out\Lib\x64\Release\include;C:\Users\User\Desktop\Magshimim\project\boost</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)C:\e_voting_system\OpenSSL-Win64\include;C:\e_voting_system\boost_1_83_0;C:\Users\User\Desktop\Magshimim\project\out\Lib\x64\Release\include;C:\Users\User\Desktop\Magshimim\project\boost</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -110,8 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\e_voting_system\OpenSSL-Win64\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,6 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\e_voting_system\OpenSSL-Win64\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
