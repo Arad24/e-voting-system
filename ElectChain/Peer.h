@@ -20,6 +20,18 @@ struct PeerStruct
         : peerEndpoint(boost::asio::ip::address::from_string(ip), port) {}
 };
 
+struct Message {
+    int userID;
+    std::string content;
+    std::string timestamp;
+
+    Message(int id, const std::string& msg) : userID(id), content(msg) {
+        auto now = std::chrono::system_clock::now();
+        std::time_t timestamp = std::chrono::system_clock::to_time_t(now);
+        this->timestamp = ctime(&timestamp);
+    }
+};
+
 class Peer
 {
 public:

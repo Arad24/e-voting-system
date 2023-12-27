@@ -1,0 +1,20 @@
+#pragma once
+#include <string>
+#include "Peer.h"
+#include "Block.h"
+#include "Blockchain.h"
+
+class RequestHandler {
+public:
+    RequestHandler();
+    std::string handleRequest(const std::string& request);
+
+    static void setPeerReference(Peer* peer);
+    static void handleAddBlock(const Message& msg);
+    static void handleShareKey(const Message& msg);
+    static void handleSendMessage(const Message& msg);
+    static void handleGenericMessage(const Message& msg);
+private:
+    static Peer* _peer;
+
+};

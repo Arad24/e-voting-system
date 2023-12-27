@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\User\Desktop\Magshimim\project\out\Lib\x64\Release\include;C:\Users\User\Desktop\Magshimim\project\boost</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Alex\e_voting_system\OpenSSL-Win64\include;C:\Users\Alex\e_voting_system\boost_1_83_0;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\User\Desktop\Magshimim\project\out\Lib\x64\Release\include;C:\Users\User\Desktop\Magshimim\project\boost</IncludePath>
@@ -110,11 +110,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);C:\Users\Alex\e_voting_system\out\Lib\x64\Release\lib\libcrypto.lib;C:\Users\Alex\e_voting_system\out\Lib\x64\Release\lib\libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies)%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -140,6 +142,7 @@
     <ClCompile Include="Deserializer.cpp" />
     <ClCompile Include="Peer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RequestHandler.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="StringUtils.cpp" />
   </ItemGroup>
@@ -150,6 +153,7 @@
     <ClInclude Include="Deserializer.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Peer.h" />
+    <ClInclude Include="RequestHandler.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="StringUtils.h" />
   </ItemGroup>

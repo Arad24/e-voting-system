@@ -17,3 +17,18 @@ std::string Serializer::serializeMessage(Block block)
 
     return StringUtils::vecToString(message);
 }
+
+std::string Serializer::serializeMessage(const Message& msg)
+{
+    std::vector<unsigned char> message;
+    nlohmann::json jsMsg = {};
+    jsMsg["userID"] = msg.userID;
+    jsMsg["content"] = msg.content;
+    jsMsg["timestamp"] = msg.timestamp;
+
+    for (char c : nlohmann::to_string(jsMsg))
+    {
+        message.push_back(c);
+    }
+    return StringUtils::vecToString(message);
+}
