@@ -21,14 +21,12 @@ struct PeerStruct
 };
 
 struct Message {
-    int userID;
-    std::string content;
-    std::string timestamp;
+    int id;
+    std::vector<unsigned char> buffer;
+    std::time_t timestamp;
 
-    Message(int id, const std::string& msg) : userID(id), content(msg) {
-        auto now = std::chrono::system_clock::now();
-        std::time_t timestamp = std::chrono::system_clock::to_time_t(now);
-        this->timestamp = ctime(&timestamp);
+
+    Message(int id, std::vector<unsigned char> msg, std::time_t time) : id(id), buffer(msg), timestamp(time) {
     }
 };
 

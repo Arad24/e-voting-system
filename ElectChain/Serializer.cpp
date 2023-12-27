@@ -1,6 +1,6 @@
 #include "Serializer.h"
 
-std::string Serializer::serializeMessage(Block block)
+std::string Serializer::serializeMessageBlock(Block block)
 {
     std::vector<unsigned char> message;
     nlohmann::json jsMsg = {};
@@ -22,9 +22,22 @@ std::string Serializer::serializeMessage(const Message& msg)
 {
     std::vector<unsigned char> message;
     nlohmann::json jsMsg = {};
-    jsMsg["userID"] = msg.userID;
-    jsMsg["content"] = msg.content;
+    jsMsg["id"] = msg.id;
+    jsMsg["buffer"] = msg.buffer;
     jsMsg["timestamp"] = msg.timestamp;
+
+    for (char c : nlohmann::to_string(jsMsg))
+    {
+        message.push_back(c);
+    }
+    return StringUtils::vecToString(message);
+}
+
+std::string Serializer::serializeErrorResponse(ErrorResponse errorResponse)
+{
+    std::vector<unsigned char> message;
+    nlohmann::json jsMsg = {};
+    jsMsg["message"] = errorResponse.message;
 
     for (char c : nlohmann::to_string(jsMsg))
     {

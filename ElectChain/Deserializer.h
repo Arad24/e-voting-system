@@ -3,10 +3,12 @@
 # include <vector>
 # include "json.hpp"
 #include "Peer.h"
+#include "structs.h"
+
 class Deserializer
 {
 	public:
-		static Block deserializeMessage(std::vector<unsigned char> buffer);
-		static Message deserializeMessage(const std::vector<unsigned char>& buffer);
-
+		static Block deserializeMessageBlock(std::vector<unsigned char> buffer);
+		static Message deserializeMessage(const std::vector<unsigned char> buffer);
+		static ShareKeyRequest deserializeShareKey(const std::vector<unsigned char> buffer);
 };

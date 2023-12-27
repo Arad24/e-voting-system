@@ -12,3 +12,4 @@ std::string StringUtils::vecToString(std::vector<unsigned char> vec)
 
     return ss.str();
 }
+

@@ -7,7 +7,7 @@ nlohmann::json getJSON(std::vector<unsigned char> buffer)
     return nlohmann::json::parse(data);
 }
 
-Block Deserializer::deserializeMessage(std::vector<unsigned char> buffer)
+Block Deserializer::deserializeMessageBlock(std::vector<unsigned char> buffer)
 {
     nlohmann::json jsonMsg = getJSON(buffer);
 
@@ -16,11 +16,19 @@ Block Deserializer::deserializeMessage(std::vector<unsigned char> buffer)
     return block;
 }
 
-Message Deserializer::deserializeMessage(const std::vector<unsigned char>& buffer) {
+Message Deserializer::deserializeMessage(const std::vector<unsigned char> buffer) {
     nlohmann::json jsonMsg = getJSON(buffer);
 
-    Message msg(jsonMsg["userID"], jsonMsg["content"]);
+    Message msg(jsonMsg["id"], jsonMsg["buffer"], jsonMsg["timestamp"]);
 
     return msg;
 }
 
+ShareKeyRequest Deserializer::deserializeShareKey(const std::vector<unsigned char> buffer) {
+
+    nlohmann::json jsonMsg = getJSON(buffer);
+
+    ShareKeyRequest req(jsonMsg["userId"], jsonMsg["publicKey"], jsonMsg["timestamp"]);
+
+    return req;
+}

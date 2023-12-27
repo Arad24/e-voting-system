@@ -5,6 +5,7 @@
 # include <openssl/evp.h>
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
+#include <vector>
 
 # define VALID_STARTWITH_HASH "00"
 # define BITS 2048
@@ -30,5 +31,6 @@ class BlockchainUtils
 		static std::string calculateHash(const std::string& data);
 		static bool isValidHash(std::string blockHash);
 		static std::shared_ptr<KeyPair> generateKeys();
+		static RSA* vectorToRSA(const std::vector<unsigned char>& keyBytes);
 		
 };
