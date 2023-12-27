@@ -3,10 +3,12 @@
 #include "Peer.h"
 #include "Block.h"
 #include "Blockchain.h"
+#include "Serializer.h"
+#include "Deserializer.h"
 
 class RequestHandler {
 public:
-    RequestHandler();
+    RequestHandler(Peer* peer);
     std::string handleRequest(const std::string& request);
 
     static void setPeerReference(Peer* peer);

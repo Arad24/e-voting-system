@@ -1,7 +1,8 @@
 #include "RequestHandler.h"
 
-RequestHandler::RequestHandler()
+RequestHandler::RequestHandler(Peer* peer)
 {
+    _peer = peer;
 }
 
 std::string RequestHandler::handleRequest(const std::string& request)

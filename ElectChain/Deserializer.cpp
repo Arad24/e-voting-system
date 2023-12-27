@@ -16,3 +16,11 @@ Block Deserializer::deserializeMessage(std::vector<unsigned char> buffer)
     return block;
 }
 
+Message Deserializer::deserializeMessage(const std::vector<unsigned char>& buffer) {
+    nlohmann::json jsonMsg = getJSON(buffer);
+
+    Message msg(jsonMsg["userID"], jsonMsg["content"]);
+
+    return msg;
+}
+
