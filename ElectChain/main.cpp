@@ -8,7 +8,7 @@ int main()
     {
         boost::asio::io_context io_context;
 
-        tcp::endpoint endpoint(boost::asio::ip::make_address("127.0.0.1"), 8888);
+        tcp::endpoint endpoint(boost::asio::ip::make_address("10.57.200.12"), 8888);
 
         Peer peer(io_context, endpoint);
 
@@ -30,6 +30,7 @@ int main()
             std::cout << "4. Exit\n";
             std::cout << "Enter your choice: ";
             std::cin >> choice;
+            getchar();
 
             switch (choice)
             {
@@ -40,8 +41,10 @@ int main()
 
                 std::cout << "Enter Peer IP: ";
                 std::cin >> peerIP;
+                getchar();
                 std::cout << "Enter Peer Port: ";
                 std::cin >> peerPort;
+                getchar();
 
                 PeerStruct newPeer(peerIP, peerPort);
                 peer.findPeer(newPeer);
@@ -52,7 +55,7 @@ int main()
                 std::cout << "Enter custom message: ";
                 std::cin.ignore();
                 std::getline(std::cin, customMessage);
-
+                getchar();
                 peer.sendBroadcastMsg(customMessage);
                 break;
             }
@@ -85,10 +88,12 @@ int main()
             default:
                 std::cout << "Invalid choice. Please try again.\n";
             }
+            
             io_context.run();
 
         } while (choice != 4);
 
+        
     }
     catch (const std::exception& e)
     {

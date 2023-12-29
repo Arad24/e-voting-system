@@ -22,6 +22,7 @@ bool saveKeys(BIO** bp_public, BIO** bp_private, RSA* r);
 bool generateRsaKeys(RSA** r, BIGNUM** bne, unsigned long	e);
 bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys);
 std::string base64Encode(const unsigned char* input, size_t length);
+std::vector<unsigned char> base64Decode(const std::string& input);
 
 
 class BlockchainUtils
@@ -33,5 +34,5 @@ class BlockchainUtils
 		static bool isValidHash(std::string blockHash);
 		static std::shared_ptr<KeyPair> generateKeys();
 		static std::string signMessage(const std::string message);
-		
+		bool verifySignature(const std::string& message, const std::string& signMsg);
 };

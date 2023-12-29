@@ -146,3 +146,48 @@ std::string base64Encode(const unsigned char* input, size_t length)
 
 	return result;
 }
+
+std::vector<unsigned char> base64Decode(const std::string& input)
+{
+	BIO* bio = BIO_new(BIO_s_mem());
+	BIO_write(bio, input.c_str(), static_cast<int>(input.length()));
+
+	BIO* b64 = BIO_new(BIO_f_base64());
+	BIO_push(b64, bio);
+
+	std::vector<unsigned char> buffer(input.length());
+	int decodedLength = BIO_read(b64, buffer.data(), static_cast<int>(buffer.size()));
+
+	BIO_free_all(b64);
+
+	if (decodedLength <= 0) {
+		throw std::runtime_error("Error decoding Base64.");
+	}
+
+	buffer.resize(decodedLength);
+	return buffer;
+}
+
+RSA* findPublicKey(std::string uid)
+{
+	return nullptr;
+}
+
+bool BlockchainUtils::verifySignature(const std::string& message, const std::string& signMsg)
+{
+	RSA* publicKey = findPublicKey("uid");
+
+	if (!publicKey) {
+		throw std::runtime_error("Public key is not available.");
+	}
+
+	std::string hashMsg = calculateHash(message);
+
+	std::vector<unsigned char> decodedSignature = base64Decode(signMsg);
+
+	int ret = RSA_verify(NID_sha256, reinterpret_cast<const unsigned char*>(hashMsg.c_str()), SHA256_DIGEST_LENGTH, decodedSignature.data(), decodedSignature.size(), publicKey);
+
+	RSA_free(publicKey);  
+
+	return (ret == 1);
+}
