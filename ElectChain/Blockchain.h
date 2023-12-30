@@ -2,6 +2,9 @@
 # include "Block.h"
 # include <vector>
 #include <string>
+#include <fstream>
+#include "Serializer.h"
+#include "Deserializer.h"
 
 # define TARGET_ZEROS 2
 
@@ -17,7 +20,8 @@ class Blockchain
 		
 		bool validateBlock(Block currentBlock);
 
-
+		void saveToFile(const std::string& filename);
+		void loadFromFile(const std::string& filename);
 	private:
 		std::vector<Block> _blocks;
 };
