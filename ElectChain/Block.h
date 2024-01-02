@@ -7,6 +7,8 @@
 
 # define DEFAULT_HASH "0"
 
+class BlockchainUtils;
+
 class Block
 {
 public:

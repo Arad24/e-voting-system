@@ -191,3 +191,27 @@ bool BlockchainUtils::verifySignature(const std::string& message, const std::str
 
 	return (ret == 1);
 }
+
+std::map<std::string, int> BlockchainUtils::countVotes(Blockchain& blockchain)
+{
+	std::map<std::string, int> votes;
+	auto blocks = blockchain.getBlocks();
+
+	try
+	{
+		for (auto block : blocks)
+		{
+			nlohmann::json blockData = nlohmann::json::parse(block.getData());
+			std::string candidate = blockData["candidate"];
+
+			(votes.find(candidate) != votes.end()) ? (votes[candidate]++) : (votes[candidate] = 1);
+		}
+		
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Error parsing block data: " << e.what() << std::endl;
+	}
+
+	return votes;
+}
