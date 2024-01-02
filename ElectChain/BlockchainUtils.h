@@ -1,15 +1,22 @@
 #pragma once
 #pragma warning(disable : 4996)
 # include "StringUtils.h"
+# include "json.hpp"
+# include "Blockchain.h"
 # include <iostream>
 # include <openssl/sha.h>
 # include <openssl/evp.h>
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
+# include <map>
 
 # define VALID_STARTWITH_HASH "00"
 # define KEY_BITS 2048
 # define SIGNATURE_LEN (KEY_BITS / 8)
+
+class Block;
+class Blockchain;
+
 struct KeyPair
 {
 	RSA* privateKey;
@@ -35,4 +42,5 @@ class BlockchainUtils
 		static std::shared_ptr<KeyPair> generateKeys();
 		static std::string signMessage(const std::string message);
 		bool verifySignature(const std::string& message, const std::string& signMsg);
+		std::map<std::string, int> countVotes(Blockchain& blockchain);
 };
