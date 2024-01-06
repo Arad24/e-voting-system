@@ -45,6 +45,7 @@ public:
 
     void sendBroadcastMsg(std::string msg);
     void createConnectionSocket(std::shared_ptr<tcp::socket> socket);
+    void sharePublicKey();
 
 private:
     std::string getMessage(std::shared_ptr<boost::asio::streambuf> buffer);

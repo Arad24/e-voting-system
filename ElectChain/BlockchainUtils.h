@@ -32,5 +32,6 @@ class BlockchainUtils
 		static bool isValidHash(std::string blockHash);
 		static std::shared_ptr<KeyPair> generateKeys();
 		static RSA* vectorToRSA(const std::vector<unsigned char>& keyBytes);
-		
+		static std::string publicKeyToString(RSA* publicKey);
+
 };
