@@ -1,75 +1,57 @@
 #include "RequestHandler.h"
+#include "Serializer.h"
+#include "Deserializer.h"
+#include "Blockchain.h"
+
+#define ERROR_CODE 22
+#define ADD_BLOCK_CODE 23
+#define SHARE_KEY_CODE 24
+#define VOTE_BLOCK_CODE 25
+
 
 RequestHandler::RequestHandler(Peer* peer)
 {
     _peer = peer;
 }
 
-std::string RequestHandler::handleRequest(Message msg)
+std::string RequestHandler::handleRequest(const Message& request) 
 {
-    int messageTypeCode = msg.id;
-    switch (messageTypeCode) {
-    case ADDBLOCK_CODE:
-        handleAddBlock(msg);
-        break;
-    case SHAREKEY_CODE:
-        handleShareKey(msg);
-        break;
-    case SENDMSG_CODE:
-        handleSendMessage(msg);
-        break;
-    case SEND_GEN_MSG:
-        handleGenericMessage(msg);
-        break;
-
+    switch (request.id) 
+    {
+    case ADD_BLOCK_CODE: 
+    {
+        Block block = Deserializer::deserializeMessageBlock(request.buffer);
+        return handleAddBlock(block);
     }
+    case SHARE_KEY_CODE: 
+    {
+        ShareKeyRequest shareKeyRequest = Deserializer::deserializeShareKey(request.buffer);
+        return handleShareKey(shareKeyRequest);
+    }
+    case VOTE_BLOCK_CODE:
 
-    return /* Some response */;
+    default:
+        return handleErrorResponse();
+    }
 }
 
-void RequestHandler::setPeerReference(Peer* peer)
-{
-	_peer = peer;
-}
 
-RequestResult RequestHandler::handleAddBlock(const Message& msg)
+std::string RequestHandler::handleAddBlock(const Block& block) 
 {
-    RequestResult result;
-    Block newBlock = Deserializer::deserializeMessageBlock(msg.buffer);
-    if (_peer->getBlockchain().validateBlock(newBlock)) {
+    if () 
+    {
         _peer->getBlockchain().addBlock(newBlock);
         _peer->sendBroadcastMsg("BLOCKCHAIN_UPDATED");
-        result.response =  Serializer::serializeMessageBlock(newBlock);
-        return result;
-    }
-    else {
-        ErrorResponse error;
-        error.message = "Signup failed";
-        result.response = Serializer::serializeErrorResponse(error);
-        return result;
 
-    }
-    return result;
+    return Serializer::serializeMessage({ "Response for AddBlock", ADD_BLOCK_CODE, {}, 123 });
 }
 
-RequestResult RequestHandler::handleShareKey(const Message& msg)
-{
-    ShareKeyRequest sharedKey = Deserializer::deserializeShareKey(msg.buffer);
-    RSA* pkey= BlockchainUtils::vectorToRSA(sharedKey.publicKey);
-    std::cout << "Received public key from user " << sharedKey.userId << std::endl;
-    BlockchainUtils::shareKey(pkey);
+std::string RequestHandler::handleShareKey(const ShareKeyRequest& shareKeyRequest) {
+
+    return Serializer::serializeMessage({ "Response for ShareKey", SHARE_KEY_CODE, {}, 456 });
 }
 
-RequestResult RequestHandler::handleSendMessage(const Message& msg)
-{
-    Message receivedMessage = Deserializer::deserializeMessage(msg.buffer);
-    std::string bufferString(receivedMessage.buffer.begin(), receivedMessage.buffer.end());
-    _peer->sendMsg(bufferString);
+std::string RequestHandler::handleErrorResponse() {
 
-}
-
-RequestResult RequestHandler::handleGenericMessage(const Message& msg)
-{
-    std::string bufferString(msg.buffer.begin(), msg.buffer.end());
-    std::cout << "Received a generic message " << ": " << bufferString << std::endl;
+    return Serializer::serializeErrorResponse({ "Unknown request type or error" });
 }
