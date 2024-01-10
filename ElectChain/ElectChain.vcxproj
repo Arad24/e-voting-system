@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Alex\e_voting_system\boost_1_83_0;C:\Users\Alex\e_voting_system\out\Lib\x64\Release\include;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)C:\e_voting_system\OpenSSL-Win64\include;C:\e_voting_system\boost_1_83_0;C:\Users\Alex\e_voting_system\OpenSSL-Win64\include;C:\Users\Alex\e_voting_system\boost_1_83_0;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\User\Desktop\Magshimim\project\openssl;C:\Users\User\Desktop\Magshimim\project\boost;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)C:\e_voting_system\OpenSSL-Win64\include;C:\e_voting_system\boost_1_83_0;C:\Users\User\Desktop\Magshimim\project\out\Lib\x64\Release\include;C:\Users\User\Desktop\Magshimim\project\boost</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -110,11 +110,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\e_voting_system\OpenSSL-Win64\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);C:\Users\Alex\e_voting_system\out\Lib\x64\Release\lib\libcrypto.lib;C:\Users\Alex\e_voting_system\out\Lib\x64\Release\lib\libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies)%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -125,12 +126,16 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\e_voting_system\OpenSSL-Win64\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);C:\Users\User\Desktop\Magshimim\project\OpenSSL\lib\VC\x64\MD\libcrypto.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -140,6 +145,7 @@
     <ClCompile Include="Deserializer.cpp" />
     <ClCompile Include="Peer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RequestHandler.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="StringUtils.cpp" />
   </ItemGroup>
@@ -150,8 +156,10 @@
     <ClInclude Include="Deserializer.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Peer.h" />
+    <ClInclude Include="RequestHandler.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="StringUtils.h" />
+    <ClInclude Include="structs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
