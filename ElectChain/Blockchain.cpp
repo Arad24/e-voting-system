@@ -38,7 +38,8 @@ bool Blockchain::validateBlock(Block block)
         }
     }
     
-    if (!BlockchainUtils::isValidHash(block.getHash())) {
+    if (!BlockchainUtils::isValidHash(block.getHash())) 
+    {
         std::cout << "Invalid proof-of-work in the block." << std::endl;
         return false;
     }
@@ -53,17 +54,19 @@ bool Blockchain::validateBlock(Block block)
     }
     return true;
 }
-
+//save blockchain to binary file
 void Blockchain::saveToFile(const std::string& filename)
 {
     std::ofstream file(filename, std::ios::binary | std::ios::out);
-    if (!file.is_open()) {
+    if (!file.is_open()) 
+    {
         std::cerr << "Error opening file for writing: " << filename << std::endl;
         return;
     }
 
     // Serialize each block and write it to the file
-    for (const Block& block : _blocks) {
+    for (const Block& block : _blocks) 
+    {
         std::string serializedBlock = Serializer::serializeMessageBlock(block);
         file.write(serializedBlock.data(), serializedBlock.size());
     }
@@ -71,15 +74,16 @@ void Blockchain::saveToFile(const std::string& filename)
     file.close();
 }
 
+//load blockchain from binary file
 void Blockchain::loadFromFile(const std::string& filename)
 {
     std::ifstream file(filename, std::ios::binary | std::ios::in);
-    if (!file.is_open()) {
+    if (!file.is_open()) 
+    {
         std::cerr << "Error opening file for reading: " << filename << std::endl;
         return;
     }
 
-    // Clear existing blocks
     _blocks.clear();
 
     std::vector<unsigned char> serializedData((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
