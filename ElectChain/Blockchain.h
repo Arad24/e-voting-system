@@ -8,6 +8,9 @@
 
 # define TARGET_ZEROS 2
 
+class BlockchainUtils;
+class Block;
+
 class Blockchain
 {
 	public:
