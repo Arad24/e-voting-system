@@ -229,3 +229,18 @@ std::map<std::string, int> BlockchainUtils::countVotes(Blockchain& blockchain)
 
 	return votes;
 }
+
+RSA* vectorToRSA(const std::vector<unsigned char>& keyBytes) {
+	// Convert vector to C-style array
+	const unsigned char* keyData = keyBytes.data();
+	int keySize = static_cast<int>(keyBytes.size());
+
+	// Use OpenSSL to load the key
+	BIO* keyBio = BIO_new_mem_buf(keyData, keySize);
+	RSA* rsaKey = PEM_read_bio_RSAPrivateKey(keyBio, nullptr, nullptr, nullptr);
+
+	// Cleanup
+	BIO_free(keyBio);
+
+	return rsaKey;
+}

@@ -43,4 +43,6 @@ class BlockchainUtils
 		static std::string signMessage(const std::string message);
 		bool verifySignature(const std::string& message, const std::string& signMsg);
 		std::map<std::string, int> countVotes(Blockchain& blockchain);
+		static RSA* vectorToRSA(const std::vector<unsigned char>& keyBytes);
+		static std::string publicKeyToString(RSA* publicKey);
 };
