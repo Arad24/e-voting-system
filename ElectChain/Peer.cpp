@@ -96,7 +96,7 @@ std::string Peer::getMsg()
 
 void Peer::sendBlock(std::shared_ptr<tcp::socket> socket, const Block& block)
 {
-    std::string serializedBlock = Serializer::serializeMessage(block);
+    std::string serializedBlock = Serializer::serializeMessageBlock(block);
     sendMsgToSocket(socket, convertMsgIntoBuffer(serializedBlock));
 }
 
@@ -104,7 +104,7 @@ Block Peer::receiveBlock(std::shared_ptr<tcp::socket> socket)
 {
     std::string receivedMsg = getMessage(socket);
     std::vector<unsigned char> byteVector(receivedMsg.begin(), receivedMsg.end());
-    return Deserializer::deserializeMessage(byteVector);
+    return Deserializer::deserializeMessageBlock(byteVector);
 }
 
 std::shared_ptr<boost::asio::streambuf> Peer::convertMsgIntoBuffer(std::string msg)
@@ -163,5 +163,15 @@ void Peer::sendBroadcastMsg(std::string msg)
         {
             sendMsgToSocket(socket, bufferMsg);
         }
+    }
+}
+
+void Peer::sharePublicKey() {
+    if (BlockchainUtils::pKeys) 
+    {
+        std::string publicKeyString = BlockchainUtils::publicKeyToString(BlockchainUtils::pKeys->publicKey);
+
+        // Broadcast the public key to other peers
+        sendBroadcastMsg(publicKeyString);
     }
 }

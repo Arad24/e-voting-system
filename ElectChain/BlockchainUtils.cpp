@@ -40,6 +40,20 @@ std::shared_ptr<KeyPair> BlockchainUtils::generateKeys()
 	else throw std::exception("Error generating keys.");
 }
 
+std::string BlockchainUtils::publicKeyToString(RSA* publicKey)
+{
+	BIO* bio = BIO_new(BIO_s_mem());
+	PEM_write_bio_RSAPublicKey(bio, publicKey);
+
+	char* publicKeyData;
+	long publicKeySize = BIO_get_mem_data(bio, &publicKeyData);
+	std::string publicKeyString(publicKeyData, publicKeySize);
+
+	BIO_free(bio);
+
+	return publicKeyString;
+}
+
 bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys)
 {
 	bool	ret = true;

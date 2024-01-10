@@ -8,7 +8,7 @@
 # include <openssl/evp.h>
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
-# include <map>
+#include <vector>
 
 # define VALID_STARTWITH_HASH "00"
 # define KEY_BITS 2048
