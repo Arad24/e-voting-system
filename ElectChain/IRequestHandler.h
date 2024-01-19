@@ -1,8 +1,9 @@
 #pragma once
 # include <iostream>
 # include <vector>
+# include "RequestHandlerFactory.h"
 
-
+class RequestHandlerFactory;
 class IRequestHandler;
 
 struct RequestResult
