@@ -39,7 +39,7 @@
     <ClCompile Include="Block.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="RequestHandler.cpp">
+    <ClCompile Include="BlockRequestHandler.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="LoginRequestHandler.cpp">
@@ -74,7 +74,7 @@
     <ClInclude Include="Block.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RequestHandler.h">
+    <ClInclude Include="BlockRequestHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="structs.h">

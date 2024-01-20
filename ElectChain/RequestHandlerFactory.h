@@ -1,5 +1,6 @@
 # pragma once
 # include <iostream>
+# include <vector>
 # include "LoginRequestHandler.h"
 # include "MenuRequestHandler.h"
 
@@ -18,10 +19,11 @@ class RequestHandlerFactory
 
 		// Room
 		// Maybe bonus: std::shared_ptr<RoomAdminRequestHandler> createRoomAdminRequestHandler(Room room, LoggedUser user);
-		std::shared_ptr<RoomMemberRequestHandler> createRoomMemberRequestHandler(Room room, LoggedUser user);
+		//std::shared_ptr<RoomMemberRequestHandler> createRoomMemberRequestHandler(Room room, LoggedUser user);
 
 	private:
 		std::shared_ptr<IDatabase> m_database;
 		LoginManager m_loginManager;
-		RoomManager m_roomManager;
+		std::vector<Peer> peers;
+		//RoomManager m_roomManager;
 };

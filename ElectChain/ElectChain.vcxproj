@@ -147,7 +147,7 @@
     <ClCompile Include="MenuRequestHandler.cpp" />
     <ClCompile Include="Peer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="RequestHandler.cpp" />
+    <ClCompile Include="BlockRequestHandler.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="StringUtils.cpp" />
   </ItemGroup>
@@ -161,7 +161,7 @@
     <ClInclude Include="LoginRequestHandler.h" />
     <ClInclude Include="MenuRequestHandler.h" />
     <ClInclude Include="Peer.h" />
-    <ClInclude Include="RequestHandler.h" />
+    <ClInclude Include="BlockRequestHandler.h" />
     <ClInclude Include="RequestHandlerFactory.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="StringUtils.h" />
