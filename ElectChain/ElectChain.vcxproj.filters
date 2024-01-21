@@ -42,6 +42,9 @@
     <ClCompile Include="RequestHandler.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="Communicator.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Peer.h">
@@ -71,7 +74,7 @@
     <ClInclude Include="RequestHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="structs.h">
+    <ClInclude Include="Communicator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
