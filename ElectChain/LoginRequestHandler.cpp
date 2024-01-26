@@ -34,12 +34,11 @@ RequestResult LoginRequestHandler::login(RequestInfo rInfo)
 {
     try
     {
-        /*
-            TODO: Handle sign up with database - create loginManager
-        */
+        LoginRequest req = JsonRequestPacketDeserializer::deserializeLoginRequest(rInfo.buffer);
+        m_handlerFactory.getLoginManager().login(req.username, req.password);
 
-        /*LoginResponse res = {SUCCESS_CODE};
-        return { JsonResponsePacketSerializer::SerializeResponse(res), m_handlerFactory.createMenuRequestHandler(req.username) };*/
+        LoginResponse res = { SUCCESS };
+        return { JsonResponsePacketSerializer::SerializeResponse(res), m_handlerFactory.createMenuRequestHandler(req.username) };
     }
     catch (std::exception e)
     {
@@ -52,12 +51,11 @@ RequestResult LoginRequestHandler::signup(RequestInfo rInfo)
 {
     try
     {
-        /*
-            TODO: Handle sign up with database - create loginManager
-        */
+        SignupRequest req = JsonRequestPacketDeserializer::deserializeSignupRequest(rInfo.buffer);
+        this->m_handlerFactory.getLoginManager().signup(req.username, req.password, req.email);
 
-        /*SignupResponse res = {SUCCESS_CODE};
-        return { JsonResponsePacketSerializer::SerializeResponse(res), m_handlerFactory.createMenuRequestHandler(req.username) };*/
+        SignupResponse res = { SUCCESS };
+        return { JsonResponsePacketSerializer::SerializeResponse(res), m_handlerFactory.createMenuRequestHandler(req.username) };
     }
     catch (std::exception e)
     {

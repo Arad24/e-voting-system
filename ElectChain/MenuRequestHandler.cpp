@@ -106,7 +106,7 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo rInfo)
 	try
 	{
 		/*
-			TODO: Create room with roomManager and start listen in new peer
+			TODO: Create room with roomManager and create new blockchain system + start listen in new peer
 		*/
 	}
 	catch (std::exception& e)
