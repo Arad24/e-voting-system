@@ -5,7 +5,7 @@
 # include <thread>
 #include <boost/asio.hpp>
 #include <mutex>
-#include <atomic> // Include atomic for std::atomic<bool>
+#include <atomic>
 #include "Block.h"
 #include "Serializer.h"
 #include "Deserializer.h"
@@ -65,4 +65,5 @@ private:
     tcp::acceptor _acceptor;
     int _port;
     std::vector<std::shared_ptr<tcp::socket>> _sockets;
+    std::shared_ptr<Blockchain> _blockchain;
 };

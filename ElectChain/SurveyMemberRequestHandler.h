@@ -1,8 +1,8 @@
 #pragma once
 # include "IRequestHandler.h"
 # include "Peer.h"
-# include "../../UsefullFunctions/Header Files/stringFuncs.h"
-# include "../../Infrastructure/Header Files/RequestHandlerFactory.h"
+# include "SurveyManager.h"
+# include "RequestHandlerFactory.h"
 
 // Forward declarations
 class RequestHandlerFactory;
@@ -24,4 +24,5 @@ class SurveyMemberRequestHandler : public IRequestHandler
 		RequestResult leaveSurvey(RequestInfo);
 		RequestResult getSurveyStats(RequestInfo);
 		RequestResult connectToNetwork(RequestInfo rInfo);
+		RequestResult vote(RequestInfo rInfo);
 };

@@ -15,19 +15,6 @@ void SurveyManager::leaveSurvey(std::string id)
     this->m_surveys.erase(id);
 }
 
- SurveyManager::getSurveyStats(std::string id)
-{
-    if (m_surveys.find(id) == m_surveys.end())
-    {
-        
-    }
-    else
-    {
-        return this->m_surveys[id]->getSurvey().isActive;
-    }
-
-}
-
 std::vector<Survey> SurveyManager::getSurveys()
 {
     std::vector<Survey> surveys;

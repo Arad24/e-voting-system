@@ -8,7 +8,7 @@ SurveyMemberRequestHandler::SurveyMemberRequestHandler(RequestHandlerFactory& ha
 
 bool SurveyMemberRequestHandler::isRequestRelevant(RequestInfo rInfo)
 {
-	return rInfo.id >= GETSURVEYSTATS_CODE && rInfo.id <= CONNECT_TO_PEERS;
+	return rInfo.id >= GETSURVEYSTATS_CODE && rInfo.id <= VOTE;
 }
 
 
@@ -29,6 +29,9 @@ RequestResult SurveyMemberRequestHandler::handleRequest(RequestInfo rInfo)
 
 		case CONNECT_TO_NETWORK:
 			res = connectToNetwork(rInfo);
+			break;
+		case VOTE:
+			res = vote(rInfo);
 			break;
 
 		default:
@@ -99,25 +102,32 @@ RequestResult SurveyMemberRequestHandler::getSurveyStats(RequestInfo rInfo)
 {
 	try
 	{
-		/* 
-			Create struct
-			Canidate votes
-			{
-				std::string canidate_name;
-				unsigned int votes;
-				
-				nlohmann::json toJson() const
-				{
-					nlohmann::json js = {
-						{"canidate_name", canidate_name},
-						{"votes", votes},
-					};
-					return js;
-				}
-			}
-		
+		GetStatsRes = { SUCCESS, BlockchainUtils::countVotes(_peer->getBlockchain())};
+		return { JsonResponsePacketSerializer::SerializeResponse(res), nullptr };
+	}
+	catch (std::exception& e)
+	{
+		ErrorResponse res = { e.what() };
+		return { JsonResponsePacketSerializer::SerializeResponse(res),  _handlerFactory.createMenuRequestHandler(_user.getUsername()) };
+	}
+}
+
+
+RequestResult SurveyMemberRequestHandler::vote(RequestInfo rInfo)
+{
+	try
+	{
+		VoteRequest req = JsonRequestPacketDeserializer::deserializeLoginRequest(rInfo.buffer);
+
+		/*
+			TODO:
+			check user didn't vote already
+			get pk
+			sign vote
+			create block
+			distribute the block
 		*/
-		GetStatsRes = { SUCCESS, _surveyManager.getSurveyById(_survey.getID())->getStats() };
+		GetStatsRes = { SUCCESS };
 		return { JsonResponsePacketSerializer::SerializeResponse(res), nullptr };
 	}
 	catch (std::exception& e)
