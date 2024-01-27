@@ -66,8 +66,6 @@ void Peer::connect(const tcp::endpoint& endpoint) {
             _sockets.push_back(socket);
 
             std::cout << "Connected to: " << endpoint << std::endl;
-
-            this->sendMsg(socket);
         }
         else
         {
@@ -152,6 +150,8 @@ std::shared_ptr<tcp::socket> Peer::getSocketByEndpoints(PeerStruct peer)
             return socket;
         }
     }
+
+    return nullptr;
 }
 
 void Peer::sendBroadcastMsg(std::string msg)
@@ -173,5 +173,27 @@ void Peer::sharePublicKey() {
 
         // Broadcast the public key to other peers
         sendBroadcastMsg(publicKeyString);
+    }
+}
+
+void Peer::closePeer()
+{
+    closeOpenSockets();
+
+    boost::system::error_code ec;
+    _acceptor.close(ec);
+    _io_context.stop();
+}
+
+void Peer::closeOpenSockets()
+{
+    for (auto& socket : _sockets)
+    {
+        if (socket->is_open())
+        {
+            boost::system::error_code ec;
+            socket->shutdown(tcp::socket::shutdown_both, ec);
+            socket->close(ec);
+        }
     }
 }

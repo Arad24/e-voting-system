@@ -47,6 +47,7 @@ public:
     void createConnectionSocket(std::shared_ptr<tcp::socket> socket);
     void sharePublicKey();
 
+    void closePeer();
 private:
     std::string getMessage(std::shared_ptr<boost::asio::streambuf> buffer);
     std::string getMessage(std::shared_ptr<tcp::socket> socket);
@@ -57,6 +58,8 @@ private:
 
     void sendBlock(std::shared_ptr<tcp::socket> socket, const Block& block);
     Block receiveBlock(std::shared_ptr<tcp::socket> socket);
+
+    void closeOpenSockets();
 
     boost::asio::io_context& _io_context;
     tcp::acceptor _acceptor;

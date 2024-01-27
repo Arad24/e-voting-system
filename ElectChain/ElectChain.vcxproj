@@ -149,6 +149,8 @@
     <ClCompile Include="RequestHandler.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="StringUtils.cpp" />
+    <ClCompile Include="SurveyMemberRequestHandler.cpp" />
+    <ClCompile Include="SurveyMemberRequestHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
