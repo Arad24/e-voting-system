@@ -60,10 +60,12 @@ private:
     Block receiveBlock(std::shared_ptr<tcp::socket> socket);
 
     void closeOpenSockets();
+    RequestInfo msgToReqInfo(std::string msg);
 
     boost::asio::io_context& _io_context;
     tcp::acceptor _acceptor;
     int _port;
     std::vector<std::shared_ptr<tcp::socket>> _sockets;
     std::shared_ptr<Blockchain> _blockchain;
+    std::shared_ptr<BlochRequestHandler> _blockRequestHandler;
 };
