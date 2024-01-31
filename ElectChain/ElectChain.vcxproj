@@ -142,6 +142,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Blockchain.cpp" />
     <ClCompile Include="BlockchainUtils.cpp" />
+    <ClCompile Include="Communicator.cpp" />
     <ClCompile Include="Deserializer.cpp" />
     <ClCompile Include="LoginRequestHandler.cpp" />
     <ClCompile Include="MenuRequestHandler.cpp" />
@@ -150,11 +151,15 @@
     <ClCompile Include="BlockRequestHandler.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="StringUtils.cpp" />
+    <ClCompile Include="SurveyManager.cpp" />
+    <ClCompile Include="SurveyMemberRequestHandler.cpp" />
+    <ClCompile Include="SurveyMemberRequestHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
     <ClInclude Include="Blockchain.h" />
     <ClInclude Include="BlockchainUtils.h" />
+    <ClInclude Include="Communicator.h" />
     <ClInclude Include="Deserializer.h" />
     <ClInclude Include="IRequestHandler.h" />
     <ClInclude Include="json.hpp" />
@@ -165,7 +170,7 @@
     <ClInclude Include="RequestHandlerFactory.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="StringUtils.h" />
-    <ClInclude Include="structs.h" />
+    <ClInclude Include="SurveyManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
