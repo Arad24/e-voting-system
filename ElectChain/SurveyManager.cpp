@@ -49,13 +49,18 @@ std::string SurveyManager::randId()
 {
     bool exist = true;
     std::string id = "";
+    static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    id.reserve(5);
 
     while (exist) 
     {
         id = "";
         for (int i = 0; i < 5; i++) 
-        {
-            id += (rand() % 2 == 0) ? char('a' + rand() % 26) : char('0' + rand() % 10);
+        {     
+            id += alphanum[rand() % (sizeof(alphanum) - 1)];
         }
 
         exist = isSurveyExist(id);
