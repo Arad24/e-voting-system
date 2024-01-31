@@ -13,6 +13,12 @@ std::string StringUtils::vecToString(std::vector<unsigned char> vec)
     return ss.str();
 }
 
+std::vector<unsigned char> strToVec(std::string str)
+{
+    std::vector<unsigned char> vect;
+    vect.insert(vect.begin(), str.begin(), str.end());
+    return vect;
+}
 
 std::string charToString(char* charArr)
 {

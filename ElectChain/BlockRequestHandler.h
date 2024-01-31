@@ -13,7 +13,8 @@ class BlockRequestHandler : public IRequestHandler
 
     private:
         RequestResult handleShareKey(const ShareKeyRequest& shareKeyRequest);
-        RequestResult handleVoteBlock(const Message& voteBlockRequest);
+        RequestResult handleAddBlock(const Message& voteBlockRequest);
+        void shareBlockInTheNetwork(Block block);
 
         std::shared_ptr<Peer> _peer;
 };

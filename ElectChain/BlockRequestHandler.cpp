@@ -43,17 +43,14 @@ RequestResult BlockRequestHandler::handleRequest(const Message& request)
 }
 
 
-RequestResult BlockRequestHandler::handleVoteBlock(RequestInfo rInfo)
+RequestResult BlockRequestHandler::handleAddBlock(RequestInfo rInfo)
 {
     VoteBlockRequest req = Deserializer::deserializeMessage(rInfo.buffer);
     Block blockToAdd = req.block;
 
-    if () /* is valid key and block & user didn't vote already*/
+    if (_peer->getBlockchain()->validateBlock(blockToAdd) && !BlockchainUtils::isAlreadyVote(BlockchainUtils::getUidFromBlock(blockToAdd))) /* signature is valid */
     {
-
-        _peer->getBlockchain()->addBlock(blockToAdd);
-        _peer->sendBroadcastMsg(blockToAdd);
-
+        shareBlockInTheNetwork(blockToAdd);
     }
     else
     {
@@ -67,20 +64,20 @@ RequestResult BlockRequestHandler::handleShareKey(const ShareKeyRequest& shareKe
     ShareKeyRequest req = Deserializer::deserializeMessage(rInfo.buffer);
     Block blockToAdd = req.block;
 
-    if () /* is valid key and block*/
+    if (_peer->getBlockchain()->validateBlock(blockToAdd) && !BlockchainUtils::isAlreadySharePK(BlockchainUtils::getUidFromBlock(blockToAdd)))
     {
-        /* 
-            TODO: 
-            + Share the block in the network
-            + Add key to the pem file
-        */
-
-        _peer->getBlockchain()->addBlock(blockToAdd);
-        _peer->sendBroadcastMsg(blockToAdd);
+        shareBlockInTheNetwork(blockToAdd);
     }
     else
     {
         ErrorResponse res = { "Invalid Request" };
         return { JsonResponsePacketSerializer::SerializeResponse(res), nullptr };
     }
+}
+
+
+void BlockRequestHandler::shareBlockInTheNetwork(Block block)
+{
+    _peer->getBlockchain()->addBlock(block);
+    _peer->sendBroadcastMsg(Serializer::serializeMessageBlock(block));
 }
