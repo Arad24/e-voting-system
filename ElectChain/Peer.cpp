@@ -5,6 +5,7 @@
 Peer::Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint)
     : _io_context(io_context), _acceptor(io_context, endpoint), _port(endpoint.port())
 {
+    _blockRequestHandler = std::make_shared<BlockRequestHandler>(this);
 }
 
 void Peer::startAccept()
@@ -40,12 +41,25 @@ void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& e
                 std::string msg = getMessage(buffer);
                 std::cout << "Received message from " << endpoint << ": " << msg << std::endl;
 
+                // Handle request
+                _blockRequestHandler->handleRequest(msgToReqInfo(msg));
+
             }
             else {
                 std::cerr << "Error reading from: " << endpoint << ": " << ec.message() << std::endl;
             }
             });
     }
+}
+
+
+RequestInfo Peer::msgToReqInfo(std::string msg)
+{
+    RequestInfo reqInfo;
+    reqInfo.id = msg.substr(0, CODE_SIZE);
+    reqInfo.buffer = strToVec(msg);
+
+    return reqInfo;
 }
 
 std::string Peer::getMessage(std::shared_ptr<boost::asio::streambuf> buffer)
@@ -66,8 +80,6 @@ void Peer::connect(const tcp::endpoint& endpoint) {
             _sockets.push_back(socket);
 
             std::cout << "Connected to: " << endpoint << std::endl;
-
-            this->sendMsg(socket);
         }
         else
         {
@@ -152,6 +164,8 @@ std::shared_ptr<tcp::socket> Peer::getSocketByEndpoints(PeerStruct peer)
             return socket;
         }
     }
+
+    return nullptr;
 }
 
 void Peer::sendBroadcastMsg(std::string msg)
@@ -173,5 +187,27 @@ void Peer::sharePublicKey() {
 
         // Broadcast the public key to other peers
         sendBroadcastMsg(publicKeyString);
+    }
+}
+
+void Peer::closePeer()
+{
+    closeOpenSockets();
+
+    boost::system::error_code ec;
+    _acceptor.close(ec);
+    _io_context.stop();
+}
+
+void Peer::closeOpenSockets()
+{
+    for (auto& socket : _sockets)
+    {
+        if (socket->is_open())
+        {
+            boost::system::error_code ec;
+            socket->shutdown(tcp::socket::shutdown_both, ec);
+            socket->close(ec);
+        }
     }
 }

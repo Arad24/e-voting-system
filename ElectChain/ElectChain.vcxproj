@@ -149,6 +149,9 @@
     <ClCompile Include="RequestHandler.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="StringUtils.cpp" />
+    <ClCompile Include="SurveyManager.cpp" />
+    <ClCompile Include="SurveyMemberRequestHandler.cpp" />
+    <ClCompile Include="SurveyMemberRequestHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
@@ -161,6 +164,7 @@
     <ClInclude Include="RequestHandler.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="StringUtils.h" />
+    <ClInclude Include="SurveyManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
