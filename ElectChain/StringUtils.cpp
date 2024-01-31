@@ -26,6 +26,12 @@ std::vector<unsigned char> strToVec(const std::string& text)
     return vec;
 }
 
+std::vector<unsigned char> strToVec(std::string str)
+{
+    std::vector<unsigned char> vect;
+    vect.insert(vect.begin(), str.begin(), str.end());
+    return vect;
+}
 
 std::string charToString(char* charArr)
 {

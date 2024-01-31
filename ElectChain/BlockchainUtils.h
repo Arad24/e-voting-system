@@ -26,23 +26,34 @@ struct KeyPair
 // Functions
 void freeAllRsa(BIO* bpPublic, BIO* bpPrivate, RSA* r, BIGNUM* bne);
 bool saveKeys(BIO** bp_public, BIO** bp_private, RSA* r);
-bool generateRsaKeys(RSA** r, BIGNUM** bne, unsigned long	e);
+bool generateRsaKeys(RSA** r, BIGNUM** bne, unsigned long e);
 bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys);
-std::string base64Encode(const unsigned char* input, size_t length);
-std::vector<unsigned char> base64Decode(const std::string& input);
+
 
 
 class BlockchainUtils
 {
+	private:
+		std::vector<Block> getUserBlocks(Blockchain bc, std::string uid);
 	public:
 		static std::shared_ptr<KeyPair> pKeys;
 
+		static std::string getUidFromBlock(Block block);
+		// Hash
 		static std::string calculateHash(const std::string& data);
 		static bool isValidHash(std::string blockHash);
+
+		// Signature
+		static std::string signMessage(const std::string message, const RSA* privateKey);
+		bool verifySignature(const std::string& message, const std::string& signMsg, std::string uid);
+
+		//Keys
 		static std::shared_ptr<KeyPair> generateKeys();
-		static std::string signMessage(const std::string message);
-		bool verifySignature(const std::string& message, const std::string& signMsg);
-		std::map<std::string, int> countVotes(Blockchain& blockchain);
-		static RSA* vectorToRSA(const std::vector<unsigned char>& keyBytes);
 		static std::string publicKeyToString(RSA* publicKey);
+		static RSA* strToPK(std::string pk);
+		
+		// Votes
+		static std::map<std::string, int> countVotes(Blockchain& blockchain);
+		static bool isAlreadyVote(std::string uid);
+		static bool isAlreadySharePK(std::string uid);
 };

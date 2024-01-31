@@ -32,20 +32,21 @@ struct Message {
 
 class Peer
 {
-public:
-    Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint);
-    void startAccept();
+    public:
+        Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint);
+        void startAccept();
 
-    void startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& endpoint);
+        void startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& endpoint);
 
-    void connect(const tcp::endpoint& endpoint);
+        void connect(const tcp::endpoint& endpoint);
 
-    void sendMsg(std::shared_ptr<tcp::socket> socket);
-    void findPeer(const PeerStruct& peerEndpoints);
+        void sendMsg(std::shared_ptr<tcp::socket> socket);
+        void findPeer(const PeerStruct& peerEndpoints);
 
-    void sendBroadcastMsg(std::string msg);
-    void createConnectionSocket(std::shared_ptr<tcp::socket> socket);
-    void sharePublicKey();
+        void sendBroadcastMsg(std::string msg);
+        void createConnectionSocket(std::shared_ptr<tcp::socket> socket);
+        void sharePublicKey();
+        std::shared_ptr<Blockchain> getBlockchain();
 
     void closePeer();
 private:
@@ -56,8 +57,8 @@ private:
     std::shared_ptr<boost::asio::streambuf> convertMsgIntoBuffer(std::string msg);
     std::string getMsg();
 
-    void sendBlock(std::shared_ptr<tcp::socket> socket, const Block& block);
-    Block receiveBlock(std::shared_ptr<tcp::socket> socket);
+        void sendBlock(std::shared_ptr<tcp::socket> socket, const Block& block);
+        Block receiveBlock(std::shared_ptr<tcp::socket> socket);
 
     void closeOpenSockets();
     RequestInfo msgToReqInfo(std::string msg);

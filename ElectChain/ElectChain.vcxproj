@@ -144,9 +144,11 @@
     <ClCompile Include="BlockchainUtils.cpp" />
     <ClCompile Include="Communicator.cpp" />
     <ClCompile Include="Deserializer.cpp" />
+    <ClCompile Include="LoginRequestHandler.cpp" />
+    <ClCompile Include="MenuRequestHandler.cpp" />
     <ClCompile Include="Peer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="RequestHandler.cpp" />
+    <ClCompile Include="BlockRequestHandler.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="StringUtils.cpp" />
     <ClCompile Include="SurveyManager.cpp" />
@@ -159,9 +161,13 @@
     <ClInclude Include="BlockchainUtils.h" />
     <ClInclude Include="Communicator.h" />
     <ClInclude Include="Deserializer.h" />
+    <ClInclude Include="IRequestHandler.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="LoginRequestHandler.h" />
+    <ClInclude Include="MenuRequestHandler.h" />
     <ClInclude Include="Peer.h" />
-    <ClInclude Include="RequestHandler.h" />
+    <ClInclude Include="BlockRequestHandler.h" />
+    <ClInclude Include="RequestHandlerFactory.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="StringUtils.h" />
     <ClInclude Include="SurveyManager.h" />

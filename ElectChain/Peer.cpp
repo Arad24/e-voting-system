@@ -31,15 +31,19 @@ void Peer::createConnectionSocket(std::shared_ptr<tcp::socket> socket)
     std::thread(&Peer::startRead, this, sharedSocket, sharedSocket->remote_endpoint()).detach();
 }
 
-void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& endpoint) {
-    while (true) {
-        auto buffer = std::make_shared<boost::asio::streambuf>();
+void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& endpoint) 
+{
+    try
+    {
+        while (true) 
+        {
+            auto buffer = std::make_shared<boost::asio::streambuf>();
 
-        boost::asio::async_read_until(*socket, *buffer, '\n', [this, socket, buffer, endpoint](const boost::system::error_code& ec, std::size_t /*bytes_transferred*/) {
-            if (!ec)
-            {
-                std::string msg = getMessage(buffer);
-                std::cout << "Received message from " << endpoint << ": " << msg << std::endl;
+            boost::asio::async_read_until(*socket, *buffer, '\n', [this, socket, buffer, endpoint](const boost::system::error_code& ec, std::size_t /*bytes_transferred*/) {
+                if (!ec)
+                {
+                    std::string msg = getMessage(buffer);
+                    std::cout << "Received message from " << endpoint << ": " << msg << std::endl;
 
                 // Handle request
                 _blockRequestHandler->handleRequest(msgToReqInfo(msg));
@@ -50,6 +54,11 @@ void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& e
             }
             });
     }
+    catch (const std::exception& e)
+    {
+        std::cerr << e.what();
+    }
+
 }
 
 
@@ -71,7 +80,8 @@ std::string Peer::getMessage(std::shared_ptr<boost::asio::streambuf> buffer)
     return message;
 }
 
-void Peer::connect(const tcp::endpoint& endpoint) {
+void Peer::connect(const tcp::endpoint& endpoint) 
+{
     auto socket = std::make_shared<tcp::socket>(_io_context);
 
     socket->async_connect(endpoint, [this, socket, endpoint](const boost::system::error_code& ec) {
@@ -180,7 +190,8 @@ void Peer::sendBroadcastMsg(std::string msg)
     }
 }
 
-void Peer::sharePublicKey() {
+void Peer::sharePublicKey() 
+{
     if (BlockchainUtils::pKeys) 
     {
         std::string publicKeyString = BlockchainUtils::publicKeyToString(BlockchainUtils::pKeys->publicKey);
