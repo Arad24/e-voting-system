@@ -28,48 +28,75 @@ RequestResult BlockRequestHandler::handleRequest(const Message& request)
                 break;
 
             case SHARE_KEY_CODE:
-                ShareKeyRequest shareKeyRequest = Deserializer::deserializeShareKey(request.buffer);
-                retRes = handleShareKey(shareKeyRequest);
+                Block block = Deserializer::deserializeMessageBlock(request.buffer);
+                retRes = handleShareKey(block);
                 break;
+
+            case CREATE_BLOCK_CODE:
+                break;
+
+            case GET_BLOCKCHAIN:
+                std::vector<Block> blocksList = Deserializer::deserializeGetBlocks(request.buffer);
+                retRes = handleGetBlockchain(blocksList);
+                break;
+
         }
 
         return retRes;
     }
     else
     {
-        ErrorResponse res = { "Invalid Request" };
-        return { JsonResponsePacketSerializer::SerializeResponse(res), nullptr };
+        Response res = { INVALID_REQUEST_ERROR };
+        return { Serializer::serializeMessage(res), nullptr };
     }
 }
 
+
+RequestResult BlockRequestHandler::handleGetBlockchain(std::vector<Block> blocksList)
+{
+    for (auto block : blocksList)
+    {
+        if ((BlockchainUtils::isVoteBlock(block) && BlockchainUtils::isValidVoteBlock(block)) ||
+            ((BlockchainUtils::isShareKeyBlock(block) && BlockchainUtils::isValidShareKeyBlock(block))))
+        {
+            _blockchain->addBlock(block);
+        }
+        else
+        {
+            Response res = { INVALID_REQUEST_ERROR };
+            return { Serializer::serializeMessage(res), nullptr };
+        }
+    }
+
+    // Return good response
+    return goodres;
+}
 
 RequestResult BlockRequestHandler::handleAddBlock(Block blockToAdd)
 {
 
-    if (_blockchain->validateBlock(blockToAdd) && !BlockchainUtils::isAlreadyVote(*_blockchain, BlockchainUtils::getUidFromBlock(blockToAdd))) /* signature is valid */
+    if (BlockchainUtils::isVoteBlock(blockToAdd) && BlockchainUtils::isValidVoteBlock(blockToAdd))
     {
         shareBlockInTheNetwork(blockToAdd);
     }
     else
     {
-        ErrorResponse res = { "Invalid Request" };
-        return { JsonResponsePacketSerializer::SerializeResponse(res), nullptr };
+        Response res = { INVALID_REQUEST_ERROR };
+        return { Serializer::serializeMessage(res), nullptr };
     }
 }
 
-RequestResult BlockRequestHandler::handleShareKey(const ShareKeyRequest& shareKeyRequest) 
+RequestResult BlockRequestHandler::handleShareKey(Block blockToAdd)
 {
-    ShareKeyRequest req = Deserializer::deserializeMessage(rInfo.buffer);
-    Block blockToAdd = req.block;
 
-    if (_blockchain->validateBlock(blockToAdd) && !BlockchainUtils::isAlreadyVote(*_blockchain, BlockchainUtils::getUidFromBlock(blockToAdd)))
+    if (BlockchainUtils::isShareKeyBlock(blockToAdd) && BlockchainUtils::isValidShareKeyBlock(blockToAdd))
     {
         shareBlockInTheNetwork(blockToAdd);
     }
     else
     {
-        ErrorResponse res = { "Invalid Request" };
-        return { JsonResponsePacketSerializer::SerializeResponse(res), nullptr };
+        Response res = { INVALID_REQUEST_ERROR };
+        return { Serializer::serializeMessage(res), nullptr };
     }
 }
 

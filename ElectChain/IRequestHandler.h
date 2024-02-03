@@ -1,14 +1,14 @@
 #pragma once
 # include <iostream>
 # include <vector>
-# include "RequestHandlerFactory.h"
+# include "Serializer.h"
+# include "Deserializer.h"
 
-class RequestHandlerFactory;
 class IRequestHandler;
 
 struct RequestResult
 {
-	std::vector<unsigned char> buffer;
+	std::string buffer;
 	std::shared_ptr<IRequestHandler> newHandler;
 };
 

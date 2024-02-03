@@ -258,3 +258,27 @@ std::string BlockchainUtils::getUidFromBlock(Block block)
 
 	return uid;
 }
+
+
+bool BlockchainUtils::isVoteBlock(Block block)
+{
+	return (block.data.find("vote") != 0);
+}
+
+bool BlockchainUtils::isShareKeyBlock(Block block)
+{
+	return (block.data.find("public_key") != 0);
+	
+}
+
+bool BlockchainUtils::isValidVoteBlock(Block block)
+{
+	return (_blockchain->validateBlock(blockToAdd) &&
+		!BlockchainUtils::isAlreadyVote(*_blockchain, BlockchainUtils::getUidFromBlock(blockToAdd))); /* add check is signature valid */
+}
+
+bool BlockchainUtils::isValidShareKeyBlock(Block block)
+{
+	return (_blockchain->validateBlock(blockToAdd)
+		&& !BlockchainUtils::isAlreadySharePK(*_blockchain, BlockchainUtils::getUidFromBlock(blockToAdd)));
+}

@@ -21,15 +21,7 @@ struct PeerStruct
         : peerEndpoint(boost::asio::ip::address::from_string(ip), port) {}
 };
 
-struct Message {
-    int id;
-    std::vector<unsigned char> buffer;
-    std::time_t timestamp;
 
-
-    Message(int id, std::vector<unsigned char> msg, std::time_t time) : id(id), buffer(msg), timestamp(time) {
-    }
-};
 
 class Peer
 {

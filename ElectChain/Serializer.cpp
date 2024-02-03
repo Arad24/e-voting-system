@@ -24,7 +24,6 @@ std::string Serializer::serializeMessage(const Message& msg)
     nlohmann::json jsMsg = {};
     jsMsg["id"] = msg.id;
     jsMsg["buffer"] = msg.buffer;
-    jsMsg["timestamp"] = msg.timestamp;
 
     for (char c : nlohmann::to_string(jsMsg))
     {
@@ -33,7 +32,7 @@ std::string Serializer::serializeMessage(const Message& msg)
     return StringUtils::vecToString(message);
 }
 
-std::string Serializer::serializeErrorResponse(ErrorResponse errorResponse)
+std::string Serializer::serializeMessage(ErrorResponse errorResponse)
 {
     std::vector<unsigned char> message;
     nlohmann::json jsMsg = {};
@@ -46,7 +45,7 @@ std::string Serializer::serializeErrorResponse(ErrorResponse errorResponse)
     return StringUtils::vecToString(message);
 }
 
-std::string Serializer::serializeSharePK(SharePK share)
+std::string Serializer::serializeMessage(SharePKData share)
 {
     std::vector<unsigned char> message;
     nlohmann::json jsMsg = {};
@@ -63,7 +62,7 @@ std::string Serializer::serializeSharePK(SharePK share)
     return StringUtils::vecToString(message);
 }
 
-std::string Serializer::serializeVoteBlock(VoteBlock vote_block)
+std::string Serializer::serializeMessage(VoteBlockData vote_block)
 {
     std::vector<unsigned char> message;
     nlohmann::json jsMsg = {};

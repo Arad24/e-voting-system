@@ -44,6 +44,15 @@ class BlockchainUtils
 		static std::string calculateHash(const std::string& data);
 		static bool isValidHash(std::string blockHash);
 
+		// Block validation
+		static bool isAlreadyVote(Blockchain bc, std::string uid);
+		static bool isAlreadySharePK(Blockchain bc, std::string uid);
+		static bool isVoteBlock(Block block);
+		static bool isShareKeyBlock(Block block);
+		static bool isValidVoteBlock(Block block);
+		static bool isValidShareKeyBlock(Block block);
+
+
 		// Signature
 		static std::string signMessage(const std::string message, const RSA* privateKey);
 		bool verifySignature(const std::string& message, const std::string& signMsg, std::string uid);
@@ -55,6 +64,5 @@ class BlockchainUtils
 		
 		// Votes
 		static std::map<std::string, int> countVotes(Blockchain& blockchain);
-		static bool isAlreadyVote(Blockchain bc, std::string uid);
-		static bool isAlreadySharePK(std::string uid);
+		
 };
