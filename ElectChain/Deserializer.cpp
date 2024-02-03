@@ -50,3 +50,21 @@ std::vector<Block> Deserializer::deserializeMessageBlocks(const std::vector<unsi
 
     return deserializedBlocks;
 }
+
+VoteBlock Deserializer::deserializeVoteBlock(const std::vector<unsigned char> buffer)
+{
+    nlohmann::json jsonMsg = getJSON(buffer);
+
+    VoteBlock req(jsonMsg["sign_data"], jsonMsg["voter_id"], jsonMsg["candidate"], jsonMsg["survey_id"]);
+
+    return req;
+}
+
+SharePK Deserializer::deserializeSharePK(const std::vector<unsigned char> buffer)
+{
+    nlohmann::json jsonMsg = getJSON(buffer);
+
+    SharePK vote_request(jsonMsg["public_key"], jsonMsg["voter_id"]);
+
+    return vote_request;
+}
