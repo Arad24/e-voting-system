@@ -45,3 +45,38 @@ std::string Serializer::serializeErrorResponse(ErrorResponse errorResponse)
     }
     return StringUtils::vecToString(message);
 }
+
+std::string Serializer::serializeSharePK(SharePK share)
+{
+    std::vector<unsigned char> message;
+    nlohmann::json jsMsg = {};
+
+    jsMsg["public_key"] = share.public_key;
+    jsMsg["voter_id"] = share.voter_id;
+
+
+    for (char c : nlohmann::to_string(jsMsg))
+    {
+        message.push_back(c);
+    }
+
+    return StringUtils::vecToString(message);
+}
+
+std::string Serializer::serializeVoteBlock(VoteBlock vote_block)
+{
+    std::vector<unsigned char> message;
+    nlohmann::json jsMsg = {};
+
+    jsMsg["voter_id"] = vote_block.voter_id;
+    jsMsg["sign_data"] = vote_block.sign_data;
+    jsMsg["candidate"] = vote_block.candidate;
+    jsMsg["survey_id"] = vote_block.survey_id;
+
+    for (char c : nlohmann::to_string(jsMsg))
+    {
+        message.push_back(c);
+    }
+
+    return StringUtils::vecToString(message);
+}
