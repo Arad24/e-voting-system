@@ -9,6 +9,7 @@
 #include "Block.h"
 #include "Serializer.h"
 #include "Deserializer.h"
+# include "BlockRequestHandler.h"
 
 using boost::asio::ip::tcp;
 
@@ -68,5 +69,5 @@ private:
     int _port;
     std::vector<std::shared_ptr<tcp::socket>> _sockets;
     std::shared_ptr<Blockchain> _blockchain;
-    std::shared_ptr<BlochRequestHandler> _blockRequestHandler;
+    std::shared_ptr<BlockRequestHandler> _blockRequestHandler;
 };

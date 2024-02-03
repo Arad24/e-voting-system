@@ -37,6 +37,7 @@ class BlockchainUtils
 		std::vector<Block> getUserBlocks(Blockchain bc, std::string uid);
 	public:
 		static std::shared_ptr<KeyPair> pKeys;
+		static std::shared_ptr<Blockchain> bcCopy;
 
 		static std::string getUidFromBlock(Block block);
 		// Hash
@@ -54,6 +55,6 @@ class BlockchainUtils
 		
 		// Votes
 		static std::map<std::string, int> countVotes(Blockchain& blockchain);
-		static bool isAlreadyVote(std::string uid);
+		static bool isAlreadyVote(Blockchain bc, std::string uid);
 		static bool isAlreadySharePK(std::string uid);
 };

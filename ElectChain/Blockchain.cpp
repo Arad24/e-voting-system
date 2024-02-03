@@ -52,8 +52,11 @@ bool Blockchain::validateBlock(Block block)
         std::cout << "Block timestamp is too far in the future." << std::endl;
         return false;
     }
+
+    /* Add check of the block signature */
     return true;
 }
+
 //save blockchain to binary file
 void Blockchain::saveToFile(const std::string& filename)
 {

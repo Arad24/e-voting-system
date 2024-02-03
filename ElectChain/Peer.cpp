@@ -5,7 +5,10 @@
 Peer::Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint)
     : _io_context(io_context), _acceptor(io_context, endpoint), _port(endpoint.port())
 {
-    _blockRequestHandler = std::make_shared<BlockRequestHandler>(this);
+    _blockchain = std::make_shared<Blockchain>();
+
+    _blockRequestHandler = std::make_shared<BlockRequestHandler>(this, _blockchain);
+    BlockchainUtils::bcCopy = _blockchain;
 }
 
 void Peer::startAccept()
@@ -196,7 +199,6 @@ void Peer::sharePublicKey()
     {
         std::string publicKeyString = BlockchainUtils::publicKeyToString(BlockchainUtils::pKeys->publicKey);
 
-        // Broadcast the public key to other peers
         sendBroadcastMsg(publicKeyString);
     }
 }

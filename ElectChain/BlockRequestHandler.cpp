@@ -4,9 +4,10 @@
 #include "Blockchain.h"
 
 
-BlockRequestHandler::BlockRequestHandler(std::shared_ptr <Peer> peer)
+BlockRequestHandler::BlockRequestHandler(std::shared_ptr <Peer> peer, std::shared_ptr<Blockchain> blockchain)
 {
     _peer = peer;
+    _blockchain = blockchain;
 }
 
 bool BlockRequestHandler::isRequestRelevant(RequestInfo rInfo)
@@ -22,15 +23,14 @@ RequestResult BlockRequestHandler::handleRequest(const Message& request)
         switch (request.id)
         {
             case ADD_BLOCK_CODE:
-            {
                 Block block = Deserializer::deserializeMessageBlock(request.buffer);
                 retRes = handleAddBlock(block);
-            }
+                break;
+
             case SHARE_KEY_CODE:
-            {
                 ShareKeyRequest shareKeyRequest = Deserializer::deserializeShareKey(request.buffer);
                 retRes = handleShareKey(shareKeyRequest);
-            }
+                break;
         }
 
         return retRes;
@@ -43,12 +43,10 @@ RequestResult BlockRequestHandler::handleRequest(const Message& request)
 }
 
 
-RequestResult BlockRequestHandler::handleAddBlock(RequestInfo rInfo)
+RequestResult BlockRequestHandler::handleAddBlock(Block blockToAdd)
 {
-    VoteBlockRequest req = Deserializer::deserializeMessage(rInfo.buffer);
-    Block blockToAdd = req.block;
 
-    if (_peer->getBlockchain()->validateBlock(blockToAdd) && !BlockchainUtils::isAlreadyVote(BlockchainUtils::getUidFromBlock(blockToAdd))) /* signature is valid */
+    if (_blockchain->validateBlock(blockToAdd) && !BlockchainUtils::isAlreadyVote(*_blockchain, BlockchainUtils::getUidFromBlock(blockToAdd))) /* signature is valid */
     {
         shareBlockInTheNetwork(blockToAdd);
     }
@@ -64,7 +62,7 @@ RequestResult BlockRequestHandler::handleShareKey(const ShareKeyRequest& shareKe
     ShareKeyRequest req = Deserializer::deserializeMessage(rInfo.buffer);
     Block blockToAdd = req.block;
 
-    if (_peer->getBlockchain()->validateBlock(blockToAdd) && !BlockchainUtils::isAlreadySharePK(BlockchainUtils::getUidFromBlock(blockToAdd)))
+    if (_blockchain->validateBlock(blockToAdd) && !BlockchainUtils::isAlreadyVote(*_blockchain, BlockchainUtils::getUidFromBlock(blockToAdd)))
     {
         shareBlockInTheNetwork(blockToAdd);
     }
@@ -78,6 +76,6 @@ RequestResult BlockRequestHandler::handleShareKey(const ShareKeyRequest& shareKe
 
 void BlockRequestHandler::shareBlockInTheNetwork(Block block)
 {
-    _peer->getBlockchain()->addBlock(block);
+    _blockchain->addBlock(block);
     _peer->sendBroadcastMsg(Serializer::serializeMessageBlock(block));
 }
