@@ -5,13 +5,15 @@
 
 # define INVALID_REQUEST_ERROR "Invalid Request"
 
+class Peer;
+
 class BlockRequestHandler : public IRequestHandler
 {
     public:
         BlockRequestHandler(std::shared_ptr<Peer> peer, std::shared_ptr<Blockchain> blockchain);
 
         RequestResult handleRequest(const Message& request);
-        bool isRequestRelevant(RequestInfo rInfo);
+        bool isRequestRelevant(Message rInfo);
 
     private:
         RequestResult handleShareKey(Block blockToAdd);

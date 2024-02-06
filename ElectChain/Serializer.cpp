@@ -32,11 +32,17 @@ std::string Serializer::serializeMessage(const Message& msg)
     return StringUtils::vecToString(message);
 }
 
-std::string Serializer::serializeMessage(ErrorResponse errorResponse)
+std::string Serializer::serializeMessage(Response res, std::string code)
 {
     std::vector<unsigned char> message;
+    
+    // Push code
+    for (char c : code)
+    {
+        message.push_back(c);
+    }
     nlohmann::json jsMsg = {};
-    jsMsg["message"] = errorResponse.message;
+    jsMsg["message"] = res.message;
 
     for (char c : nlohmann::to_string(jsMsg))
     {

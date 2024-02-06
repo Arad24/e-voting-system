@@ -3,10 +3,11 @@
 # include "json.hpp"
 # include <vector>
 
+class Block;
 
 struct Message
 {
-    int id;
+    std::string id;
     std::vector<unsigned char> buffer;
 
     Message(int id, std::vector<unsigned char> msg) : id(id), buffer(msg) {}
@@ -44,14 +45,25 @@ struct VoteBlockData
 };
 
 
+# define ADD_BLOCK_CODE "100"
+# define SHARE_KEY_CODE "101"
+# define GET_PEERS_LIST "102"
+# define GET_BLOCKCHAIN "103"
+# define LOGIN_CODE "104"
+# define LOGIN_SUCCEEDED_CODE "204"
+# define ADD_VOTE_CODE "300"
+# define COUNT_VOTES_CODE "301"
+# define LOGIN_FAILED_CODE "404"
+# define DONT_SEND_CODE "0"
+
 class Deserializer
 {
-public:
-    static Block deserializeMessageBlock(std::vector<unsigned char> buffer);
-    static Message deserializeMessage(const std::vector<unsigned char> buffer);
-    static ShareKeyRequest deserializeShareKey(const std::vector<unsigned char> buffer);
-    static std::vector<Block> deserializeGetBlocks(const std::vector<unsigned char> buffer);
-    static SharePKData deserializeSharePKData(const std::vector<unsigned char> buffer);
-    static VoteBlockData deserializeVoteBlockData(const std::vector<unsigned char> VoteBlockData);
+    public:
+        static Block deserializeMessageBlock(std::vector<unsigned char> buffer);
+        static Message deserializeMessage(const std::vector<unsigned char> buffer);
+        static ShareKeyRequest deserializeShareKey(const std::vector<unsigned char> buffer);
+        static std::vector<Block> deserializeGetBlocks(const std::vector<unsigned char> buffer);
+        static SharePKData deserializeSharePKData(const std::vector<unsigned char> buffer);
+        static VoteBlockData deserializeVoteBlockData(const std::vector<unsigned char> VoteBlockData);
 
 };

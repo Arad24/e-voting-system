@@ -8,8 +8,7 @@ class IRequestHandler;
 
 struct RequestResult
 {
-	std::string buffer;
-	std::shared_ptr<IRequestHandler> newHandler;
+	std::string response;
 };
 
 struct RequestInfo
