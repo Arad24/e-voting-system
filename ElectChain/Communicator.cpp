@@ -1,7 +1,7 @@
 # include "Communicator.h"
 
 
-Communicator::Communicator(RequestHandlerFactory& factory) : m_handlerFactory(factory)
+Communicator::Communicator()
 {}
 
 void Communicator::startHandleRequests()
@@ -81,13 +81,10 @@ void Communicator::handleClient(std::shared_ptr<websocket::stream<tcp::socket>> 
 
 			_mtx.lock();
 			RequestResult res = m_clients[clientSocket]->handleRequest(req);
-			if (res.newHandler != nullptr) m_clients[clientSocket] = res.newHandler;
 			_mtx.unlock();
 
-			std::string serverMsg(res.buffer.begin(), res.buffer.end());
 
-
-			sendMsgToClient(*clientSocket, serverMsg);
+			sendMsgToClient(*clientSocket, res.response);
 		}
 	}
 	catch (const std::exception& e)
@@ -111,22 +108,4 @@ std::string Communicator::getMsgFromClient(websocket::stream<tcp::socket>& ws)
 void Communicator::sendMsgToClient(websocket::stream<boost::asio::ip::tcp::socket>& ws, std::string msg)
 {
 	ws.write(boost::asio::buffer(msg));
-}
-
-
-RequestInfo Communicator::msgToReqInfo(std::string msg)
-{
-	RequestInfo reqInfo;
-
-	// Get time 
-	auto time = std::chrono::system_clock::now();
-	reqInfo.receivalTime = std::chrono::system_clock::to_time_t(time);
-
-	// Get id 
-	reqInfo.id = msg.at(0);
-
-	// get buffer
-	reqInfo.buffer = StringUtils::strToVec(msg);
-
-	return reqInfo;
 }

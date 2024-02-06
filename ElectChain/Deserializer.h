@@ -10,7 +10,7 @@ struct Message
     std::string id;
     std::vector<unsigned char> buffer;
 
-    Message(int id, std::vector<unsigned char> msg) : id(id), buffer(msg) {}
+    Message(std::string id, std::vector<unsigned char> msg) : id(id), buffer(msg) {}
 };
 
 struct ShareKeyRequest 

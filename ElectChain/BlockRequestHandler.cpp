@@ -10,12 +10,12 @@ BlockRequestHandler::BlockRequestHandler(std::shared_ptr <Peer> peer, std::share
     _blockchain = blockchain;
 }
 
-bool BlockRequestHandler::isRequestRelevant(Message req)
+bool BlockRequestHandler::isRequestRelevant(Message& req)
 {
     return (req.id >= SHARE_KEY_CODE && req.id <= GET_BLOCKCHAIN);
 }
 
-RequestResult BlockRequestHandler::handleRequest(const Message& req) 
+RequestResult BlockRequestHandler::handleRequest(Message& req) 
 {
     Block block;
     std::string reqCode = req.id;
