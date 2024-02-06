@@ -3,6 +3,8 @@
 # include "IRequestHandler.h"
 #include <iostream>
 
+# define INVALID_REQUEST_ERROR "Invalid Request"
+
 class BlockRequestHandler : public IRequestHandler
 {
     public:
@@ -12,9 +14,11 @@ class BlockRequestHandler : public IRequestHandler
         bool isRequestRelevant(RequestInfo rInfo);
 
     private:
-        RequestResult handleShareKey(const ShareKeyRequest& shareKeyRequest);
+        RequestResult handleShareKey(Block blockToAdd);
         RequestResult handleAddBlock(Block blockToAdd);
+        RequestResult handleGetBlockchain(std::vector<Block> blocksList);
         void shareBlockInTheNetwork(Block block);
+        
 
         std::shared_ptr<Peer> _peer;
         std::shared_ptr<Blockchain> _blockchain;

@@ -1,36 +1,46 @@
 #pragma once
 # include "Block.h"
-# include <vector>
 # include "json.hpp"
-#include "Peer.h"
-#include "structs.h"
+# include <vector>
 
-struct ShareKeyRequest {
-    int userId;
+
+struct Message
+{
+    int id;
+    std::vector<unsigned char> buffer;
+
+    Message(int id, std::vector<unsigned char> msg) : id(id), buffer(msg) {}
+};
+
+struct ShareKeyRequest 
+{
+    std::string uid;
     std::vector<unsigned char> publicKey;
     std::time_t timestamp;
 
-    ShareKeyRequest(int id, std::vector<unsigned char> key, std::time_t time) : userId(id), publicKey(key), timestamp(time) {}
+    ShareKeyRequest(std::string id, std::vector<unsigned char> key, std::time_t time) : uid(id), publicKey(key), timestamp(time) {}
 };
 
-struct ErrorResponse
+struct Response
 {
     std::string message;
 };
 
-struct SharePK {
+struct SharePKData 
+{
     std::string public_key;
     std::string voter_id;
 
-    SharePK(std::string public_key1, std::string voter_id1) : public_key(public_key1), voter_id(voter_id1) {}
+    SharePKData(std::string public_key1, std::string voter_id1) : public_key(public_key1), voter_id(voter_id1) {}
 };
 
-struct VoteBlock {
+struct VoteBlockData
+{
     std::string sign_data;
     std::string voter_id;
     std::string candidate;
     std::string survey_id;
-    VoteBlock(std::string sign_data1, std::string voter_id1, std::string candidate1, std::string survey_id1) :sign_data(sign_data1), voter_id(voter_id1), candidate(candidate1), survey_id(survey_id1) {}
+    VoteBlockData(std::string sign_data1, std::string voter_id1, std::string candidate1, std::string survey_id1) :sign_data(sign_data1), voter_id(voter_id1), candidate(candidate1), survey_id(survey_id1) {}
 };
 
 
@@ -40,8 +50,8 @@ public:
     static Block deserializeMessageBlock(std::vector<unsigned char> buffer);
     static Message deserializeMessage(const std::vector<unsigned char> buffer);
     static ShareKeyRequest deserializeShareKey(const std::vector<unsigned char> buffer);
-    static std::vector<Block> deserializeMessageBlocks(const std::vector<unsigned char> buffer);
-    static SharePK deserializeSharePK(const std::vector<unsigned char> buffer);
-    static VoteBlock deserializeVoteBlock(const std::vector<unsigned char> buffer);
+    static std::vector<Block> deserializeGetBlocks(const std::vector<unsigned char> buffer);
+    static SharePKData deserializeSharePKData(const std::vector<unsigned char> buffer);
+    static VoteBlockData deserializeVoteBlockData(const std::vector<unsigned char> VoteBlockData);
 
 };

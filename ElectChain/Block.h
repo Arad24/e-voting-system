@@ -13,7 +13,7 @@ class Block
 {
 public:
     // Ctor
-    Block(std::string prevHash, std::string hash, std::string data, std::string timestamp);
+    Block(std::string prevHash, std::string hash, std::string data, std::string timestamp, int nonce);
     Block();
     Block(std::string data);
 
