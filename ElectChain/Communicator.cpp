@@ -48,9 +48,7 @@ void Communicator::acceptClients(tcp::acceptor* acceptor, boost::asio::io_contex
 
 void Communicator::addClientToMap(std::shared_ptr<websocket::stream<tcp::socket>> cSocket)
 {
-	std::shared_ptr<LoginRequestHandler> handler = m_handlerFactory.createLoginRequestHandler();
-
-	m_clients.insert(std::make_pair(cSocket, handler));
+	_clients.push_back(cSocket);
 }
 
 void Communicator::handleNewClient(std::shared_ptr<websocket::stream<tcp::socket>> clientSocket)
@@ -62,7 +60,10 @@ void Communicator::handleNewClient(std::shared_ptr<websocket::stream<tcp::socket
 	catch (const std::exception& e)
 	{
 		std::cerr << "User disconnected.\n" << std::endl;
-		m_clients.erase(clientSocket);
+		_mtx.lock();
+		auto location = std::find(_clients.begin(), _clients.end(), clientSocket);
+		if (location != _clients.end()) (_clients.erase(location));
+		_mtx.unlock();
 	}
 }
 
@@ -76,21 +77,13 @@ void Communicator::handleClient(std::shared_ptr<websocket::stream<tcp::socket>> 
 		while (true)
 		{
 			std::string msg = getMsgFromClient(*clientSocket);
-
-			auto req = msgToReqInfo(msg);
-
-			_mtx.lock();
-			RequestResult res = m_clients[clientSocket]->handleRequest(req);
-			_mtx.unlock();
-
-
-			sendMsgToClient(*clientSocket, res.response);
 		}
 	}
 	catch (const std::exception& e)
 	{
 		_mtx.lock();
-		m_clients.erase(clientSocket);
+		auto location = std::find(_clients.begin(), _clients.end(), clientSocket);
+		if (location != _clients.end()) (_clients.erase(location));
 		_mtx.unlock();
 	}
 }

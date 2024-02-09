@@ -93,7 +93,7 @@ void Blockchain::loadFromFile(const std::string& filename)
 
     file.close();
 
-    std::vector<Block> deserializedBlocks = Deserializer::deserializeMessageBlocks(serializedData);
+    std::vector<Block> deserializedBlocks = Deserializer::deserializeGetBlocks(serializedData);
     _blocks.insert(_blocks.end(), deserializedBlocks.begin(), deserializedBlocks.end());
 }
 

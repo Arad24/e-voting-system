@@ -160,7 +160,6 @@
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Peer.h" />
     <ClInclude Include="BlockRequestHandler.h" />
-    <ClInclude Include="RequestHandlerFactory.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="StringUtils.h" />
   </ItemGroup>

@@ -18,7 +18,7 @@ std::string Serializer::serializeMessageBlock(Block block)
     return StringUtils::vecToString(message);
 }
 
-std::string Serializer::serializeMessage(const Message& msg)
+std::string Serializer::serializeMessage(Message msg)
 {
     std::vector<unsigned char> message;
     nlohmann::json jsMsg = {};

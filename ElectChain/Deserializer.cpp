@@ -45,7 +45,7 @@ std::vector<Block> Deserializer::deserializeGetBlocks(const std::vector<unsigned
 
     std::vector<Block> deserializedBlocks;
     for (const auto& jsonMsg : jsonMsgArray) {
-        deserializedBlocks.push_back(Block(jsonMsg["prevHash"], jsonMsg["hash"], jsonMsg["data"], jsonMsg["timestamp"]));
+        deserializedBlocks.push_back(Block(jsonMsg["prevHash"], jsonMsg["hash"], jsonMsg["data"], jsonMsg["timestamp"], jsonMsg["nonce"]));
     }
 
     return deserializedBlocks;

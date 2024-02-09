@@ -5,7 +5,6 @@
 #include <boost/beast.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/beast/core.hpp>
-# include "LoginRequestHandler.h"
 #include <iostream>
 #include <thread>
 # include <map>
@@ -23,7 +22,7 @@ using tcp = boost::asio::ip::tcp; // from <boost/asio/ip/tcp.hpp>
 class Communicator
 {
 	public:
-		Communicator(RequestHandlerFactory& factory);
+		Communicator();
 		void startHandleRequests();
 		void bindAndListen();
 
@@ -39,11 +38,8 @@ class Communicator
 		// Connect with client
 		std::string getMsgFromClient(websocket::stream<tcp::socket>& ws);
 		void sendMsgToClient(websocket::stream<tcp::socket>& ws, std::string msg);
-		RequestInfo msgToReqInfo(std::string msg);
 
-
-		RequestHandlerFactory& m_handlerFactory;
-		std::map<std::shared_ptr<websocket::stream<tcp::socket>>, std::shared_ptr<IRequestHandler>> m_clients;
+		std::vector<std::shared_ptr<websocket::stream<tcp::socket>>> _clients;
 
 		std::mutex _mtx;
 };

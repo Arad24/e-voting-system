@@ -13,7 +13,7 @@ struct Message
     Message(std::string id, std::vector<unsigned char> msg) : id(id), buffer(msg) {}
 };
 
-struct ShareKeyRequest 
+struct ShareKeyRequest
 {
     std::string uid;
     std::vector<unsigned char> publicKey;
@@ -27,7 +27,7 @@ struct Response
     std::string message;
 };
 
-struct SharePKData 
+struct SharePKData
 {
     std::string public_key;
     std::string voter_id;
@@ -58,12 +58,12 @@ struct VoteBlockData
 
 class Deserializer
 {
-    public:
-        static Block deserializeMessageBlock(std::vector<unsigned char> buffer);
-        static Message deserializeMessage(const std::vector<unsigned char> buffer);
-        static ShareKeyRequest deserializeShareKey(const std::vector<unsigned char> buffer);
-        static std::vector<Block> deserializeGetBlocks(const std::vector<unsigned char> buffer);
-        static SharePKData deserializeSharePKData(const std::vector<unsigned char> buffer);
-        static VoteBlockData deserializeVoteBlockData(const std::vector<unsigned char> VoteBlockData);
+public:
+    static Block deserializeMessageBlock(std::vector<unsigned char> buffer);
+    static Message deserializeMessage(const std::vector<unsigned char> buffer);
+    static ShareKeyRequest deserializeShareKey(const std::vector<unsigned char> buffer);
+    static std::vector<Block> deserializeGetBlocks(const std::vector<unsigned char> buffer);
+    static SharePKData deserializeSharePKData(const std::vector<unsigned char> buffer);
+    static VoteBlockData deserializeVoteBlockData(const std::vector<unsigned char> VoteBlockData);
 
 };

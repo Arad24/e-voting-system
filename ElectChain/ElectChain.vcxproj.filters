@@ -56,12 +56,6 @@
     <ClInclude Include="BlockchainUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Serializer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Deserializer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="StringUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -80,7 +74,10 @@
     <ClInclude Include="IRequestHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RequestHandlerFactory.h">
+    <ClInclude Include="Serializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deserializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
