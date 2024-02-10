@@ -1,14 +1,12 @@
 #pragma once
-#pragma warning(disable:4996)
+# include "BlockchainUtils.h"
 #include <iostream>
 #include <chrono>
 # include <string>
-# include "BlockchainUtils.h"
 
 # define DEFAULT_HASH "0"
 
 class BlockchainUtils;
-class Deserializer;
 
 class Block
 {

@@ -32,8 +32,6 @@ bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys);
 std::vector<Block> getUserBlocks(Blockchain bc, std::string uid);
 
 
-
-
 class BlockchainUtils
 {
 	public:
@@ -62,8 +60,8 @@ class BlockchainUtils
 		static std::shared_ptr<KeyPair> generateKeys();
 		static std::string publicKeyToString(RSA* publicKey);
 		static RSA* strToPK(std::string pk);
-		
+
 		// Votes
 		static std::map<std::string, int> countVotes(Blockchain& blockchain);
-		
+
 };

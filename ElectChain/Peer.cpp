@@ -1,13 +1,11 @@
 #include "Peer.h"
 
-
-
 Peer::Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint)
     : _io_context(io_context), _acceptor(io_context, endpoint), _port(endpoint.port())
 {
     _blockchain = std::make_shared<Blockchain>();
 
-    _blockRequestHandler = std::make_shared<BlockRequestHandler>(this, _blockchain);
+    _blockRequestHandler = std::make_shared<BlockRequestHandler>(std::shared_ptr<Peer>(this), _blockchain);
     BlockchainUtils::_bcCopy = _blockchain;
 }
 

@@ -24,9 +24,6 @@
     <ClCompile Include="Blockchain.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="BlockchainUtils.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="Deserializer.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -45,15 +42,15 @@
     <ClCompile Include="Communicator.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="BlockchainUtils.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Peer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Blockchain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BlockchainUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StringUtils.h">
@@ -78,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deserializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockchainUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

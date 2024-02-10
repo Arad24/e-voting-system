@@ -1,8 +1,13 @@
 #pragma once
-# include "stringUtils.h"
 # include "Deserializer.h"
 
+// Forward declarations
 class Block;
+struct Message;
+struct ShareKeyRequest;
+struct Response;
+struct SharePKData;
+struct VoteBlockData;
 
 class Serializer
 {
