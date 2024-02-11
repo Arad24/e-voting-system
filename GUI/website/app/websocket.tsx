@@ -12,5 +12,6 @@ export function startListening()
     });
   
     ws.send('something');
+    console.log('new connection')
   });
 }

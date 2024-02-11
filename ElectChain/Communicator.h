@@ -1,45 +1,27 @@
 # pragma once
 # include "StringUtils.h"
-#include <boost/asio.hpp>
 #include <boost/beast/core.hpp>
-#include <boost/beast.hpp>
 #include <boost/beast/websocket.hpp>
-#include <boost/beast/core.hpp>
-#include <iostream>
-#include <thread>
-# include <map>
-#include <mutex>
-
+#include <boost/asio/connect.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <cstdlib>
+#include <functional>
+#include <string>
 
 namespace beast = boost::beast;
-namespace websocket = boost::beast::websocket;
-using tcp = boost::asio::ip::tcp; // from <boost/asio/ip/tcp.hpp>
-
-
-# define LOCAL_IP "127.0.0.1"
-# define PORT 8820
+namespace websocket = beast::websocket;
+namespace net = boost::asio;
+using tcp = boost::asio::ip::tcp;
 
 class Communicator
 {
 	public:
-		Communicator();
+		Communicator(std::string host, std::string port);
 		void startHandleRequests();
-		void bindAndListen();
 
 	private:
-		// Private functions
-		void addClientToMap(std::shared_ptr< websocket::stream<tcp::socket>> cSocket);
+		std::shared_ptr<websocket::stream<tcp::socket>> ws;
+		std::shared_ptr<net::io_context> ioc;
 
-		// Server communicate
-		void handleNewClient(std::shared_ptr< websocket::stream<tcp::socket>> clientSocket);
-		void handleClient(std::shared_ptr<websocket::stream<tcp::socket>> clientSocket);
-		void acceptClients(tcp::acceptor* acceptor, boost::asio::io_context* io_context);
-
-		// Connect with client
-		std::string getMsgFromClient(websocket::stream<tcp::socket>& ws);
-		void sendMsgToClient(websocket::stream<tcp::socket>& ws, std::string msg);
-
-		std::vector<std::shared_ptr<websocket::stream<tcp::socket>>> _clients;
-
-		std::mutex _mtx;
+		void createWsConnection(std::string host, std::string port);
 };
