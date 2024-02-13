@@ -1,132 +1,55 @@
 # include "Communicator.h"
 
 
-Communicator::Communicator(RequestHandlerFactory& factory) : m_handlerFactory(factory)
-{}
+Communicator::Communicator(std::string host, std::string port)
+{
+    createWsConnection(host, port);
+}
 
+void Communicator::createWsConnection(std::string host, std::string port)
+{
+    // These objects perform our I/O
+    ioc = std::make_shared<net::io_context>();
+    tcp::resolver resolver(*ioc);
+    this->ws = std::make_shared<websocket::stream<tcp::socket>>(*ioc);
+
+    // Look up the domain name
+    auto const results = resolver.resolve(host, port);
+
+    // Make the connection on the IP address we get from a lookup
+    net::connect(ws->next_layer(), results.begin(), results.end());
+
+    // Perform the websocket handshake
+    ws->handshake("localhost", "/");
+}
 void Communicator::startHandleRequests()
 {
-	try
-	{
-		bindAndListen();
-	}
-	catch (const std::exception& e)
-	{
-		std::cerr << "Error: " << e.what() << std::endl;
-	}
+    try
+    {
+        // Send a message to the server
+        std::string message = "Hello from C++";
+        ws->write(net::buffer(message));
 
-}
+        // Read a message from the server asynchronously
+        beast::flat_buffer buffer;
+        ws->async_read(buffer, [&](beast::error_code ec, std::size_t bytes_transferred) {
+            if (ec == websocket::error::closed) {
+                std::cout << "Connection closed by server\n";
+                return;
+            }
+            if (ec) {
+                std::cerr << "Error reading message: " << ec.message() << std::endl;
+                return;
+            }
+            std::cout << "Received: " << beast::make_printable(buffer.data()) << std::endl;
+            });
 
-void Communicator::bindAndListen()
-{
-	// Create a TCP acceptor to listen for incoming connections
-	boost::asio::io_context io_context;
-	tcp::acceptor acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), PORT));
+        // Run the IO context
+        ioc->run();
 
-	std::cout << "Accepting clients...\n";
-	while (true)
-	{
-		acceptClients(&acceptor, &io_context);
-	}
-}
-
-void Communicator::acceptClients(tcp::acceptor* acceptor, boost::asio::io_context* io_context)
-{
-	tcp::socket cSocket(*io_context);
-	acceptor->accept(cSocket);
-
-	auto ws = std::make_shared<websocket::stream<boost::asio::ip::tcp::socket>>(std::move(cSocket));
-
-	_mtx.lock();
-	addClientToMap(ws);
-	_mtx.unlock();
-
-	std::cout << "New client join\n";
-
-	std::thread(&Communicator::handleNewClient, this, std::move(ws)).detach();
-}
-
-void Communicator::addClientToMap(std::shared_ptr<websocket::stream<tcp::socket>> cSocket)
-{
-	std::shared_ptr<LoginRequestHandler> handler = m_handlerFactory.createLoginRequestHandler();
-
-	m_clients.insert(std::make_pair(cSocket, handler));
-}
-
-void Communicator::handleNewClient(std::shared_ptr<websocket::stream<tcp::socket>> clientSocket)
-{
-	try
-	{
-		handleClient(clientSocket);
-	}
-	catch (const std::exception& e)
-	{
-		std::cerr << "User disconnected.\n" << std::endl;
-		m_clients.erase(clientSocket);
-	}
-}
-
-void Communicator::handleClient(std::shared_ptr<websocket::stream<tcp::socket>> clientSocket)
-{
-	// Construct a WebSocket stream from the socket
-	clientSocket->accept();
-
-	try
-	{
-		while (true)
-		{
-			std::string msg = getMsgFromClient(*clientSocket);
-
-			auto req = msgToReqInfo(msg);
-
-			_mtx.lock();
-			RequestResult res = m_clients[clientSocket]->handleRequest(req);
-			if (res.newHandler != nullptr) m_clients[clientSocket] = res.newHandler;
-			_mtx.unlock();
-
-			std::string serverMsg(res.buffer.begin(), res.buffer.end());
-
-
-			sendMsgToClient(*clientSocket, serverMsg);
-		}
-	}
-	catch (const std::exception& e)
-	{
-		_mtx.lock();
-		m_clients.erase(clientSocket);
-		_mtx.unlock();
-	}
-}
-
-
-std::string Communicator::getMsgFromClient(websocket::stream<tcp::socket>& ws)
-{
-	boost::beast::flat_buffer buffer;
-	ws.read(buffer);
-
-	return boost::beast::buffers_to_string(buffer.data());
-}
-
-
-void Communicator::sendMsgToClient(websocket::stream<boost::asio::ip::tcp::socket>& ws, std::string msg)
-{
-	ws.write(boost::asio::buffer(msg));
-}
-
-
-RequestInfo Communicator::msgToReqInfo(std::string msg)
-{
-	RequestInfo reqInfo;
-
-	// Get time 
-	auto time = std::chrono::system_clock::now();
-	reqInfo.receivalTime = std::chrono::system_clock::to_time_t(time);
-
-	// Get id 
-	reqInfo.id = msg.at(0);
-
-	// get buffer
-	reqInfo.buffer = StringUtils::strToVec(msg);
-
-	return reqInfo;
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
 }

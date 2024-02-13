@@ -8,8 +8,7 @@ class IRequestHandler;
 
 struct RequestResult
 {
-	std::string buffer;
-	std::shared_ptr<IRequestHandler> newHandler;
+	std::string response;
 };
 
 struct RequestInfo
@@ -21,6 +20,6 @@ struct RequestInfo
 class IRequestHandler
 {
 	public:
-		virtual bool isRequestRelevant(RequestInfo rInfo) = 0;
-		virtual RequestResult handleRequest(RequestInfo rInfo) = 0;
+		virtual bool isRequestRelevant(Message& request) = 0;
+		virtual RequestResult handleRequest(Message& request) = 0;
 };

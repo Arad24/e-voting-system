@@ -1,14 +1,14 @@
 #pragma once
 # include "Block.h"
+#include "Serializer.h"
+#include "Deserializer.h"
 # include <vector>
 #include <string>
 #include <fstream>
-#include "Serializer.h"
-#include "Deserializer.h"
+
 
 # define TARGET_ZEROS 2
 
-class BlockchainUtils;
 class Block;
 
 class Blockchain

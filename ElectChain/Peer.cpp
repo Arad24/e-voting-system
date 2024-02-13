@@ -1,14 +1,12 @@
 #include "Peer.h"
 
-
-
 Peer::Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint)
     : _io_context(io_context), _acceptor(io_context, endpoint), _port(endpoint.port())
 {
     _blockchain = std::make_shared<Blockchain>();
 
-    _blockRequestHandler = std::make_shared<BlockRequestHandler>(this, _blockchain);
-    BlockchainUtils::bcCopy = _blockchain;
+    _blockRequestHandler = std::make_shared<BlockRequestHandler>(std::shared_ptr<Peer>(this), _blockchain);
+    BlockchainUtils::_bcCopy = _blockchain;
 }
 
 void Peer::startAccept()
@@ -38,7 +36,7 @@ void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& e
 {
     try
     {
-        while (true) 
+        while (true)
         {
             auto buffer = std::make_shared<boost::asio::streambuf>();
 
@@ -48,14 +46,18 @@ void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& e
                     std::string msg = getMessage(buffer);
                     std::cout << "Received message from " << endpoint << ": " << msg << std::endl;
 
-                // Handle request
-                _blockRequestHandler->handleRequest(msgToReqInfo(msg));
+                    /*
+                        TODO: Create handleRequest
+                    */
+                    //_blockRequestHandler->handleRequest(msg);
 
-            }
-            else {
-                std::cerr << "Error reading from: " << endpoint << ": " << ec.message() << std::endl;
-            }
-            });
+                }
+                else
+                {
+                    std::cerr << "Error reading from: " << endpoint << ": " << ec.message() << std::endl;
+                }
+                });
+        }
     }
     catch (const std::exception& e)
     {
@@ -65,7 +67,7 @@ void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& e
 }
 
 
-RequestInfo Peer::msgToReqInfo(std::string msg)
+/*RequestInfo Peer::msgToReqInfo(std::string msg)
 {
     RequestInfo reqInfo;
     reqInfo.id = msg.substr(0, CODE_SIZE);
@@ -73,6 +75,7 @@ RequestInfo Peer::msgToReqInfo(std::string msg)
 
     return reqInfo;
 }
+*/
 
 std::string Peer::getMessage(std::shared_ptr<boost::asio::streambuf> buffer)
 {
@@ -81,6 +84,11 @@ std::string Peer::getMessage(std::shared_ptr<boost::asio::streambuf> buffer)
     std::getline(is, message);
 
     return message;
+}
+
+std::shared_ptr<Blockchain> Peer::getBlockchain()
+{
+    return _blockchain;
 }
 
 void Peer::connect(const tcp::endpoint& endpoint) 
@@ -195,9 +203,9 @@ void Peer::sendBroadcastMsg(std::string msg)
 
 void Peer::sharePublicKey() 
 {
-    if (BlockchainUtils::pKeys) 
+    if (BlockchainUtils::_pKeys) 
     {
-        std::string publicKeyString = BlockchainUtils::publicKeyToString(BlockchainUtils::pKeys->publicKey);
+        std::string publicKeyString = BlockchainUtils::publicKeyToString(BlockchainUtils::_pKeys->publicKey);
 
         sendBroadcastMsg(publicKeyString);
     }

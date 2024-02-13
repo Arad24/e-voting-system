@@ -10,8 +10,9 @@
 #include <openssl/pem.h>
 #include <vector>
 
-# define VALID_STARTWITH_HASH "00"
+# define VALID_STARTWITH_HASH "000"
 # define KEY_BITS 2048
+# define POW_LENGTH 3
 # define SIGNATURE_LEN (KEY_BITS / 8)
 
 class Block;
@@ -28,16 +29,14 @@ void freeAllRsa(BIO* bpPublic, BIO* bpPrivate, RSA* r, BIGNUM* bne);
 bool saveKeys(BIO** bp_public, BIO** bp_private, RSA* r);
 bool generateRsaKeys(RSA** r, BIGNUM** bne, unsigned long e);
 bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys);
-
+std::vector<Block> getUserBlocks(Blockchain bc, std::string uid);
 
 
 class BlockchainUtils
 {
-	private:
-		std::vector<Block> getUserBlocks(Blockchain bc, std::string uid);
 	public:
-		static std::shared_ptr<KeyPair> pKeys;
-		static std::shared_ptr<Blockchain> bcCopy;
+		static std::shared_ptr<KeyPair> _pKeys;
+		static std::shared_ptr<Blockchain> _bcCopy;
 
 		static std::string getUidFromBlock(Block block);
 		// Hash
@@ -61,8 +60,8 @@ class BlockchainUtils
 		static std::shared_ptr<KeyPair> generateKeys();
 		static std::string publicKeyToString(RSA* publicKey);
 		static RSA* strToPK(std::string pk);
-		
+
 		// Votes
 		static std::map<std::string, int> countVotes(Blockchain& blockchain);
-		
+
 };
