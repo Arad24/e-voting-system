@@ -1,12 +1,12 @@
 # include "Block.h"
 
-Block::Block(std::string prevHash, std::string hash, std::string data, std::string timestamp)
+Block::Block(std::string prevHash, std::string hash, std::string data, std::string timestamp, int nonce)
 {
 	this->_hash = hash;
 	this->_prevHash = prevHash;
 	this->_data = data;
 	this->_timestamp = getCurrentTimestamp();
-	this->_nonce = 0;
+	this->_nonce = nonce;
 }
 
 Block::Block()

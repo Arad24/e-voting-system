@@ -12,7 +12,26 @@ std::string StringUtils::vecToString(std::vector<unsigned char> vec)
 
     return ss.str();
 }
+std::string toLower(const std::string& text)
+{
+    std::string lowerTxt = text;
+    std::transform(lowerTxt.begin(), lowerTxt.end(), lowerTxt.begin(), [](unsigned char c) { return std::tolower(c); });
 
+    return lowerTxt;
+}
+
+std::vector<unsigned char> strToVec(const std::string& text)
+{
+    std::vector<unsigned char> vec(text.begin(), text.end());
+    return vec;
+}
+
+std::vector<unsigned char> strToVec(std::string str)
+{
+    std::vector<unsigned char> vect;
+    vect.insert(vect.begin(), str.begin(), str.end());
+    return vect;
+}
 
 std::string charToString(char* charArr)
 {
