@@ -22,7 +22,7 @@ void Communicator::createWsConnection(std::string host, std::string port)
         net::connect(ws->next_layer(), results.begin(), results.end());
 
         // Perform the websocket handshake
-        ws->handshake("localhost", "/");
+        ws->handshake("WEB_IP", "/");
     }
     catch (const std::exception& e)
     {
@@ -30,26 +30,27 @@ void Communicator::createWsConnection(std::string host, std::string port)
     }
 
 }
-void Communicator::startHandleRequests()
+void Communicator::startHandleRequests(std::string username, std::string password, std::string peerAddress)
 {
     try
     {
-        // Send a message to the server
-        std::string message = "Hello from C++";
+        std::string message = std::string(LOGIN_CODE) + "{'username':'" + username + "','password':'" + password + "','peer_address':'" + peerAddress + "'}";
         ws->write(net::buffer(message));
 
         // Read a message from the server asynchronously
         beast::flat_buffer buffer;
-        ws->async_read(buffer, [&](beast::error_code ec, std::size_t bytes_transferred) {
-            if (ec == websocket::error::closed) {
-                std::cout << "Connection closed by server\n";
-                return;
-            }
-            if (ec) {
-                std::cerr << "Error reading message: " << ec.message() << std::endl;
-                return;
-            }
-            std::cout << "Received: " << beast::make_printable(buffer.data()) << std::endl;
+        ws->async_read(buffer, [&](beast::error_code ec, std::size_t bytes_transferred) 
+            {
+                if (ec == websocket::error::closed) 
+                {
+                    std::cout << "Connection closed by server\n";
+                    return;
+                }
+                if (ec) {
+                    std::cerr << "Error reading message: " << ec.message() << std::endl;
+                    return;
+                }
+                std::cout << "Received: " << beast::make_printable(buffer.data()) << std::endl;
             });
 
         // Run the IO context

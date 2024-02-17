@@ -1,21 +1,22 @@
 const codeLen = 3;
 
-function removeCodeFromMsg(msg : string)
+function removeCodeFromMsg(msg)
 {
-    return msg.substring(codeLen, msg.length);
+    return msg.substring(codeLen);
 }
 
-function getMsgCode(msg : string)
+function getMsgCode(msg)
 {
     return msg.substring(0, codeLen);
 }
 
-function isRequestRelevant(req : string)
+function isRequestRelevant(req)
 {
-    return getMsgCode(req) >= '100'/*Code*/ && getMsgCode(req) <= '100'/*Code*/;
+    var code = getMsgCode(req)
+    return code >= '100'/*Code*/ && code <= '100'/*Code*/;
 }
 
-export function handleRequest(req : string)
+export function handleRequest(req)
 {
     if (isRequestRelevant(req))
     {
@@ -28,10 +29,11 @@ export function handleRequest(req : string)
     else
     {
         // Close socket
+        return false;
     }
 
 }
-export function handleLogin(msg : string)
+export function handleLogin(msg)
 {
     /*
         TODO:
@@ -39,5 +41,6 @@ export function handleLogin(msg : string)
         - if exist: add peers into user db & return ok msg to socket
         - if not exist: return eror msg to socket
     */
+   console.log(1)
 }
 

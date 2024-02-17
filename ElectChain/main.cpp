@@ -6,7 +6,7 @@
 # define LOCAL_IP "127.0.0.1"
 # define PORT 8820
 
-bool Login();
+bool Login(std::shared_ptr<Communicator> cm);
 
 int main()
 {
@@ -19,18 +19,22 @@ int main()
     catch (const std::exception& e)
     {
         std::cerr << e.what();
+        return 1;
     }
     
+    /*
+        TODO: create peer
+    */
     
     while (!login)
     {
-        login = Login();
+        login = Login(cm);
     }
     
     return 0;
 }
 
-bool Login()
+bool Login(std::shared_ptr<Communicator> cm)
 {
     std::string uName = "", password = "";
 
@@ -39,6 +43,7 @@ bool Login()
     std::cout << "Enter password: ";
     std::cin >> password;
 
+    cm->startHandleRequests(uName, password, "123");
     // TODO: Send message to website - LOGIN_CODE{“username":"username",“password":"password","peer_address":"address"}
     // If get success code return true, else return false
     return true;
