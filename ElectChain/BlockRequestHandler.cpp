@@ -21,7 +21,6 @@ RequestResult BlockRequestHandler::handleRequest(Message& req)
     std::string reqCode = req.id;
     if (isRequestRelevant(req))
     {
-
         RequestResult retRes;
         if (reqCode == ADD_BLOCK_CODE)
         {

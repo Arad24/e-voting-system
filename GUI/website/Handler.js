@@ -1,5 +1,7 @@
 const codeLen = 3;
 
+const loginCode = process.env.LOGIN_CODE_REQ;
+
 function removeCodeFromMsg(msg)
 {
     return msg.substring(codeLen);
@@ -21,7 +23,7 @@ export function handleRequest(req)
     if (isRequestRelevant(req))
     {
         let reqCode = getMsgCode(req);
-        if (reqCode == '100'/*Login code*/)
+        if (reqCode == loginCode)
         {
             handleLogin(req);
         }

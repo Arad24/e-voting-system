@@ -11,18 +11,15 @@ function startListening() {
   } catch (error) 
   {
     console.error('Error starting WebSocket server:', error);
-    return; // Exit the function if an error occurs
+    return;
   }
 
   wss.on('connection', function connection(ws) 
   {
-    // Generate a unique identifier for the connection
     const connectionId = generateUniqueId();
     connectionsMap.set(connectionId, ws);
     console.log(`New connection established with id ${connectionId}`);
     ws.on('error', console.error);
-
-
 
     ws.on('message', function message(data) 
     {
@@ -30,8 +27,9 @@ function startListening() {
       if (typeof data === 'string')
       {
         console.log(`received from connection ${connectionId}: ${data}`);
-        handleRequest(data) ? (/* send msg */ console.log('msg')) : (closeSocket(connectionId));
+        var res = handleRequest(data)
       }
+      ws.send('404{}');
     });
     
     ws.on('close', function close() 

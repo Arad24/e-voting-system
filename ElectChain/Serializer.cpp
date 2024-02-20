@@ -73,9 +73,9 @@ std::string Serializer::serializeMessage(VoteBlockData vote_block)
     std::vector<unsigned char> message;
     nlohmann::json jsMsg = {};
 
-    jsMsg["voter_id"] = vote_block.voter_id;
-    jsMsg["sign_data"] = vote_block.sign_data;
-    jsMsg["candidate"] = vote_block.candidate;
+    jsMsg["user_uid"] = vote_block.voter_id;
+    jsMsg["sign_vote"] = vote_block.sign_data;
+    jsMsg["vote"] = vote_block.vote;
     jsMsg["survey_id"] = vote_block.survey_id;
 
     for (char c : nlohmann::to_string(jsMsg))

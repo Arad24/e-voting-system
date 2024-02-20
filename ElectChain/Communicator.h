@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <functional>
 #include <string>
+#include <future>
 
 namespace beast = boost::beast;
 namespace websocket = beast::websocket;
@@ -19,12 +20,14 @@ using tcp = boost::asio::ip::tcp;
 class Communicator
 {
 	public:
-		Communicator(std::string host, std::string port);
-		void startHandleRequests(std::string username, std::string password, std::string peerAddress);
+		Communicator(std::string host, std::string port, std::shared_ptr<net::io_context> ioc);
+		std::string loginRequest(std::string username, std::string password, std::string peerAddress);
+		void startHandleRequests();
 
 	private:
 		std::shared_ptr<websocket::stream<tcp::socket>> ws;
 		std::shared_ptr<net::io_context> ioc;
 
 		void createWsConnection(std::string host, std::string port);
+		std::string readMsg();
 };
