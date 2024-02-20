@@ -51,3 +51,9 @@ char* stringToChar(std::string str)
 
     return charArray;
 }
+
+
+nlohmann::json strToJson(std::string str)
+{
+    return nlohmann::json::parse(str);
+}

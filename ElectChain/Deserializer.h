@@ -5,6 +5,11 @@
 
 class Block;
 
+struct Response
+{
+    std::string message;
+};
+
 struct Message
 {
     std::string id;
@@ -22,11 +27,6 @@ struct ShareKeyRequest
     ShareKeyRequest(std::string id, std::vector<unsigned char> key, std::time_t time) : uid(id), publicKey(key), timestamp(time) {}
 } typedef ShareKeyRequest;
 
-struct Response
-{
-    std::string message;
-};
-
 struct SharePKData
 {
     std::string public_key;
@@ -39,9 +39,9 @@ struct VoteBlockData
 {
     std::string sign_data;
     std::string voter_id;
-    std::string candidate;
+    std::string vote;
     std::string survey_id;
-    VoteBlockData(std::string sign_data1, std::string voter_id1, std::string candidate1, std::string survey_id1) :sign_data(sign_data1), voter_id(voter_id1), candidate(candidate1), survey_id(survey_id1) {}
+    VoteBlockData(std::string sign_data1, std::string voter_id1, std::string vote1, std::string survey_id1) :sign_data(sign_data1), voter_id(voter_id1), vote(vote1), survey_id(survey_id1) {}
 } typedef VoteBlockData;
 
 

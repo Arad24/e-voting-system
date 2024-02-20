@@ -5,6 +5,9 @@ Peer::Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint)
 {
     _blockchain = std::make_shared<Blockchain>();
 
+    /*
+        TODO: If blockchain file exist, load file to blockchain.
+    */
     _blockRequestHandler = std::make_shared<BlockRequestHandler>(std::shared_ptr<Peer>(this), _blockchain);
     BlockchainUtils::_bcCopy = _blockchain;
 }
