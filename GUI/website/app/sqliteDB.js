@@ -77,6 +77,16 @@ class SqliteDatabase implements IDatabase {
       return this.sendQuery(this.dbHandle, updateStatement);
     }
 
+    async getUidByUsername(username: string): Promise<string | null> {
+      try {
+          const sqlStatement = `SELECT UID FROM USERS WHERE NAME = '${username}';`;
+          const result = await this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
+          return result !== "" ? result : null; // Return the UID if found, otherwise null
+      } catch (error) {
+          console.error('Error getting UID:', error);
+          return null; // Return null if there was an error getting the UID
+      }
+  }
 
 getUsersList(): Promise<string[]> {
   const sqlStatement = "SELECT NAME FROM USERS;";
@@ -135,6 +145,30 @@ async isNewSurveyByUid(uid: string): Promise<boolean> {
 async getPeerByUid(uid: string): Promise<string> {
   const sqlStatement = `SELECT ADDRESSES FROM USERS WHERE UID = '${uid}';`;
   return await this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
+}
+
+async getPeersList(): Promise<string> {
+  try {
+      const sqlStatement = "SELECT ADDRESSES FROM USERS;";
+      const peers = await this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
+
+      // Split the peers string into an array
+      const peersArray = peers.split(',');
+
+      // Create a formatted string with the peers
+      let formattedPeers = '';
+      for (let i = 0; i < peersArray.length; i++) {
+          formattedPeers += `${i + 1}: "${peersArray[i]}", `;
+      }
+
+      // Remove the trailing comma and space
+      formattedPeers = formattedPeers.slice(0, -2);
+
+      return formattedPeers;
+  } catch (error) {
+      console.error('Error getting peers list:', error);
+      return ''; // Return an empty string if there was an error
+  }
 }
 
 async changePeerByUid(uid: string, newPeer: string): Promise<boolean> {

@@ -15,6 +15,8 @@ interface IDatabase {
     isNewSurveyByUid(uid: string): Promise<boolean>;
     getPeerByUid(uid: string): Promise<string>;
     changePeerByUid(uid: string, newPeer: string): Promise<boolean>;
+    getUidByUsername(username: string): Promise<string | null>;
+    getPeersList(): Promise<string>;
 }
 
 
