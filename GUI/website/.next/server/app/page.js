@@ -89,6 +89,72 @@ module.exports = require("next/dist/compiled/next-server/app-page.runtime.dev.js
 
 /***/ }),
 
+/***/ "buffer":
+/*!*************************!*\
+  !*** external "buffer" ***!
+  \*************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("buffer");
+
+/***/ }),
+
+/***/ "crypto":
+/*!*************************!*\
+  !*** external "crypto" ***!
+  \*************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("crypto");
+
+/***/ }),
+
+/***/ "events":
+/*!*************************!*\
+  !*** external "events" ***!
+  \*************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("events");
+
+/***/ }),
+
+/***/ "http":
+/*!***********************!*\
+  !*** external "http" ***!
+  \***********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("http");
+
+/***/ }),
+
+/***/ "https":
+/*!************************!*\
+  !*** external "https" ***!
+  \************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("https");
+
+/***/ }),
+
+/***/ "net":
+/*!**********************!*\
+  !*** external "net" ***!
+  \**********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("net");
+
+/***/ }),
+
 /***/ "path":
 /*!***********************!*\
   !*** external "path" ***!
@@ -97,6 +163,28 @@ module.exports = require("next/dist/compiled/next-server/app-page.runtime.dev.js
 
 "use strict";
 module.exports = require("path");
+
+/***/ }),
+
+/***/ "stream":
+/*!*************************!*\
+  !*** external "stream" ***!
+  \*************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("stream");
+
+/***/ }),
+
+/***/ "tls":
+/*!**********************!*\
+  !*** external "tls" ***!
+  \**********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("tls");
 
 /***/ }),
 
@@ -111,6 +199,37 @@ module.exports = require("url");
 
 /***/ }),
 
+/***/ "zlib":
+/*!***********************!*\
+  !*** external "zlib" ***!
+  \***********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("zlib");
+
+/***/ }),
+
+/***/ "?32c4":
+/*!****************************!*\
+  !*** bufferutil (ignored) ***!
+  \****************************/
+/***/ (() => {
+
+/* (ignored) */
+
+/***/ }),
+
+/***/ "?66e9":
+/*!********************************!*\
+  !*** utf-8-validate (ignored) ***!
+  \********************************/
+/***/ (() => {
+
+/* (ignored) */
+
+/***/ }),
+
 /***/ "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fpage&page=%2Fpage&appPaths=%2Fpage&pagePath=private-next-app-dir%2Fpage.tsx&appDir=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!":
 /*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fpage&page=%2Fpage&appPaths=%2Fpage&pagePath=private-next-app-dir%2Fpage.tsx&appDir=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! ***!
@@ -122,16 +241,6 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
-/***/ "(ssr)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Capp%5Cglobals.css&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cfont%5Cgoogle%5Ctarget.css%3F%7B%22path%22%3A%22app%5C%5Clayout.tsx%22%2C%22import%22%3A%22Inter%22%2C%22arguments%22%3A%5B%7B%22subsets%22%3A%5B%22latin%22%5D%7D%5D%2C%22variableName%22%3A%22inter%22%7D&server=true!":
-/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Capp%5Cglobals.css&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cfont%5Cgoogle%5Ctarget.css%3F%7B%22path%22%3A%22app%5C%5Clayout.tsx%22%2C%22import%22%3A%22Inter%22%2C%22arguments%22%3A%5B%7B%22subsets%22%3A%5B%22latin%22%5D%7D%5D%2C%22variableName%22%3A%22inter%22%7D&server=true! ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/***/ (() => {
-
-
-
-/***/ }),
-
 /***/ "(ssr)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Capp-router.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Cerror-boundary.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Clayout-router.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Cnot-found-boundary.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Crender-from-template-context.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Cstatic-generation-searchparams-bailout-provider.js&server=true!":
 /*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Capp-router.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Cerror-boundary.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Clayout-router.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Cnot-found-boundary.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Crender-from-template-context.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Cstatic-generation-searchparams-bailout-provider.js&server=true! ***!
@@ -139,6 +248,16 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 eval("Promise.resolve(/*! import() eager */).then(__webpack_require__.t.bind(__webpack_require__, /*! ./node_modules/next/dist/client/components/app-router.js */ \"(ssr)/./node_modules/next/dist/client/components/app-router.js\", 23));\nPromise.resolve(/*! import() eager */).then(__webpack_require__.t.bind(__webpack_require__, /*! ./node_modules/next/dist/client/components/error-boundary.js */ \"(ssr)/./node_modules/next/dist/client/components/error-boundary.js\", 23));\nPromise.resolve(/*! import() eager */).then(__webpack_require__.t.bind(__webpack_require__, /*! ./node_modules/next/dist/client/components/layout-router.js */ \"(ssr)/./node_modules/next/dist/client/components/layout-router.js\", 23));\nPromise.resolve(/*! import() eager */).then(__webpack_require__.t.bind(__webpack_require__, /*! ./node_modules/next/dist/client/components/not-found-boundary.js */ \"(ssr)/./node_modules/next/dist/client/components/not-found-boundary.js\", 23));\nPromise.resolve(/*! import() eager */).then(__webpack_require__.t.bind(__webpack_require__, /*! ./node_modules/next/dist/client/components/render-from-template-context.js */ \"(ssr)/./node_modules/next/dist/client/components/render-from-template-context.js\", 23));\nPromise.resolve(/*! import() eager */).then(__webpack_require__.t.bind(__webpack_require__, /*! ./node_modules/next/dist/client/components/static-generation-searchparams-bailout-provider.js */ \"(ssr)/./node_modules/next/dist/client/components/static-generation-searchparams-bailout-provider.js\", 23))//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi9ub2RlX21vZHVsZXMvbmV4dC9kaXN0L2J1aWxkL3dlYnBhY2svbG9hZGVycy9uZXh0LWZsaWdodC1jbGllbnQtZW50cnktbG9hZGVyLmpzP21vZHVsZXM9QyUzQSU1Q1VzZXJzJTVDVXNlciU1Q0Rlc2t0b3AlNUNNYWdzaGltaW0lNUNwcm9qZWN0JTVDZV92b3Rpbmdfc3lzdGVtJTVDR1VJJTVDd2Vic2l0ZSU1Q25vZGVfbW9kdWxlcyU1Q25leHQlNUNkaXN0JTVDY2xpZW50JTVDY29tcG9uZW50cyU1Q2FwcC1yb3V0ZXIuanMmbW9kdWxlcz1DJTNBJTVDVXNlcnMlNUNVc2VyJTVDRGVza3RvcCU1Q01hZ3NoaW1pbSU1Q3Byb2plY3QlNUNlX3ZvdGluZ19zeXN0ZW0lNUNHVUklNUN3ZWJzaXRlJTVDbm9kZV9tb2R1bGVzJTVDbmV4dCU1Q2Rpc3QlNUNjbGllbnQlNUNjb21wb25lbnRzJTVDZXJyb3ItYm91bmRhcnkuanMmbW9kdWxlcz1DJTNBJTVDVXNlcnMlNUNVc2VyJTVDRGVza3RvcCU1Q01hZ3NoaW1pbSU1Q3Byb2plY3QlNUNlX3ZvdGluZ19zeXN0ZW0lNUNHVUklNUN3ZWJzaXRlJTVDbm9kZV9tb2R1bGVzJTVDbmV4dCU1Q2Rpc3QlNUNjbGllbnQlNUNjb21wb25lbnRzJTVDbGF5b3V0LXJvdXRlci5qcyZtb2R1bGVzPUMlM0ElNUNVc2VycyU1Q1VzZXIlNUNEZXNrdG9wJTVDTWFnc2hpbWltJTVDcHJvamVjdCU1Q2Vfdm90aW5nX3N5c3RlbSU1Q0dVSSU1Q3dlYnNpdGUlNUNub2RlX21vZHVsZXMlNUNuZXh0JTVDZGlzdCU1Q2NsaWVudCU1Q2NvbXBvbmVudHMlNUNub3QtZm91bmQtYm91bmRhcnkuanMmbW9kdWxlcz1DJTNBJTVDVXNlcnMlNUNVc2VyJTVDRGVza3RvcCU1Q01hZ3NoaW1pbSU1Q3Byb2plY3QlNUNlX3ZvdGluZ19zeXN0ZW0lNUNHVUklNUN3ZWJzaXRlJTVDbm9kZV9tb2R1bGVzJTVDbmV4dCU1Q2Rpc3QlNUNjbGllbnQlNUNjb21wb25lbnRzJTVDcmVuZGVyLWZyb20tdGVtcGxhdGUtY29udGV4dC5qcyZtb2R1bGVzPUMlM0ElNUNVc2VycyU1Q1VzZXIlNUNEZXNrdG9wJTVDTWFnc2hpbWltJTVDcHJvamVjdCU1Q2Vfdm90aW5nX3N5c3RlbSU1Q0dVSSU1Q3dlYnNpdGUlNUNub2RlX21vZHVsZXMlNUNuZXh0JTVDZGlzdCU1Q2NsaWVudCU1Q2NvbXBvbmVudHMlNUNzdGF0aWMtZ2VuZXJhdGlvbi1zZWFyY2hwYXJhbXMtYmFpbG91dC1wcm92aWRlci5qcyZzZXJ2ZXI9dHJ1ZSEiLCJtYXBwaW5ncyI6IkFBQUEsa09BQTZLO0FBQzdLLDBPQUFpTDtBQUNqTCx3T0FBZ0w7QUFDaEwsa1BBQXFMO0FBQ3JMLHNRQUErTDtBQUMvTCIsInNvdXJjZXMiOlsid2VicGFjazovL215LXByb2plY3QvP2UwYmYiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0KC8qIHdlYnBhY2tNb2RlOiBcImVhZ2VyXCIgKi8gXCJDOlxcXFxVc2Vyc1xcXFxVc2VyXFxcXERlc2t0b3BcXFxcTWFnc2hpbWltXFxcXHByb2plY3RcXFxcZV92b3Rpbmdfc3lzdGVtXFxcXEdVSVxcXFx3ZWJzaXRlXFxcXG5vZGVfbW9kdWxlc1xcXFxuZXh0XFxcXGRpc3RcXFxcY2xpZW50XFxcXGNvbXBvbmVudHNcXFxcYXBwLXJvdXRlci5qc1wiKTtcbmltcG9ydCgvKiB3ZWJwYWNrTW9kZTogXCJlYWdlclwiICovIFwiQzpcXFxcVXNlcnNcXFxcVXNlclxcXFxEZXNrdG9wXFxcXE1hZ3NoaW1pbVxcXFxwcm9qZWN0XFxcXGVfdm90aW5nX3N5c3RlbVxcXFxHVUlcXFxcd2Vic2l0ZVxcXFxub2RlX21vZHVsZXNcXFxcbmV4dFxcXFxkaXN0XFxcXGNsaWVudFxcXFxjb21wb25lbnRzXFxcXGVycm9yLWJvdW5kYXJ5LmpzXCIpO1xuaW1wb3J0KC8qIHdlYnBhY2tNb2RlOiBcImVhZ2VyXCIgKi8gXCJDOlxcXFxVc2Vyc1xcXFxVc2VyXFxcXERlc2t0b3BcXFxcTWFnc2hpbWltXFxcXHByb2plY3RcXFxcZV92b3Rpbmdfc3lzdGVtXFxcXEdVSVxcXFx3ZWJzaXRlXFxcXG5vZGVfbW9kdWxlc1xcXFxuZXh0XFxcXGRpc3RcXFxcY2xpZW50XFxcXGNvbXBvbmVudHNcXFxcbGF5b3V0LXJvdXRlci5qc1wiKTtcbmltcG9ydCgvKiB3ZWJwYWNrTW9kZTogXCJlYWdlclwiICovIFwiQzpcXFxcVXNlcnNcXFxcVXNlclxcXFxEZXNrdG9wXFxcXE1hZ3NoaW1pbVxcXFxwcm9qZWN0XFxcXGVfdm90aW5nX3N5c3RlbVxcXFxHVUlcXFxcd2Vic2l0ZVxcXFxub2RlX21vZHVsZXNcXFxcbmV4dFxcXFxkaXN0XFxcXGNsaWVudFxcXFxjb21wb25lbnRzXFxcXG5vdC1mb3VuZC1ib3VuZGFyeS5qc1wiKTtcbmltcG9ydCgvKiB3ZWJwYWNrTW9kZTogXCJlYWdlclwiICovIFwiQzpcXFxcVXNlcnNcXFxcVXNlclxcXFxEZXNrdG9wXFxcXE1hZ3NoaW1pbVxcXFxwcm9qZWN0XFxcXGVfdm90aW5nX3N5c3RlbVxcXFxHVUlcXFxcd2Vic2l0ZVxcXFxub2RlX21vZHVsZXNcXFxcbmV4dFxcXFxkaXN0XFxcXGNsaWVudFxcXFxjb21wb25lbnRzXFxcXHJlbmRlci1mcm9tLXRlbXBsYXRlLWNvbnRleHQuanNcIik7XG5pbXBvcnQoLyogd2VicGFja01vZGU6IFwiZWFnZXJcIiAqLyBcIkM6XFxcXFVzZXJzXFxcXFVzZXJcXFxcRGVza3RvcFxcXFxNYWdzaGltaW1cXFxccHJvamVjdFxcXFxlX3ZvdGluZ19zeXN0ZW1cXFxcR1VJXFxcXHdlYnNpdGVcXFxcbm9kZV9tb2R1bGVzXFxcXG5leHRcXFxcZGlzdFxcXFxjbGllbnRcXFxcY29tcG9uZW50c1xcXFxzdGF0aWMtZ2VuZXJhdGlvbi1zZWFyY2hwYXJhbXMtYmFpbG91dC1wcm92aWRlci5qc1wiKSJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(ssr)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Capp-router.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Cerror-boundary.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Clayout-router.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Cnot-found-boundary.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Crender-from-template-context.js&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cdist%5Cclient%5Ccomponents%5Cstatic-generation-searchparams-bailout-provider.js&server=true!\n");
+
+/***/ }),
+
+/***/ "(ssr)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cfont%5Cgoogle%5Ctarget.css%3F%7B%22path%22%3A%22app%5C%5Clayout.tsx%22%2C%22import%22%3A%22Inter%22%2C%22arguments%22%3A%5B%7B%22subsets%22%3A%5B%22latin%22%5D%7D%5D%2C%22variableName%22%3A%22inter%22%7D&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Capp%5Cglobals.css&server=true!":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Cnode_modules%5Cnext%5Cfont%5Cgoogle%5Ctarget.css%3F%7B%22path%22%3A%22app%5C%5Clayout.tsx%22%2C%22import%22%3A%22Inter%22%2C%22arguments%22%3A%5B%7B%22subsets%22%3A%5B%22latin%22%5D%7D%5D%2C%22variableName%22%3A%22inter%22%7D&modules=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Capp%5Cglobals.css&server=true! ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ (() => {
+
+
 
 /***/ }),
 
@@ -170,7 +289,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ RootLayout),\n/* harmony export */   metadata: () => (/* binding */ metadata)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"(rsc)/./node_modules/next/dist/server/future/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.js\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var next_font_google_target_css_path_app_layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/font/google/target.css?{\"path\":\"app\\\\layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"]}],\"variableName\":\"inter\"} */ \"(rsc)/./node_modules/next/font/google/target.css?{\\\"path\\\":\\\"app\\\\\\\\layout.tsx\\\",\\\"import\\\":\\\"Inter\\\",\\\"arguments\\\":[{\\\"subsets\\\":[\\\"latin\\\"]}],\\\"variableName\\\":\\\"inter\\\"}\");\n/* harmony import */ var next_font_google_target_css_path_app_layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_font_google_target_css_path_app_layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _globals_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./globals.css */ \"(rsc)/./app/globals.css\");\n\n\n\nconst metadata = {\n    title: \"Election\",\n    description: \"Alex & Arad\"\n};\nfunction RootLayout({ children }) {\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"html\", {\n        lang: \"en\",\n        children: /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"body\", {\n            className: (next_font_google_target_css_path_app_layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_2___default().className),\n            children: children\n        }, void 0, false, {\n            fileName: \"C:\\\\Users\\\\User\\\\Desktop\\\\Magshimim\\\\project\\\\e_voting_system\\\\GUI\\\\website\\\\app\\\\layout.tsx\",\n            lineNumber: 19,\n            columnNumber: 7\n        }, this)\n    }, void 0, false, {\n        fileName: \"C:\\\\Users\\\\User\\\\Desktop\\\\Magshimim\\\\project\\\\e_voting_system\\\\GUI\\\\website\\\\app\\\\layout.tsx\",\n        lineNumber: 18,\n        columnNumber: 5\n    }, this);\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9hcHAvbGF5b3V0LnRzeCIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7OztBQUlNQTtBQUZpQjtBQUloQixNQUFNQyxXQUFxQjtJQUNoQ0MsT0FBTztJQUNQQyxhQUFhO0FBQ2YsRUFBRTtBQUVhLFNBQVNDLFdBQVcsRUFDakNDLFFBQVEsRUFHUjtJQUNBLHFCQUNFLDhEQUFDQztRQUFLQyxNQUFLO2tCQUNULDRFQUFDQztZQUFLQyxXQUFXVCwySkFBZTtzQkFBR0s7Ozs7Ozs7Ozs7O0FBR3pDIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vbXktcHJvamVjdC8uL2FwcC9sYXlvdXQudHN4Pzk5ODgiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHR5cGUgeyBNZXRhZGF0YSB9IGZyb20gXCJuZXh0XCI7XHJcbmltcG9ydCB7IEludGVyIH0gZnJvbSBcIm5leHQvZm9udC9nb29nbGVcIjtcclxuaW1wb3J0IFwiLi9nbG9iYWxzLmNzc1wiO1xyXG5cclxuY29uc3QgaW50ZXIgPSBJbnRlcih7IHN1YnNldHM6IFtcImxhdGluXCJdIH0pO1xyXG5cclxuZXhwb3J0IGNvbnN0IG1ldGFkYXRhOiBNZXRhZGF0YSA9IHtcclxuICB0aXRsZTogXCJFbGVjdGlvblwiLFxyXG4gIGRlc2NyaXB0aW9uOiBcIkFsZXggJiBBcmFkXCIsXHJcbn07XHJcblxyXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBSb290TGF5b3V0KHtcclxuICBjaGlsZHJlbixcclxufTogUmVhZG9ubHk8e1xyXG4gIGNoaWxkcmVuOiBSZWFjdC5SZWFjdE5vZGU7XHJcbn0+KSB7XHJcbiAgcmV0dXJuIChcclxuICAgIDxodG1sIGxhbmc9XCJlblwiPlxyXG4gICAgICA8Ym9keSBjbGFzc05hbWU9e2ludGVyLmNsYXNzTmFtZX0+e2NoaWxkcmVufTwvYm9keT5cclxuICAgIDwvaHRtbD5cclxuICApO1xyXG59XHJcbiJdLCJuYW1lcyI6WyJpbnRlciIsIm1ldGFkYXRhIiwidGl0bGUiLCJkZXNjcmlwdGlvbiIsIlJvb3RMYXlvdXQiLCJjaGlsZHJlbiIsImh0bWwiLCJsYW5nIiwiYm9keSIsImNsYXNzTmFtZSJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(rsc)/./app/layout.tsx\n");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ RootLayout),\n/* harmony export */   metadata: () => (/* binding */ metadata)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"(rsc)/./node_modules/next/dist/server/future/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.js\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var next_font_google_target_css_path_app_layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! next/font/google/target.css?{\"path\":\"app\\\\layout.tsx\",\"import\":\"Inter\",\"arguments\":[{\"subsets\":[\"latin\"]}],\"variableName\":\"inter\"} */ \"(rsc)/./node_modules/next/font/google/target.css?{\\\"path\\\":\\\"app\\\\\\\\layout.tsx\\\",\\\"import\\\":\\\"Inter\\\",\\\"arguments\\\":[{\\\"subsets\\\":[\\\"latin\\\"]}],\\\"variableName\\\":\\\"inter\\\"}\");\n/* harmony import */ var next_font_google_target_css_path_app_layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(next_font_google_target_css_path_app_layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _globals_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./globals.css */ \"(rsc)/./app/globals.css\");\n/* harmony import */ var _websocket__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./websocket */ \"(rsc)/./app/websocket.tsx\");\n\n\n\n\nconst metadata = {\n    title: \"Election\",\n    description: \"Alex & Arad\"\n};\nfunction RootLayout({ children }) {\n    try {\n        console.log(1);\n        (0,_websocket__WEBPACK_IMPORTED_MODULE_2__.startListening)();\n    } catch (e) {\n        console.log(\"Server closed\");\n    }\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"html\", {\n        lang: \"en\",\n        children: /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"body\", {\n            className: (next_font_google_target_css_path_app_layout_tsx_import_Inter_arguments_subsets_latin_variableName_inter___WEBPACK_IMPORTED_MODULE_3___default().className),\n            children: children\n        }, void 0, false, {\n            fileName: \"C:\\\\Users\\\\User\\\\Desktop\\\\Magshimim\\\\project\\\\e_voting_system\\\\GUI\\\\website\\\\app\\\\layout.tsx\",\n            lineNumber: 30,\n            columnNumber: 7\n        }, this)\n    }, void 0, false, {\n        fileName: \"C:\\\\Users\\\\User\\\\Desktop\\\\Magshimim\\\\project\\\\e_voting_system\\\\GUI\\\\website\\\\app\\\\layout.tsx\",\n        lineNumber: 29,\n        columnNumber: 5\n    }, this);\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9hcHAvbGF5b3V0LnRzeCIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7QUFLTUE7QUFIaUI7QUFDcUI7QUFJckMsTUFBTUUsV0FBcUI7SUFDaENDLE9BQU87SUFDUEMsYUFBYTtBQUNmLEVBQUU7QUFFYSxTQUFTQyxXQUFXLEVBQ2pDQyxRQUFRLEVBR1I7SUFFQSxJQUNBO1FBQ0VDLFFBQVFDLEdBQUcsQ0FBQztRQUNaUCwwREFBY0E7SUFDaEIsRUFDQSxPQUFPUSxHQUNQO1FBQ0VGLFFBQVFDLEdBQUcsQ0FBQztJQUNkO0lBQ0EscUJBQ0UsOERBQUNFO1FBQUtDLE1BQUs7a0JBQ1QsNEVBQUNDO1lBQUtDLFdBQVdiLDJKQUFlO3NCQUFHTTs7Ozs7Ozs7Ozs7QUFHekMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9teS1wcm9qZWN0Ly4vYXBwL2xheW91dC50c3g/OTk4OCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgdHlwZSB7IE1ldGFkYXRhIH0gZnJvbSBcIm5leHRcIjtcclxuaW1wb3J0IHsgSW50ZXIgfSBmcm9tIFwibmV4dC9mb250L2dvb2dsZVwiO1xyXG5pbXBvcnQgXCIuL2dsb2JhbHMuY3NzXCI7XHJcbmltcG9ydCB7IHN0YXJ0TGlzdGVuaW5nIH0gZnJvbSAnLi93ZWJzb2NrZXQnXHJcblxyXG5jb25zdCBpbnRlciA9IEludGVyKHsgc3Vic2V0czogW1wibGF0aW5cIl0gfSk7XHJcblxyXG5leHBvcnQgY29uc3QgbWV0YWRhdGE6IE1ldGFkYXRhID0ge1xyXG4gIHRpdGxlOiBcIkVsZWN0aW9uXCIsXHJcbiAgZGVzY3JpcHRpb246IFwiQWxleCAmIEFyYWRcIixcclxufTtcclxuXHJcbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIFJvb3RMYXlvdXQoe1xyXG4gIGNoaWxkcmVuLFxyXG59OiBSZWFkb25seTx7XHJcbiAgY2hpbGRyZW46IFJlYWN0LlJlYWN0Tm9kZTtcclxufT4pIHtcclxuXHJcbiAgdHJ5XHJcbiAge1xyXG4gICAgY29uc29sZS5sb2coMSk7XHJcbiAgICBzdGFydExpc3RlbmluZygpO1xyXG4gIH1cclxuICBjYXRjaCAoZSlcclxuICB7XHJcbiAgICBjb25zb2xlLmxvZygnU2VydmVyIGNsb3NlZCcpXHJcbiAgfVxyXG4gIHJldHVybiAoXHJcbiAgICA8aHRtbCBsYW5nPVwiZW5cIj5cclxuICAgICAgPGJvZHkgY2xhc3NOYW1lPXtpbnRlci5jbGFzc05hbWV9PntjaGlsZHJlbn08L2JvZHk+XHJcbiAgICA8L2h0bWw+XHJcbiAgKTtcclxufVxyXG4iXSwibmFtZXMiOlsiaW50ZXIiLCJzdGFydExpc3RlbmluZyIsIm1ldGFkYXRhIiwidGl0bGUiLCJkZXNjcmlwdGlvbiIsIlJvb3RMYXlvdXQiLCJjaGlsZHJlbiIsImNvbnNvbGUiLCJsb2ciLCJlIiwiaHRtbCIsImxhbmciLCJib2R5IiwiY2xhc3NOYW1lIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(rsc)/./app/layout.tsx\n");
 
 /***/ }),
 
@@ -182,6 +301,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Home)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"(rsc)/./node_modules/next/dist/server/future/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.js\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n\nfunction Home() {\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n        className: \"bg-white\",\n        children: /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"h1\", {\n            className: \"text-4xl flex justify-center\",\n            children: \"Election\"\n        }, void 0, false, {\n            fileName: \"C:\\\\Users\\\\User\\\\Desktop\\\\Magshimim\\\\project\\\\e_voting_system\\\\GUI\\\\website\\\\app\\\\page.tsx\",\n            lineNumber: 6,\n            columnNumber: 7\n        }, this)\n    }, void 0, false, {\n        fileName: \"C:\\\\Users\\\\User\\\\Desktop\\\\Magshimim\\\\project\\\\e_voting_system\\\\GUI\\\\website\\\\app\\\\page.tsx\",\n        lineNumber: 5,\n        columnNumber: 5\n    }, this);\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9hcHAvcGFnZS50c3giLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUVlLFNBQVNBO0lBQ3RCLHFCQUNFLDhEQUFDQztRQUFJQyxXQUFVO2tCQUNiLDRFQUFDQztZQUFHRCxXQUFVO3NCQUErQjs7Ozs7Ozs7Ozs7QUFHbkQiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9teS1wcm9qZWN0Ly4vYXBwL3BhZ2UudHN4Pzc2MDMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IEltYWdlIGZyb20gXCJuZXh0L2ltYWdlXCI7XHJcblxyXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBIb21lKCkge1xyXG4gIHJldHVybiAoXHJcbiAgICA8ZGl2IGNsYXNzTmFtZT1cImJnLXdoaXRlXCI+XHJcbiAgICAgIDxoMSBjbGFzc05hbWU9XCJ0ZXh0LTR4bCBmbGV4IGp1c3RpZnktY2VudGVyXCI+RWxlY3Rpb248L2gxPlxyXG4gICAgPC9kaXY+XHJcbiAgKTtcclxufVxyXG5cclxuIl0sIm5hbWVzIjpbIkhvbWUiLCJkaXYiLCJjbGFzc05hbWUiLCJoMSJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(rsc)/./app/page.tsx\n");
+
+/***/ }),
+
+/***/ "(rsc)/./app/websocket.tsx":
+/*!***************************!*\
+  !*** ./app/websocket.tsx ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   startListening: () => (/* binding */ startListening)\n/* harmony export */ });\n/* harmony import */ var ws__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ws */ \"(rsc)/./node_modules/ws/wrapper.mjs\");\n\nconst wss = new ws__WEBPACK_IMPORTED_MODULE_0__.WebSocketServer({\n    port: 8081\n});\nfunction startListening() {\n    wss.on(\"connection\", function connection(ws) {\n        ws.on(\"error\", console.error);\n        ws.on(\"message\", function message(data) {\n            console.log(\"received: %s\", data);\n        });\n        ws.send(\"something\");\n        console.log(\"new connection\");\n    });\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9hcHAvd2Vic29ja2V0LnRzeCIsIm1hcHBpbmdzIjoiOzs7OztBQUFxQztBQUVyQyxNQUFNQyxNQUFNLElBQUlELCtDQUFlQSxDQUFDO0lBQUVFLE1BQU07QUFBSztBQUV0QyxTQUFTQztJQUVkRixJQUFJRyxFQUFFLENBQUMsY0FBYyxTQUFTQyxXQUFXQyxFQUFFO1FBQ3pDQSxHQUFHRixFQUFFLENBQUMsU0FBU0csUUFBUUMsS0FBSztRQUU1QkYsR0FBR0YsRUFBRSxDQUFDLFdBQVcsU0FBU0ssUUFBUUMsSUFBSTtZQUNwQ0gsUUFBUUksR0FBRyxDQUFDLGdCQUFnQkQ7UUFDOUI7UUFFQUosR0FBR00sSUFBSSxDQUFDO1FBQ1JMLFFBQVFJLEdBQUcsQ0FBQztJQUNkO0FBQ0YiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9teS1wcm9qZWN0Ly4vYXBwL3dlYnNvY2tldC50c3g/ZTY4ZCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBXZWJTb2NrZXRTZXJ2ZXIgfSBmcm9tICd3cyc7XHJcblxyXG5jb25zdCB3c3MgPSBuZXcgV2ViU29ja2V0U2VydmVyKHsgcG9ydDogODA4MSB9KTtcclxuXHJcbmV4cG9ydCBmdW5jdGlvbiBzdGFydExpc3RlbmluZygpXHJcbntcclxuICB3c3Mub24oJ2Nvbm5lY3Rpb24nLCBmdW5jdGlvbiBjb25uZWN0aW9uKHdzKSB7XHJcbiAgICB3cy5vbignZXJyb3InLCBjb25zb2xlLmVycm9yKTtcclxuICBcclxuICAgIHdzLm9uKCdtZXNzYWdlJywgZnVuY3Rpb24gbWVzc2FnZShkYXRhKSB7XHJcbiAgICAgIGNvbnNvbGUubG9nKCdyZWNlaXZlZDogJXMnLCBkYXRhKTtcclxuICAgIH0pO1xyXG4gIFxyXG4gICAgd3Muc2VuZCgnc29tZXRoaW5nJyk7XHJcbiAgICBjb25zb2xlLmxvZygnbmV3IGNvbm5lY3Rpb24nKVxyXG4gIH0pO1xyXG59XHJcbiJdLCJuYW1lcyI6WyJXZWJTb2NrZXRTZXJ2ZXIiLCJ3c3MiLCJwb3J0Iiwic3RhcnRMaXN0ZW5pbmciLCJvbiIsImNvbm5lY3Rpb24iLCJ3cyIsImNvbnNvbGUiLCJlcnJvciIsIm1lc3NhZ2UiLCJkYXRhIiwibG9nIiwic2VuZCJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(rsc)/./app/websocket.tsx\n");
 
 /***/ }),
 
@@ -203,7 +333,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 var __webpack_require__ = require("../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next","vendor-chunks/@swc"], () => (__webpack_exec__("(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fpage&page=%2Fpage&appPaths=%2Fpage&pagePath=private-next-app-dir%2Fpage.tsx&appDir=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!")));
+var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next","vendor-chunks/ws","vendor-chunks/@swc"], () => (__webpack_exec__("(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fpage&page=%2Fpage&appPaths=%2Fpage&pagePath=private-next-app-dir%2Fpage.tsx&appDir=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5CUser%5CDesktop%5CMagshimim%5Cproject%5Ce_voting_system%5CGUI%5Cwebsite&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!")));
 module.exports = __webpack_exports__;
 
 })();
