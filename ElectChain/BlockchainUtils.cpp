@@ -86,62 +86,111 @@ RSA* BlockchainUtils::strToPK(std::string pk)
 
 	return rsaKey;
 }
-
 bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys)
 {
-	bool	ret = true;
-	RSA* r = NULL;
-	BIGNUM* bne = NULL;
-	BIO* bpPublic = NULL, * bpPrivate = NULL;
-	unsigned long	e = RSA_F4;
+	RSA* private_key = NULL;
+	RSA* public_key = NULL;
 
-	ret = (generateRsaKeys(&r, &bne, e));
-	if (!ret) goto free_all;
+	if (!generateRsaKeys(&public_key, &private_key))
+		return false;
 
-	ret = (saveKeys(&bpPublic, &bpPrivate, r));
-	if (!ret) goto free_all;
+	if (!saveKeys(public_key, private_key)) {
+		RSA_free(public_key);
+		RSA_free(private_key);
+		return false;
+	}
 
-	pairKeys->privateKey = PEM_read_bio_RSAPrivateKey(bpPrivate, NULL, NULL, NULL);
-	pairKeys->publicKey = PEM_read_bio_RSA_PUBKEY(bpPublic, NULL, NULL, NULL);
+	if (!private_key || !public_key) return false;
 
-free_all:
-	freeAllRsa(bpPublic, bpPrivate, r, bne);
-
-	return ret;
-}
-
-bool generateRsaKeys(RSA** r, BIGNUM** bne, unsigned long	e)
-{
-	int ret = 0;
-	*bne = BN_new();
-	ret = BN_set_word(*bne, e);
-	if (ret != 1) return false;
-
-	*r = RSA_new();
-	ret = RSA_generate_key_ex(*r, KEY_BITS, *bne, NULL);
-	if (ret != 1) return false;
+	pairKeys->privateKey = private_key;
+	pairKeys->publicKey = public_key;
 
 	return true;
 }
 
-bool saveKeys(BIO** bp_public, BIO** bp_private, RSA* r)
+bool generateRsaKeys(RSA** public_key, RSA** private_key)
 {
-	int ret = 0;
+	BIGNUM* bne = NULL;
+	RSA* r = RSA_new();
+	if (!r) return false;
 
-	// Save public key
-	*bp_public = BIO_new_file("public.pem", "w+");
-	ret = PEM_write_bio_RSAPublicKey(*bp_public, r);
-	if (ret != 1) return false;
+	bne = BN_new();
+	if (!bne) {
+		RSA_free(r);
+		return false;
+	}
 
-	// Save private key
-	*bp_private = BIO_new_file("private.pem", "w+");
-	ret = PEM_write_bio_RSAPrivateKey(*bp_private, r, NULL, NULL, 0, NULL, NULL);
-	if (ret != 1) return false;
+	if (!BN_set_word(bne, RSA_F4)) {
+		BN_free(bne);
+		RSA_free(r);
+		return false;
+	}
 
-	// Rewind the BIOs before reading
-	BIO_reset(*bp_public);
-	BIO_reset(*bp_private);
+	if (!RSA_generate_key_ex(r, KEY_BITS, bne, NULL)) {
+		BN_free(bne);
+		RSA_free(r);
+		return false;
+	}
 
+	*public_key = RSAPublicKey_dup(r);
+	*private_key = RSAPrivateKey_dup(r);
+
+	BN_free(bne);
+	RSA_free(r);
+
+	if (!*public_key || !*private_key)
+		return false;
+
+	return true;
+}
+
+bool saveKeys(RSA* public_key, RSA* private_key)
+{
+	if (!public_key || !private_key) return false;
+
+	if (BlockchainUtils::_userUid.empty()) return false;
+
+	std::string filename = BlockchainUtils::_userUid + ".pem";
+	BIO* bp = BIO_new_file(filename.c_str(), "w+");
+	
+	if (!bp) return false;
+
+	int ret = 1;
+	ret &= PEM_write_bio_RSAPublicKey(bp, public_key);
+	ret &= PEM_write_bio_RSAPrivateKey(bp, private_key, NULL, NULL, 0, NULL, NULL);
+
+	BIO_free(bp);
+
+	return ret == 1;
+}
+
+bool BlockchainUtils::loadKeysFromFile(std::string fileName)
+{
+	BlockchainUtils::_pKeys = std::make_shared<KeyPair>();
+	RSA* pk = BlockchainUtils::_pKeys->publicKey;
+	RSA* sk = BlockchainUtils::_pKeys->privateKey;
+
+	BIO* bp = BIO_new_file(fileName.c_str(), "r");
+
+	if (!bp) return false;
+
+	pk = PEM_read_bio_RSAPublicKey(bp, NULL, NULL, NULL);
+
+	if (!pk) 
+	{
+		BIO_free(bp);
+		return false;
+	}
+
+	sk = PEM_read_bio_RSAPrivateKey(bp, NULL, NULL, NULL);
+	if (!sk) 
+	{
+		RSA_free(pk); // Free the previously allocated public key
+		BIO_free(bp);
+		return false;
+	}
+
+	BIO_free(bp);
 	return true;
 }
 
