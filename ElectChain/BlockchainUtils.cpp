@@ -2,6 +2,7 @@
 
 std::shared_ptr<KeyPair> BlockchainUtils::_pKeys;
 std::shared_ptr<Blockchain> BlockchainUtils::_bcCopy;
+std::string BlockchainUtils::_userUid;
 
 std::string BlockchainUtils::calculateHash(const std::string& data)
 {
@@ -200,7 +201,7 @@ RSA* findPublicKey(std::string uid, Blockchain bc)
 
 bool BlockchainUtils::verifySignature(const std::string& message, const std::string& signMsg, std::string uid)
 {
-	RSA* publicKey = findPublicKey(uid, *_bcCopy);
+	RSA* publicKey = (uid == BlockchainUtils::_userUid) ? (BlockchainUtils::_pKeys->publicKey) : findPublicKey(uid, *_bcCopy);
 
 	if (!publicKey) {
 		throw std::runtime_error("Public key is not available.");
@@ -217,7 +218,7 @@ bool BlockchainUtils::verifySignature(const std::string& message, const std::str
 	return result == 1;
 }
 
-std::map<std::string, int> BlockchainUtils::countVotes(Blockchain& blockchain)
+std::map<std::string, int> BlockchainUtils::countVotes(Blockchain& blockchain, std::string survey_uid)
 {
 	std::map<std::string, int> votes;
 	auto blocks = blockchain.getBlocks();
@@ -226,16 +227,23 @@ std::map<std::string, int> BlockchainUtils::countVotes(Blockchain& blockchain)
 	{
 		for (auto block : blocks)
 		{
-			nlohmann::json blockData = nlohmann::json::parse(block.getData());
-			std::string candidate = blockData["candidate"];
+			if (isVoteBlock(block))
+			{
+				nlohmann::json blockData = nlohmann::json::parse(block.getData());
+				if (blockData["survey_uid"] == survey_uid)
+				{
+					std::string candidate = blockData["vote"];
 
-			(votes.find(candidate) != votes.end()) ? (votes[candidate]++) : (votes[candidate] = 1);
+					(votes.find(candidate) != votes.end()) ? (votes[candidate]++) : (votes[candidate] = 1);
+				}
+			}
 		}
 
 	}
 	catch (const std::exception& e)
 	{
 		std::cerr << "Error parsing block data: " << e.what() << std::endl;
+		throw e;
 	}
 
 	return votes;
@@ -257,16 +265,16 @@ std::vector<Block> getUserBlocks(Blockchain bc, std::string uid)
 }
 
 
-bool BlockchainUtils::isAlreadyVote(Blockchain bc, std::string uid)
+bool BlockchainUtils::isAlreadyVote(Blockchain bc, std::string user_uid, std::string survey_uid)
 {
-	std::vector<Block> userBlocks = getUserBlocks(bc, uid);
+	std::vector<Block> userBlocks = getUserBlocks(bc, user_uid);
 
 	for (auto block : userBlocks)
 	{
 		nlohmann::json jsonData = nlohmann::json::parse(block.getData());
-		if (jsonData.find("vote") != jsonData.end())
+		if (jsonData.find("survey_uid") != jsonData.end())
 		{
-			return true;
+			if (jsonData["survey_uid"] == survey_uid) return true;
 		}
 	}
 
@@ -289,18 +297,37 @@ bool BlockchainUtils::isAlreadySharePK(Blockchain bc, std::string uid)
 	return false;
 }
 
-std::string BlockchainUtils::getUidFromBlock(Block block)
+std::string BlockchainUtils::getUserUidFromBlock(Block block)
 {
 	std::string uid = "";
 	nlohmann::json jsonData = nlohmann::json::parse(block.getData());
-	if (jsonData.find("uid") != jsonData.end())
+	if (jsonData.find("user_uid") != jsonData.end())
 	{
-		uid = jsonData["uid"];
+		uid = jsonData["user_uid"];
 	}
 
 	return uid;
 }
 
+std::string BlockchainUtils::getSurveyUidFromBlock(Block block)
+{
+	std::string uid = "";
+	nlohmann::json jsonData = nlohmann::json::parse(block.getData());
+	if (jsonData.find("survey_uid") != jsonData.end())
+	{
+		uid = jsonData["survey_uid"];
+	}
+
+	return uid;
+}
+
+nlohmann::json BlockchainUtils::dataToJson(std::string data)
+{
+
+	nlohmann::json jsonData = nlohmann::json::parse(data);
+
+	return jsonData;
+}
 
 bool BlockchainUtils::isVoteBlock(Block block)
 {
@@ -314,12 +341,22 @@ bool BlockchainUtils::isShareKeyBlock(Block block)
 
 bool BlockchainUtils::isValidVoteBlock(Block block)
 {
+	nlohmann::json jsonData = BlockchainUtils::dataToJson(block.getData());
+	std::string userUid = "", surveyUid = "", vote = "", signVote = "";
+	if (jsonData.find("survey_uid") != jsonData.end()) surveyUid = jsonData["survey_uid"];
+	if (jsonData.find("user_uid") != jsonData.end()) userUid = jsonData["user_uid"];
+	if (jsonData.find("vote") != jsonData.end()) vote = jsonData["vote"];
+	if (jsonData.find("sign_vote") != jsonData.end()) signVote = jsonData["sign_vote"];
+
+	if (userUid == "" || surveyUid == "" || vote == "" || signVote == "") return false;
+
 	return (_bcCopy->validateBlock(block) &&
-		!BlockchainUtils::isAlreadyVote(*_bcCopy, BlockchainUtils::getUidFromBlock(block))); /* add check is signature valid */
+		!BlockchainUtils::isAlreadyVote(*_bcCopy, userUid, surveyUid) &&
+		BlockchainUtils::verifySignature(vote, signVote, userUid));
 }
 
 bool BlockchainUtils::isValidShareKeyBlock(Block block)
 {
 	return (_bcCopy->validateBlock(block)
-		&& !BlockchainUtils::isAlreadySharePK(*_bcCopy, BlockchainUtils::getUidFromBlock(block)));
+		&& !BlockchainUtils::isAlreadySharePK(*_bcCopy, BlockchainUtils::getUserUidFromBlock(block)));
 }

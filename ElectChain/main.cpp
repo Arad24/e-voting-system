@@ -69,15 +69,10 @@ bool Login(std::shared_ptr<Communicator> cm, std::string peer_address)
     }
     else if (res.rfind(LOGIN_SUCCEEDED_CODE, 0) == 0)
     {
-        /*nlohmann::json jsonData = StringUtils::strToJson(res.substr(3, res.length()));
-        if (jsonData.find("uid") != jsonData.end())
-        {
-            g_userUid = jsonData['uid'];
-            return true;
-        }*/
+        g_userUid = BlockchainUtils::_userUid;
 
         return true;
     }
 
-    return true;
+    return false;
 }

@@ -9,6 +9,7 @@ std::string Serializer::serializeMessageBlock(Block block)
     jsMsg["hash"] = block.getHash();
     jsMsg["data"] = block.getData();
     jsMsg["timestamp"] = block.getTimeStamp();
+    jsMsg["nonce"] = block.getNonce();
 
     for (char c : nlohmann::to_string(jsMsg))
     {
@@ -57,7 +58,7 @@ std::string Serializer::serializeMessage(SharePKData share)
     nlohmann::json jsMsg = {};
 
     jsMsg["public_key"] = share.public_key;
-    jsMsg["voter_id"] = share.voter_id;
+    jsMsg["user_uid"] = share.user_uid;
 
 
     for (char c : nlohmann::to_string(jsMsg))
@@ -73,10 +74,10 @@ std::string Serializer::serializeMessage(VoteBlockData vote_block)
     std::vector<unsigned char> message;
     nlohmann::json jsMsg = {};
 
-    jsMsg["user_uid"] = vote_block.voter_id;
+    jsMsg["user_uid"] = vote_block.user_uid;
     jsMsg["sign_vote"] = vote_block.sign_data;
     jsMsg["vote"] = vote_block.vote;
-    jsMsg["survey_id"] = vote_block.survey_id;
+    jsMsg["survey_uid"] = vote_block.survey_uid;
 
     for (char c : nlohmann::to_string(jsMsg))
     {
@@ -84,4 +85,15 @@ std::string Serializer::serializeMessage(VoteBlockData vote_block)
     }
 
     return StringUtils::vecToString(message);
+}
+
+std::string Serializer::serializeMessage(CountVotesResponse res)
+{
+    nlohmann::json jsonObj;
+    for (const auto& votePair : res.votes)
+    {
+        jsonObj[votePair.first] = votePair.second;
+    }
+
+    return SUCCESS_COUNT_VOTES + jsonObj.dump(4);
 }

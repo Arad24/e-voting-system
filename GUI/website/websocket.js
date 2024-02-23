@@ -16,9 +16,9 @@ function startListening() {
 
   wss.on('connection', function connection(ws) 
   {
-    const connectionId = generateUniqueId();
+    const connectionId = '123';
     connectionsMap.set(connectionId, ws);
-    console.log(`New connection established with id ${connectionId}`);
+    console.log(`New connection established `);
     ws.on('error', console.error);
 
     ws.on('message', function message(data) 
@@ -54,11 +54,6 @@ function closeSocket(connectionId)
 {
   console.log(`Connection ${connectionId} closed`);
       connectionsMap.delete(connectionId);
-}
-
-function generateUniqueId() 
-{
-  return Math.random().toString(36).substring(2, 10); // Example of a simple unique ID
 }
 
 export default startListening;

@@ -15,7 +15,7 @@ class Blockchain
 {
 	public:
 		void addBlock(Block block);
-		void createNewBlock(std::string data);
+		std::shared_ptr<Block> createNewBlock(std::string data);
 
 		// Getters
 		Block getLatestBlock();

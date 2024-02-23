@@ -28,7 +28,7 @@ ShareKeyRequest Deserializer::deserializeShareKey(const std::vector<unsigned cha
 
     nlohmann::json jsonMsg = getJSON(buffer);
 
-    ShareKeyRequest req(jsonMsg["uid"], jsonMsg["publicKey"], jsonMsg["timestamp"]);
+    ShareKeyRequest req(jsonMsg["uid"], jsonMsg["publicKey"]);
 
     return req;
 }
@@ -55,7 +55,17 @@ VoteBlockData Deserializer::deserializeVoteBlockData(const std::vector<unsigned 
 {
     nlohmann::json jsonMsg = getJSON(buffer);
 
-    VoteBlockData req(jsonMsg["sign_data"], jsonMsg["voter_id"], jsonMsg["candidate"], jsonMsg["survey_id"]);
+    VoteBlockData req(jsonMsg["sign_data"], jsonMsg["voter_id"], jsonMsg["candidate"], jsonMsg["survey_uid"]);
+
+    return req;
+}
+
+
+AddVoteRequest Deserializer::deserializeAddVote(const std::vector<unsigned char> buffer)
+{
+    nlohmann::json jsonMsg = getJSON(buffer);
+
+    AddVoteRequest req(jsonMsg["vote"], jsonMsg["survey_uid"]);
 
     return req;
 }
@@ -64,7 +74,36 @@ SharePKData Deserializer::deserializeSharePKData(const std::vector<unsigned char
 {
     nlohmann::json jsonMsg = getJSON(buffer);
 
-    SharePKData vote_request(jsonMsg["public_key"], jsonMsg["voter_id"]);
+    SharePKData vote_request(jsonMsg["public_key"], jsonMsg["user_uid"]);
 
     return vote_request;
+}
+
+
+CountVotesRequest Deserializer::deserializeCountVotes(const std::vector<unsigned char> buffer)
+{
+    nlohmann::json jsonMsg = getJSON(buffer);
+
+    CountVotesRequest req(jsonMsg["survey_uid"]);
+
+    return req;
+}
+
+GetPeersRequest Deserializer::deserializeGetPeers(const std::vector<unsigned char> buffer)
+{
+    nlohmann::json jsonMsg = getJSON(buffer);
+    std::vector<PeerStruct> peers;
+
+    for (const auto& peer : jsonMsg["peers"]) 
+    {
+        std::string strPeer = peer.dump();
+        std::string ip = strPeer.substr(0, strPeer.find(":"));
+        int port = stoi(strPeer.substr(strPeer.find(":") + 1, strPeer.length()));
+        PeerStruct newPeer(ip, port);
+        peers.push_back(newPeer);
+    }
+
+    GetPeersRequest req(peers);
+
+    return req;
 }
