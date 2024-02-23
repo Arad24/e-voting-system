@@ -23,6 +23,7 @@ class Block
         std::string getHash();
         std::string getPrevHash();
         std::string getTimeStamp();
+        int getNonce();
 
         // Setters
         void setPrevHash(std::string prevHash);

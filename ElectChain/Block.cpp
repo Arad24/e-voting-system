@@ -57,6 +57,11 @@ std::string Block::getTimeStamp()
 	return this->_timestamp;
 }
 
+int Block::getNonce()
+{
+	return _nonce;
+}
+
 void Block::setPrevHash(std::string prevHash)
 {
 	this->_prevHash = prevHash;

@@ -1,10 +1,13 @@
 #pragma once
+# include "Peer.h"
+# include "Deserializer.h"
 # include <iostream>
 # include <vector>
-# include "Serializer.h"
-# include "Deserializer.h"
 
+class Peer;
+class Deserializer;
 class IRequestHandler;
+struct Message;
 
 struct RequestResult
 {

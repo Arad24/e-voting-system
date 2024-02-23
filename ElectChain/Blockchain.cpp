@@ -1,9 +1,10 @@
 # include "Blockchain.h"
 
 
-void Blockchain::createNewBlock(std::string data)
+std::shared_ptr<Block> Blockchain::createNewBlock(std::string data)
 {
-	Block newBlock = Block(data);
+	std::shared_ptr<Block> newBlock = std::make_shared<Block>(data);
+    return newBlock;
 }
 
 
@@ -53,7 +54,6 @@ bool Blockchain::validateBlock(Block block)
         return false;
     }
 
-    /* Add check of the block signature */
     return true;
 }
 
