@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{2429bfb8-41fc-4eb4-93f6-55b13c9c3039}</ProjectGuid>
+    <ProjectGuid>{48a7c8d9-d3e8-40fe-a5ec-00bcbd0e1810}</ProjectGuid>
     <RootNamespace>ElectChain</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -71,8 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExecutablePath>$(VC_ExecutablePath_x64);$(CommonExecutablePath)</ExecutablePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Alex\e_voting_system\boost_1_83_0;C:\Users\Alex\e_voting_system\OpenSSL-Win64\include;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\User\Desktop\Magshimim\project\boost;C:\Users\User\Desktop\Magshimim\project\OpenSSL\include;</IncludePath>
+    <GenerateManifest>No</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\User\Desktop\Magshimim\project\boost;C:\Users\User\Desktop\Magshimim\project\OpenSSL\include;</IncludePath>
+    <GenerateManifest>No</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,11 +112,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\e_voting_system\OpenSSL-Win64\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Users\Alex\e_voting_system\out\DLL\x64\Release\lib\libcrypto.lib;C:\Users\Alex\e_voting_system\out\DLL\x64\Release\lib\libssl.lib;</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\User\Desktop\Magshimim\project\OpenSSL\lib\VC\x64\MD\*.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -123,23 +128,27 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\e_voting_system\OpenSSL-Win64\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>C:\Users\User\Desktop\Magshimim\project\OpenSSL\lib\VC\x64\MD\*.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Blockchain.cpp" />
     <ClCompile Include="BlockchainUtils.cpp" />
-    <ClCompile Include="BlockRequestHandler.cpp" />
     <ClCompile Include="Communicator.cpp" />
     <ClCompile Include="Deserializer.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Peer.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="BlockRequestHandler.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="StringUtils.cpp" />
   </ItemGroup>
@@ -147,12 +156,12 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="Blockchain.h" />
     <ClInclude Include="BlockchainUtils.h" />
-    <ClInclude Include="BlockRequestHandler.h" />
     <ClInclude Include="Communicator.h" />
     <ClInclude Include="Deserializer.h" />
     <ClInclude Include="IRequestHandler.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Peer.h" />
+    <ClInclude Include="BlockRequestHandler.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="StringUtils.h" />
   </ItemGroup>
