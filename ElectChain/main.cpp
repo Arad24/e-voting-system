@@ -1,51 +1,55 @@
 # include "Peer.h"
 # include "Communicator.h"
-#include "Blockchain.h"
+# include "Blockchain.h"
 # include "StringUtils.h"
 # include <iostream>
+# include <fstream>
 
 # define LOCAL_IP "localhost"
-# define PORT "8881"
+# define WEB_PORT "8881"
+# define BLOCKCHAIN_FILENAME "bcCopy.csv"
 
 bool Login(std::shared_ptr<Communicator> cm, std::string peer_address);
+bool loadKeys();
 
 static std::string g_userUid = "";
 
 int main()
 {
+    // Create a blockchain
+    std::shared_ptr<Blockchain> blockchain = std::make_shared<Blockchain>();
+    BlockchainUtils::_bcCopy = blockchain;
+    blockchain->loadFromFile(BLOCKCHAIN_FILENAME);
+
+
     bool login = false;
     std::shared_ptr<net::io_context> ioc_web = std::make_shared<net::io_context>();
     std::shared_ptr<Communicator> cm;
 
     try
     {
-        cm = std::make_shared<Communicator>("localhost", PORT, ioc_web);
+        cm = std::make_shared<Communicator>("localhost", WEB_PORT, ioc_web);
     }
     catch (const std::exception& e)
     {
-        std::cerr << e.what();
+        std::cerr << e->what();
         return 1;
     }
 
     /*
-        TODO: Create peer - load ip and port from json file if exist
-    */
-    
-    /*
-        TODO: create peer
-        Save in json file
-        peer ip,
-        peer port,
-
-        save in {uid}.pem
-        private key
-        public key
+        TODO: Create peer
     */
     
     while (!login)
     {
         login = Login(cm, "123:123");
     }
+
+    if (!loadKeys())
+    {
+        BlockchainUtils::generateKeys();
+    }
+    
     
     ioc_web->run();
     return 0;
@@ -75,4 +79,11 @@ bool Login(std::shared_ptr<Communicator> cm, std::string peer_address)
     }
 
     return false;
+}
+
+
+bool loadKeys()
+{
+    std::string fileName = g_userUid + ".pem";
+    return BlockchainUtils::loadKeysFromFile(fileName);
 }

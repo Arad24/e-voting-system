@@ -7,7 +7,8 @@
 #include <fstream>
 
 
-# define TARGET_ZEROS 2
+# define TARGET_ZEROS 3
+# define BLOCKCHAIN_FILENAME "bcCopy.csv"
 
 class Block;
 
@@ -23,8 +24,19 @@ class Blockchain
 		
 		bool validateBlock(Block currentBlock);
 
-		void saveToFile(const std::string& filename);
-		void loadFromFile(const std::string& filename);
+
+		void saveToFile(std::string filename);
+		void loadFromFile(std::string filename);
+		void appendToFile(std::string filename, Block block);
+
+		int getLastIndex();
+
+		void display();
+
 	private:
 		std::vector<Block> _blocks;
+
+		void deserializeBlock(const std::vector<char>& blockData, Block& block);
+
+		
 };
