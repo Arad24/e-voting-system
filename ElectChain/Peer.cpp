@@ -35,40 +35,29 @@ void Peer::createConnectionSocket(std::shared_ptr<tcp::socket> socket)
     std::thread(&Peer::startRead, this, sharedSocket, sharedSocket->remote_endpoint()).detach();
 }
 
-void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& endpoint) 
+void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& endpoint)
 {
-    try
-    {
-        while (true)
+    auto buffer = std::make_shared<boost::asio::streambuf>();
+
+    boost::asio::async_read_until(*socket, *buffer, '\n', [this, socket, buffer, endpoint](const boost::system::error_code& ec, std::size_t /*bytes_transferred*/) {
+        if (!ec)
         {
-            auto buffer = std::make_shared<boost::asio::streambuf>();
+            std::string msg = getMessage(buffer);
+            std::cout << YELLOW << "Received message from " << endpoint << ": " << msg << RESET << std::endl;
 
-            boost::asio::async_read_until(*socket, *buffer, '\n', [this, socket, buffer, endpoint](const boost::system::error_code& ec, std::size_t /*bytes_transferred*/) {
-                if (!ec)
-                {
-                    std::string msg = getMessage(buffer);
-                    std::cout << YELLOW << "Received message from " << endpoint << ": " << msg << RESET << std::endl;
+            // Process the received message
 
-
-                    /*
-                        TODO: Create handleRequest
-                    */
-                    //_blockRequestHandler->handleRequest(msg);
-
-                }
-                else
-                {
-                    std::cerr << YELLOW << "Error reading from: " << endpoint << ": " << ec.message() << RESET << std::endl;
-                }
-                });
-        }                    
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << e.what();
-    }
-
+            // Continue reading
+            startRead(socket, endpoint);
+        }
+        else if (ec != boost::asio::error::operation_aborted)
+        {
+            // Error occurred, but not due to operation cancellation
+            std::cerr << YELLOW << "Error reading from " << endpoint << ": " << ec.message() << RESET << std::endl;
+        }
+        });
 }
+
 
 
 /*RequestInfo Peer::msgToReqInfo(std::string msg)
