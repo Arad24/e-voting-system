@@ -21,6 +21,7 @@ int main() {
     boost::asio::io_context io_context;
 
     while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(2)); // Wait for 2 seconds
         printMenu();
         std::getline(std::cin, option);
 
@@ -61,6 +62,7 @@ int main() {
             std::cout << "Enter the message you want to send: ";
             std::getline(std::cin, message);
             peer->sendBroadcastMsg(message);
+            std::cout << "Message sent to all peers.\n";
         }
         else if (option == "4") {
             if (peer) {
