@@ -3,87 +3,92 @@
 # include "Blockchain.h"
 # include "StringUtils.h"
 # include <iostream>
-# include <fstream>
+#include <string>
+#include <thread>
 
-# define LOCAL_IP "localhost"
-# define WEB_PORT "8881"
-# define BLOCKCHAIN_FILENAME "bcCopy.csv"
+#define RESET   "\033[0m"
+#define YELLOW  "\033[33m"
 
-bool Login(std::shared_ptr<Communicator> cm, std::string peer_address);
-bool loadKeys();
+void printMenu() {
+    std::cout << "Options:\n";
+    std::cout << "1. Create Peer\n";
+    std::cout << "2. Connect to Other Peer\n";
+    std::cout << "3. Send Message to All Peers\n";
+    std::cout << "4. Exit\n";
+    std::cout << "Choose an option: ";
+}
 
-static std::string g_userUid = "";
+int getRandomPort(int minPort, int maxPort) {
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    return minPort + std::rand() % ((maxPort - minPort) + 1);
+}
 
-int main()
-{
-    // Create a blockchain
-    std::shared_ptr<Blockchain> blockchain = std::make_shared<Blockchain>();
-    BlockchainUtils::_bcCopy = blockchain;
-    blockchain->loadFromFile(BLOCKCHAIN_FILENAME);
+int main() {
+    std::string option;
+    std::shared_ptr<Peer> peer;
+    boost::asio::io_context io_context;
 
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(2)); // Wait for 2 seconds
+        printMenu();
+        std::getline(std::cin, option);
 
-    bool login = false;
-    std::shared_ptr<net::io_context> ioc_web = std::make_shared<net::io_context>();
-    std::shared_ptr<Communicator> cm;
+        if (option == "1") {
+            std::string ip;
+            int port;
+            std::cout << "Enter your IP: ";
+            std::getline(std::cin, ip);
+            std::cout << "Enter the port (enter 0 for a random port): ";
+            std::cin >> port;
+            std::cin.ignore();
 
-    try
-    {
-        cm = std::make_shared<Communicator>("localhost", WEB_PORT, ioc_web);
+            if (port == 0) {
+                // Generate a random port within a range (e.g., 1024 to 65535)
+                port = getRandomPort(1024, 65535);
+                std::cout << YELLOW << "Random port selected: " << port << RESET << std::endl;
+            }
+
+            peer = std::make_shared<Peer>(io_context, tcp::endpoint(boost::asio::ip::address::from_string(ip), port));
+            peer->startAccept();
+            std::thread io_thread([&io_context]() { io_context.run(); });
+            io_thread.detach();
+        }
+        else if (option == "2") {
+            if (!peer) {
+                std::cout << "You need to create a peer first.\n";
+                continue;
+            }
+            std::string ip;
+            int port;
+            std::cout << "Enter the IP you want to connect to: ";
+            std::getline(std::cin, ip);
+            std::cout << "Enter the port you want to connect to: ";
+            std::cin >> port;
+            std::cin.ignore(); // Ignore the newline character
+            peer->connect(tcp::endpoint(boost::asio::ip::address::from_string(ip), port));
+        }
+        else if (option == "3") {
+            if (!peer) {
+                std::cout << "You need to create a peer first.\n";
+                continue;
+            }
+            std::string message;
+            std::cout << "Enter the message you want to send: ";
+            std::getline(std::cin, message);
+            peer->sendBroadcastMsg(message);
+            std::cout << "Message sent to all peers.\n";
+        }
+        else if (option == "4") {
+            if (peer) {
+                peer->closePeer();
+            }
+            std::cout << "Exiting...\n";
+            break;
+        }
+        else {
+            std::cout << "Invalid option. Please choose again.\n";
+        }
     }
-    catch (const std::exception& e)
-    {
-        std::cerr << e->what();
-        return 1;
-    }
 
-    /*
-        TODO: Create peer
-    */
-    
-    while (!login)
-    {
-        login = Login(cm, "123:123");
-    }
-
-    if (!loadKeys())
-    {
-        BlockchainUtils::generateKeys();
-    }
-    
-    
-    ioc_web->run();
     return 0;
-}
-
-bool Login(std::shared_ptr<Communicator> cm, std::string peer_address)
-{
-    std::string uName = "", password = "";
-    std::string res = "";
-
-    std::cout << "Enter username: ";
-    std::cin >> uName;
-    std::cout << "Enter password: ";
-    std::cin >> password;
-
-    res = cm->loginRequest(uName, password, peer_address);
-
-    if (res.rfind(LOGIN_FAILED_CODE, 0) == 0)
-    {
-        return false;
-    }
-    else if (res.rfind(LOGIN_SUCCEEDED_CODE, 0) == 0)
-    {
-        g_userUid = BlockchainUtils::_userUid;
-
-        return true;
-    }
-
-    return false;
-}
-
-
-bool loadKeys()
-{
-    std::string fileName = g_userUid + ".pem";
-    return BlockchainUtils::loadKeysFromFile(fileName);
 }

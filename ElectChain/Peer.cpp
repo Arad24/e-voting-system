@@ -18,7 +18,7 @@ void Peer::startAccept()
 
     _acceptor.async_accept(*socket, [this, socket](const boost::system::error_code& ec) {
         if (!ec) {
-            std::cout << "Accepted connection from: " << socket->remote_endpoint() << std::endl;
+            std::cout << YELLOW << "Accepted connection from: " << socket->remote_endpoint() << RESET << std::endl;
             _sockets.push_back(socket);
 
             createConnectionSocket(socket);
@@ -35,39 +35,29 @@ void Peer::createConnectionSocket(std::shared_ptr<tcp::socket> socket)
     std::thread(&Peer::startRead, this, sharedSocket, sharedSocket->remote_endpoint()).detach();
 }
 
-void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& endpoint) 
+void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& endpoint)
 {
-    try
-    {
-        while (true)
+    auto buffer = std::make_shared<boost::asio::streambuf>();
+
+    boost::asio::async_read_until(*socket, *buffer, '\n', [this, socket, buffer, endpoint](const boost::system::error_code& ec, std::size_t /*bytes_transferred*/) {
+        if (!ec)
         {
-            auto buffer = std::make_shared<boost::asio::streambuf>();
+            std::string msg = getMessage(buffer);
+            std::cout << YELLOW << "Received message from " << endpoint << ": " << msg << RESET << std::endl;
 
-            boost::asio::async_read_until(*socket, *buffer, '\n', [this, socket, buffer, endpoint](const boost::system::error_code& ec, std::size_t /*bytes_transferred*/) {
-                if (!ec)
-                {
-                    std::string msg = getMessage(buffer);
-                    std::cout << "Received message from " << endpoint << ": " << msg << std::endl;
+            // Process the received message
 
-                    /*
-                        TODO: Create handleRequest
-                    */
-                    //_blockRequestHandler->handleRequest(msg);
-
-                }
-                else
-                {
-                    std::cerr << "Error reading from: " << endpoint << ": " << ec.message() << std::endl;
-                }
-                });
+            // Continue reading
+            startRead(socket, endpoint);
         }
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << e.what();
-    }
-
+        else if (ec != boost::asio::error::operation_aborted)
+        {
+            // Error occurred, but not due to operation cancellation
+            std::cerr << YELLOW << "Error reading from " << endpoint << ": " << ec.message() << RESET << std::endl;
+        }
+        });
 }
+
 
 
 /*RequestInfo Peer::msgToReqInfo(std::string msg)
@@ -103,7 +93,7 @@ void Peer::connect(const tcp::endpoint& endpoint)
         {
             _sockets.push_back(socket);
 
-            std::cout << "Connected to: " << endpoint << std::endl;
+            std::cout << YELLOW << "Connected to: " << endpoint << RESET << std::endl;
         }
         else
         {
@@ -153,7 +143,7 @@ void Peer::sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<
 {
     boost::asio::async_write(*socket, *buffer, [this, socket, buffer](const boost::system::error_code& ec, std::size_t /*bytes_transferred*/) {
         if (!ec) {
-            std::cout << "Message sent successfully." << std::endl;
+            std::cout << YELLOW << "Message sent successfully." << RESET << std::endl;
         }
         else {
             std::cerr << "Error writing to peer: " << ec.message() << std::endl;
@@ -163,7 +153,7 @@ void Peer::sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<
 
 void Peer::findPeer(const PeerStruct& peer)
 {
-    std::cout << "Connecting to peer at: " << peer.peerEndpoint << std::endl;
+    std::cout << YELLOW << "Connecting to peer at: " << peer.peerEndpoint << RESET << std::endl;
     connect(peer.peerEndpoint);
 }
 

@@ -9,6 +9,9 @@
 #include "Block.h"
 # include "BlockRequestHandler.h"
 
+#define RESET   "\033[0m"
+#define YELLOW  "\033[33m"
+
 using boost::asio::ip::tcp;
 
 struct PeerStruct
