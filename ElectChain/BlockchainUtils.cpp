@@ -208,14 +208,14 @@ std::string BlockchainUtils::signMessage(const std::string message, const RSA* p
 	if (!_pKeys) throw std::runtime_error("Private key is not available.");
 	else if (!_pKeys->privateKey) throw std::runtime_error("Private key is not available.");
 
-	// Hash the message (SHA-256 for example)
 	std::string hashMsg = calculateHash(message);
 
 	// Sign the hash
 	unsigned char* signature = new unsigned char[RSA_size(privateKey)];
 	unsigned int sigLen;
 	if (!RSA_sign(NID_sha256, reinterpret_cast<const unsigned char*>(hashMsg.c_str()), hashMsg.length(),
-		signature, &sigLen, const_cast<RSA*>(privateKey))) {
+		signature, &sigLen, const_cast<RSA*>(privateKey))) 
+	{
 		// Error occurred while signing
 		delete[] signature;
 		throw std::runtime_error("Failed to sign the message.");
@@ -223,7 +223,7 @@ std::string BlockchainUtils::signMessage(const std::string message, const RSA* p
 
 	// Convert the signature to a string
 	std::string signatureStr(reinterpret_cast<char*>(signature), sigLen);
-	delete[] signature; // Free the memory allocated for the signature buffer
+	delete[] signature; 
 
 	return signatureStr;
 

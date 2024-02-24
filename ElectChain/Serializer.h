@@ -14,6 +14,7 @@ struct AddVoteRequest;
 struct CountVotesRequest;
 struct GetPeersRequest;
 struct CountVotesResponse;
+struct GetBlocksResponse;
 
 class Serializer
 {
@@ -24,4 +25,5 @@ class Serializer
         static std::string serializeMessage(SharePKData share);
         static std::string serializeMessage(VoteBlockData vote_block);
         static std::string serializeMessage(CountVotesResponse res);
+        static std::string serializeMessage(GetBlocksResponse res);
 };

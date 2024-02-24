@@ -11,7 +11,7 @@ Block Deserializer::deserializeMessageBlock(std::vector<unsigned char> buffer)
 {
     nlohmann::json jsonMsg = getJSON(buffer);
 
-    Block block(jsonMsg["prevHash"], jsonMsg["hash"], jsonMsg["data"], jsonMsg["timestamp"], jsonMsg["nonce"]);
+    Block block(jsonMsg["prevHash"], jsonMsg["hash"], jsonMsg["data"], jsonMsg["index"], jsonMsg["nonce"]);
 
     return block;
 }
@@ -33,22 +33,48 @@ ShareKeyRequest Deserializer::deserializeShareKey(const std::vector<unsigned cha
     return req;
 }
 
-std::vector<Block> Deserializer::deserializeGetBlocks(const std::vector<unsigned char> buffer)
+std::vector<Block> Deserializer::deserializeGetBlocksResponse(const std::vector<unsigned char> buffer)
+{
+    std::string jsonString(buffer.begin(), buffer.end());
+    std::vector<Block> blockchain;
+
+    try 
+    {
+        nlohmann::json jsonData = nlohmann::json::parse(jsonString);
+
+        for (const auto& blockJson : jsonData)
+        {
+            Block block(blockJson["prevHash"].get<std::string>(),
+                blockJson["blockHash"].get<std::string>(),
+                blockJson["data"].get<std::string>(),
+                std::stoi(blockJson["index"].get<std::string>()),
+                std::stoi(blockJson["Nonce"].get<std::string>()));
+
+            blockchain.push_back(block);
+        }
+    }
+    catch (const std::exception& e) 
+    {
+        std::cerr << "Error parsing JSON: " << e.what() << std::endl;
+    }
+
+    return blockchain;
+}
+
+GetBlocksRequest Deserializer::deserializeGetBlocksRequest(const std::vector<unsigned char> buffer)
 {
     std::string jsonString(buffer.begin(), buffer.end());
 
-    nlohmann::json jsonMsgArray = nlohmann::json::parse(jsonString);
+    nlohmann::json jsonData = nlohmann::json::parse(jsonString);
 
-    if (!jsonMsgArray.is_array()) {
-        return std::vector<Block>();
+    GetBlocksRequest req("");
+
+    if (jsonData.find("last_hash") != jsonData.end())
+    {
+        req.last_hash = jsonData["last_hash"];
     }
 
-    std::vector<Block> deserializedBlocks;
-    for (const auto& jsonMsg : jsonMsgArray) {
-        deserializedBlocks.push_back(Block(jsonMsg["prevHash"], jsonMsg["hash"], jsonMsg["data"], jsonMsg["timestamp"], jsonMsg["nonce"]));
-    }
-
-    return deserializedBlocks;
+    return req;
 }
 
 VoteBlockData Deserializer::deserializeVoteBlockData(const std::vector<unsigned char> buffer)

@@ -12,7 +12,10 @@ BlockRequestHandler::BlockRequestHandler(std::shared_ptr <Peer> peer, std::share
 
 bool BlockRequestHandler::isRequestRelevant(Message& req)
 {
-    return (req.id >= SHARE_KEY_CODE && req.id <= GET_BLOCKCHAIN);
+    return (req.id >= ADD_BLOCK_CODE && req.id <= LOGIN_CODE) ||
+           (req.id >= PEERS_LIST_SUCCEEDED_CODE && req.id <= LOGIN_SUCCEEDED_CODE) ||
+           (req.id >= ADD_VOTE_CODE && req.id <= COUNT_VOTES_CODE) ||
+           (req.id >= SUCCESS_ADD_VOTE && req.id <= SUCCESS_COUNT_VOTES);
 }
 
 RequestResult BlockRequestHandler::handleRequest(Message& req) 
@@ -34,10 +37,14 @@ RequestResult BlockRequestHandler::handleRequest(Message& req)
             block = Deserializer::deserializeMessageBlock(req.buffer);
             retRes = handleShareKey(block);
         }
-        else if (reqCode == GET_BLOCKCHAIN)
+        else if (reqCode == GET_BLOCKCHAIN_REQ)
         {
-            std::vector<Block> blocksList = Deserializer::deserializeGetBlocks(req.buffer);
-            retRes = handleGetBlockchain(blocksList);
+            handleGetBlockchainReq(req);
+        }
+        else if (reqCode == GET_BLOCKCHAIN_RES)
+        {
+            std::vector<Block> blocksList = Deserializer::deserializeGetBlocksResponse(req.buffer);
+            retRes = handleGetBlockchainRes(blocksList);
         }
         // Web
         else if (reqCode == ADD_VOTE_CODE)
@@ -145,7 +152,7 @@ RequestResult BlockRequestHandler::handlePeersList(Message& req)
     }
 }
 
-RequestResult BlockRequestHandler::handleGetBlockchain(std::vector<Block> blocksList)
+RequestResult BlockRequestHandler::handleGetBlockchainRes(std::vector<Block> blocksList)
 {
     for (auto block : blocksList)
     {
@@ -163,6 +170,37 @@ RequestResult BlockRequestHandler::handleGetBlockchain(std::vector<Block> blocks
 
     Response res = { SUCCESS_RESPONSE };
     return { Serializer::serializeMessage(res, DONT_SEND_CODE) };
+}
+
+RequestResult BlockRequestHandler::handleGetBlockchainReq(Message& req)
+{
+    auto reqData = Deserializer::deserializeGetBlocksRequest(req.buffer);
+    
+
+    if (reqData.last_hash == "")
+    {
+        GetBlocksResponse res(BlockchainUtils::_bcCopy->getBlocks());
+        return { Serializer::serializeMessage(res) };
+    }
+    else
+    {
+        return { Serializer::serializeMessage(getBlocksFromHash(reqData.last_hash)) };
+    }
+
+}
+
+std::vector<Block> BlockRequestHandler::getBlocksFromHash(std::string hash)
+{
+    std::vector<Block> blocks;
+    bool startRead = false;
+
+    for (auto block : BlockchainUtils::_bcCopy->getBlocks())
+    {
+        if (block.getHash() == hash) startRead = true;
+        else if (startRead) blocks.push_back(block);
+    }
+
+    return blocks;
 }
 
 RequestResult BlockRequestHandler::handleAddBlock(Block blockToAdd)

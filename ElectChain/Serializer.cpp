@@ -8,7 +8,7 @@ std::string Serializer::serializeMessageBlock(Block block)
     jsMsg["prevHash"] = block.getPrevHash();
     jsMsg["hash"] = block.getHash();
     jsMsg["data"] = block.getData();
-    jsMsg["timestamp"] = block.getTimeStamp();
+    jsMsg["index"] = block.getIndex();
     jsMsg["nonce"] = block.getNonce();
 
     for (char c : nlohmann::to_string(jsMsg))
@@ -95,5 +95,29 @@ std::string Serializer::serializeMessage(CountVotesResponse res)
         jsonObj[votePair.first] = votePair.second;
     }
 
-    return SUCCESS_COUNT_VOTES + jsonObj.dump(4);
+    std::string retString = SUCCESS_COUNT_VOTES + std::string("{") + jsonObj.dump(4) + std::string("}");
+    return retString;
+}
+
+
+std::string Serializer::serializeMessage(GetBlocksResponse res)
+{
+    nlohmann::json jsonBlockchain;
+
+    for (auto& block : res.blocks)
+    {
+
+        nlohmann::json jsonBlock;
+        jsonBlock["blockHash"] = block.getHash();
+        jsonBlock["prevHash"] = block.getPrevHash();
+        jsonBlock["data"] = block.getData();
+        jsonBlock["nonce"] = block.getNonce();
+        jsonBlock["index"] = block.getIndex();
+
+        jsonBlockchain.push_back(jsonBlock);
+    }
+
+
+    std::string retString = GET_BLOCKCHAIN_RES + std::string("{") + jsonBlockchain.dump(4) + std::string("}");
+    return retString;
 }

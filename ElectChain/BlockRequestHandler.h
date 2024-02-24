@@ -24,7 +24,10 @@ class BlockRequestHandler : public IRequestHandler
     private:
         RequestResult handleShareKey(Block blockToAdd);
         RequestResult handleAddBlock(Block blockToAdd);
-        RequestResult handleGetBlockchain(std::vector<Block> blocksList);
+        RequestResult handleGetBlockchainRes(std::vector<Block> blocksList);
+        RequestResult handleGetBlockchainReq(Message& req);
+
+        std::vector<Block> getBlocksFromHash(std::string hash);
 
         // Web
         RequestResult handleAddVote(Message& req);

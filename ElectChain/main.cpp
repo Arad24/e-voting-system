@@ -7,7 +7,7 @@
 
 # define LOCAL_IP "localhost"
 # define WEB_PORT "8881"
-# define PEER_DATA_FILE "info.json"
+# define BLOCKCHAIN_FILENAME "bcCopy.csv"
 
 bool Login(std::shared_ptr<Communicator> cm, std::string peer_address);
 bool loadKeys();
@@ -16,6 +16,12 @@ static std::string g_userUid = "";
 
 int main()
 {
+    // Create a blockchain
+    std::shared_ptr<Blockchain> blockchain = std::make_shared<Blockchain>();
+    BlockchainUtils::_bcCopy = blockchain;
+    blockchain->loadFromFile(BLOCKCHAIN_FILENAME);
+
+
     bool login = false;
     std::shared_ptr<net::io_context> ioc_web = std::make_shared<net::io_context>();
     std::shared_ptr<Communicator> cm;
@@ -26,7 +32,7 @@ int main()
     }
     catch (const std::exception& e)
     {
-        std::cerr << e.what();
+        std::cerr << e->what();
         return 1;
     }
 
