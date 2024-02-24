@@ -18,6 +18,11 @@ void printMenu() {
     std::cout << "Choose an option: ";
 }
 
+int getRandomPort(int minPort, int maxPort) {
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    return minPort + std::rand() % ((maxPort - minPort) + 1);
+}
+
 int main() {
     std::string option;
     std::shared_ptr<Peer> peer;
@@ -33,9 +38,15 @@ int main() {
             int port;
             std::cout << "Enter your IP: ";
             std::getline(std::cin, ip);
-            std::cout << "Enter your port: ";
+            std::cout << "Enter the port (enter 0 for a random port): ";
             std::cin >> port;
-            std::cin.ignore(); // Ignore the newline character
+            std::cin.ignore();
+
+            if (port == 0) {
+                // Generate a random port within a range (e.g., 1024 to 65535)
+                port = getRandomPort(1024, 65535);
+                std::cout << YELLOW << "Random port selected: " << port << RESET << std::endl;
+            }
 
             peer = std::make_shared<Peer>(io_context, tcp::endpoint(boost::asio::ip::address::from_string(ip), port));
             peer->startAccept();
