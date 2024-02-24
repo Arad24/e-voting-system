@@ -4,11 +4,12 @@
 # include "StringUtils.h"
 # include <iostream>
 #include <string>
-
+#include <thread>
 
 int main() {
     std::string option;
     std::shared_ptr<Peer> peer;
+    boost::asio::io_context io_context;
 
     while (true) {
         std::cout << "Options:\n";
@@ -27,10 +28,11 @@ int main() {
             std::cout << "Enter your port: ";
             std::cin >> port;
             std::cin.ignore(); // Ignore the newline character
-            boost::asio::io_context io_context;
+
             peer = std::make_shared<Peer>(io_context, tcp::endpoint(boost::asio::ip::address::from_string(ip), port));
             peer->startAccept();
-            io_context.run();
+            std::thread io_thread([&io_context]() { io_context.run(); });
+            io_thread.detach();
         }
         else if (option == "2") {
             if (!peer) {
