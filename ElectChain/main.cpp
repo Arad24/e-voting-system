@@ -6,18 +6,22 @@
 #include <string>
 #include <thread>
 
+void printMenu() {
+    std::cout << "Options:\n";
+    std::cout << "1. Create Peer\n";
+    std::cout << "2. Connect to Other Peer\n";
+    std::cout << "3. Send Message to All Peers\n";
+    std::cout << "4. Exit\n";
+    std::cout << "Choose an option: ";
+}
+
 int main() {
     std::string option;
     std::shared_ptr<Peer> peer;
     boost::asio::io_context io_context;
 
     while (true) {
-        std::cout << "Options:\n";
-        std::cout << "1. Create Peer\n";
-        std::cout << "2. Connect to Other Peer\n";
-        std::cout << "3. Send Message to All Peers\n";
-        std::cout << "4. Exit\n";
-        std::cout << "Choose an option: ";
+        printMenu();
         std::getline(std::cin, option);
 
         if (option == "1") {
