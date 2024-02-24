@@ -18,7 +18,7 @@ void Peer::startAccept()
 
     _acceptor.async_accept(*socket, [this, socket](const boost::system::error_code& ec) {
         if (!ec) {
-            std::cout << "Accepted connection from: " << socket->remote_endpoint() << std::endl;
+            std::cout << YELLOW << "Accepted connection from: " << socket->remote_endpoint() << RESET << std::endl;
             _sockets.push_back(socket);
 
             createConnectionSocket(socket);
@@ -47,7 +47,8 @@ void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& e
                 if (!ec)
                 {
                     std::string msg = getMessage(buffer);
-                    std::cout << "Received message from " << endpoint << ": " << msg << std::endl;
+                    std::cout << YELLOW << "Received message from " << endpoint << ": " << msg << RESET << std::endl;
+
 
                     /*
                         TODO: Create handleRequest
@@ -57,10 +58,10 @@ void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& e
                 }
                 else
                 {
-                    std::cerr << "Error reading from: " << endpoint << ": " << ec.message() << std::endl;
+                    std::cerr << YELLOW << "Error reading from: " << endpoint << ": " << ec.message() << RESET << std::endl;
                 }
                 });
-        }
+        }                    
     }
     catch (const std::exception& e)
     {
@@ -103,7 +104,7 @@ void Peer::connect(const tcp::endpoint& endpoint)
         {
             _sockets.push_back(socket);
 
-            std::cout << "Connected to: " << endpoint << std::endl;
+            std::cout << YELLOW << "Connected to: " << endpoint << RESET << std::endl;
         }
         else
         {
@@ -165,7 +166,7 @@ void Peer::sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<
 {
     boost::asio::async_write(*socket, *buffer, [this, socket, buffer](const boost::system::error_code& ec, std::size_t /*bytes_transferred*/) {
         if (!ec) {
-            std::cout << "Message sent successfully." << std::endl;
+            std::cout << YELLOW << "Message sent successfully." << RESET << std::endl;
         }
         else {
             std::cerr << "Error writing to peer: " << ec.message() << std::endl;
@@ -175,7 +176,7 @@ void Peer::sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<
 
 void Peer::findPeer(const PeerStruct& peer)
 {
-    std::cout << "Connecting to peer at: " << peer.peerEndpoint << std::endl;
+    std::cout << YELLOW << "Connecting to peer at: " << peer.peerEndpoint << RESET << std::endl;
     connect(peer.peerEndpoint);
 }
 

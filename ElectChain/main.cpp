@@ -6,6 +6,9 @@
 #include <string>
 #include <thread>
 
+#define RESET   "\033[0m"
+#define YELLOW  "\033[33m"
+
 void printMenu() {
     std::cout << "Options:\n";
     std::cout << "1. Create Peer\n";
