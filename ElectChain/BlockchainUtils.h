@@ -26,25 +26,30 @@ struct KeyPair
 
 // Functions
 void freeAllRsa(BIO* bpPublic, BIO* bpPrivate, RSA* r, BIGNUM* bne);
-bool saveKeys(BIO** bp_public, BIO** bp_private, RSA* r);
-bool generateRsaKeys(RSA** r, BIGNUM** bne, unsigned long e);
+bool saveKeys(RSA* public_key, RSA* private_key);
+bool generateRsaKeys(RSA** public_key, RSA** private_key);
 bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys);
 std::vector<Block> getUserBlocks(Blockchain bc, std::string uid);
 
 
 class BlockchainUtils
 {
+	
 	public:
 		static std::shared_ptr<KeyPair> _pKeys;
 		static std::shared_ptr<Blockchain> _bcCopy;
+		static std::string _userUid;
 
-		static std::string getUidFromBlock(Block block);
+		static std::string getSurveyUidFromBlock(Block block);
+		static std::string getUserUidFromBlock(Block block);
+		static nlohmann::json dataToJson(std::string data);
+
 		// Hash
 		static std::string calculateHash(const std::string& data);
 		static bool isValidHash(std::string blockHash);
 
 		// Block validation
-		static bool isAlreadyVote(Blockchain bc, std::string uid);
+		static bool isAlreadyVote(Blockchain bc, std::string user_uid, std::string survey_uid);
 		static bool isAlreadySharePK(Blockchain bc, std::string uid);
 		static bool isVoteBlock(Block block);
 		static bool isShareKeyBlock(Block block);
@@ -54,14 +59,14 @@ class BlockchainUtils
 
 		// Signature
 		static std::string signMessage(const std::string message, const RSA* privateKey);
-		bool verifySignature(const std::string& message, const std::string& signMsg, std::string uid);
+		static bool verifySignature(const std::string& message, const std::string& signMsg, std::string uid);
 
-		//Keys
+		// Keys
 		static std::shared_ptr<KeyPair> generateKeys();
 		static std::string publicKeyToString(RSA* publicKey);
 		static RSA* strToPK(std::string pk);
+		static bool loadKeysFromFile(std::string fileName);
 
 		// Votes
-		static std::map<std::string, int> countVotes(Blockchain& blockchain);
-
+		static std::map<std::string, int> countVotes(Blockchain& blockchain, std::string survey_uid);
 };

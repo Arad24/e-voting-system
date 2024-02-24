@@ -1,9 +1,9 @@
 # include "Blockchain.h"
 
-
-void Blockchain::createNewBlock(std::string data)
+std::shared_ptr<Block> Blockchain::createNewBlock(std::string data)
 {
-	Block newBlock = Block(data);
+	std::shared_ptr<Block> newBlock = std::make_shared<Block>(data);
+    return newBlock;
 }
 
 
@@ -12,7 +12,14 @@ void Blockchain::addBlock(Block block)
 	if (validateBlock(block))
 	{
 		_blocks.push_back(block);
+        appendToFile(BLOCKCHAIN_FILENAME, block);
 	}
+}
+
+int Blockchain::getLastIndex()
+{
+    int lastIndex = (_blocks.empty()) ? (0) : (getLatestBlock().getIndex());
+    return lastIndex;
 }
 
 Block Blockchain::getLatestBlock()
@@ -44,56 +51,96 @@ bool Blockchain::validateBlock(Block block)
         return false;
     }
 
-    std::chrono::system_clock::time_point blockTimestamp = std::chrono::system_clock::from_time_t(std::stoi(block.getTimeStamp()));
-    std::chrono::system_clock::time_point currentTimestamp = std::chrono::system_clock::now(); 
-    
-    if (blockTimestamp > currentTimestamp)
-    {
-        std::cout << "Block timestamp is too far in the future." << std::endl;
-        return false;
-    }
+    if (block.getIndex() - 1 != getLastIndex()) return false;
 
-    /* Add check of the block signature */
     return true;
 }
 
-//save blockchain to binary file
-void Blockchain::saveToFile(const std::string& filename)
+// Utility function to display block_blocks contents
+void Blockchain::display() 
 {
-    std::ofstream file(filename, std::ios::binary | std::ios::out);
-    if (!file.is_open()) 
+    for (auto& block : _blocks) 
     {
-        std::cerr << "Error opening file for writing: " << filename << std::endl;
+        std::cout << "Block:" << std::endl;
+        std::cout << "  Previous Hash: " << block.getPrevHash() << std::endl;
+        std::cout << "  Hash: " << block.getHash() << std::endl;
+        std::cout << "  Data: " << block.getData() << std::endl;
+        std::cout << "  index: " << block.getIndex() << std::endl;
+        std::cout << "  Nonce: " << block.getNonce() << std::endl;
+    }
+}
+
+
+
+void Blockchain::saveToFile(std::string filename) 
+{
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open file: " << filename << std::endl;
         return;
     }
 
-    // Serialize each block and write it to the file
-    for (const Block& block : _blocks) 
-    {
-        std::string serializedBlock = Serializer::serializeMessageBlock(block);
-        file.write(serializedBlock.data(), serializedBlock.size());
+    // Write header
+    file << "PreviousHash,Hash,Data,Index,Nonce\n";
+
+    // Write data
+    for (auto& block : _blocks) {
+        std::stringstream ss;
+        ss << block.getPrevHash() << "," << block.getHash() << "," << block.getData() << ","
+            << block.getIndex() << "," << block.getNonce() << "\n";
+        file << ss.str();
     }
 
     file.close();
 }
 
-//load blockchain from binary file
-void Blockchain::loadFromFile(const std::string& filename)
+void Blockchain::appendToFile(std::string filename, Block block) 
 {
-    std::ifstream file(filename, std::ios::binary | std::ios::in);
+    std::ofstream file(filename, std::ios_base::app);
     if (!file.is_open()) 
     {
-        std::cerr << "Error opening file for reading: " << filename << std::endl;
+        std::cerr << "Failed to open file: " << filename << std::endl;
         return;
     }
 
-    _blocks.clear();
-
-    std::vector<unsigned char> serializedData((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    std::stringstream ss;
+    ss << block.getPrevHash() << "," << block.getHash() << "," << block.getData() << ","
+        << block.getIndex() << "," << block.getNonce() << "\n";
+    file << ss.str();
 
     file.close();
-
-    std::vector<Block> deserializedBlocks = Deserializer::deserializeGetBlocks(serializedData);
-    _blocks.insert(_blocks.end(), deserializedBlocks.begin(), deserializedBlocks.end());
 }
 
+void Blockchain::loadFromFile(std::string filename) 
+{
+
+    std::ifstream file(filename);
+    std::string line;
+    if (!file.is_open()) 
+    {
+        std::ofstream newFile(filename); 
+        newFile << "PreviousHash,Hash,Data,Index,Nonce\n";
+        newFile.close();
+        return;
+    }
+
+    // Read Blocks
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string prevHash, hash, data;
+        int index, nonce;
+        char comma;
+
+        if (std::getline(ss, prevHash, ',') &&
+            std::getline(ss, hash, ',') &&
+            std::getline(ss, data, ',') &&
+            ss >> index >> comma >> nonce) {
+            _blocks.push_back({ prevHash, hash, data, index, nonce });
+        }
+        else {
+            std::cerr << "Error parsing line: " << line << std::endl;
+        }
+    }
+
+    file.close();
+}

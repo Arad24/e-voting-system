@@ -7,7 +7,6 @@
 #include <mutex>
 #include <atomic>
 #include "Block.h"
-#include "Serializer.h"
 # include "BlockRequestHandler.h"
 
 #define RESET   "\033[0m"
@@ -25,6 +24,8 @@ struct PeerStruct
 
 class BlockRequestHandler;
 class IRequestHandler;
+class Deserializer;
+class Serializer;
 
 class Peer
 {
@@ -53,9 +54,6 @@ class Peer
         void sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<boost::asio::streambuf> buffer);
         std::shared_ptr<boost::asio::streambuf> convertMsgIntoBuffer(std::string msg);
         std::string getMsg();
-
-        void sendBlock(std::shared_ptr<tcp::socket> socket, const Block& block);
-        Block receiveBlock(std::shared_ptr<tcp::socket> socket);
 
         void closeOpenSockets();
        // RequestInfo msgToReqInfo(std::string msg);
