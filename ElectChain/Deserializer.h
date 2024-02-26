@@ -86,8 +86,6 @@ struct GetBlocksResponse
 } typedef GetBlocksResponse;
 
 
-
-
 # define ADD_BLOCK_CODE "100"
 # define SHARE_KEY_CODE "101"
 # define GET_PEERS_LIST "102"

@@ -12,7 +12,7 @@ void Blockchain::addBlock(Block block)
 	if (validateBlock(block))
 	{
 		_blocks.push_back(block);
-        appendToFile(BLOCKCHAIN_FILENAME, block);
+        appendToFile(block);
 	}
 }
 
@@ -72,8 +72,9 @@ void Blockchain::display()
 
 
 
-void Blockchain::saveToFile(std::string filename) 
+void Blockchain::saveToFile() 
 {
+    std::string filename = BLOCKCHAIN_FILENAME;
     std::ofstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Failed to open file: " << filename << std::endl;
@@ -94,8 +95,9 @@ void Blockchain::saveToFile(std::string filename)
     file.close();
 }
 
-void Blockchain::appendToFile(std::string filename, Block block) 
+void Blockchain::appendToFile(Block block) 
 {
+    std::string filename = BLOCKCHAIN_FILENAME;
     std::ofstream file(filename, std::ios_base::app);
     if (!file.is_open()) 
     {
@@ -111,9 +113,9 @@ void Blockchain::appendToFile(std::string filename, Block block)
     file.close();
 }
 
-void Blockchain::loadFromFile(std::string filename) 
+void Blockchain::loadFromFile()
 {
-
+    std::string filename = BLOCKCHAIN_FILENAME;
     std::ifstream file(filename);
     std::string line;
     if (!file.is_open()) 

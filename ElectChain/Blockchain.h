@@ -25,9 +25,9 @@ class Blockchain
 		bool validateBlock(Block currentBlock);
 
 
-		void saveToFile(std::string filename);
-		void loadFromFile(std::string filename);
-		void appendToFile(std::string filename, Block block);
+		void saveToFile();
+		void loadFromFile();
+		void appendToFile(Block block);
 
 		int getLastIndex();
 
@@ -35,8 +35,6 @@ class Blockchain
 
 	private:
 		std::vector<Block> _blocks;
-
-		void deserializeBlock(const std::vector<char>& blockData, Block& block);
 
 		
 };
