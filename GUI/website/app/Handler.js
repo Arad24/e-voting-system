@@ -2,24 +2,28 @@ import IDatabase from './IDatabase';
 import SqliteDatabase from './sqliteDB';
 
 const codeLen = 3;
-const db: IDatabase = new SqliteDatabase();
+const db = new SqliteDatabase();
 
-function removeCodeFromMsg(msg : string)
+function removeCodeFromMsg(msg)
 {
     return msg.substring(codeLen, msg.length);
 }
 
-function getMsgCode(msg : string)
+function getMsgCode(msg)
 {
     return msg.substring(0, codeLen);
 }
 
-function isRequestRelevant(req : string)
+function isRequestRelevant(req)
 {
-    return getMsgCode(req) >= '100'/*Code*/ && getMsgCode(req) <= '100'/*Code*/;
+    var code = getMsgCode(req)
+    return (req.id >= ADD_BLOCK_CODE && req.id <= LOGIN_CODE) ||
+           (req.id >= PEERS_LIST_SUCCEEDED_CODE && req.id <= LOGIN_SUCCEEDED_CODE) ||
+           (req.id >= ADD_VOTE_CODE && req.id <= COUNT_VOTES_CODE) ||
+           (req.id >= SUCCESS_ADD_VOTE && req.id <= SUCCESS_COUNT_VOTES);
 }
 
-export function handleRequest(req : string)
+export function handleRequest(req)
 {
     if (isRequestRelevant(req))
     {
@@ -39,7 +43,7 @@ export function handleRequest(req : string)
     }
 
 }
-async function handleLogin(msg: string) {
+async function handleLogin(msg) {
     try {
         const { username, password, peer_address } = JSON.parse(removeCodeFromMsg(msg));
 
@@ -53,20 +57,20 @@ async function handleLogin(msg: string) {
             return '404{}';
         }
 
-        const uid = await db.getUidByUsername(username);
+        const uid = await db.getUserUid(username, password);
         if (!uid) {
             return '404{}';
         }
 
         await db.changePeerByUid(uid, peer_address);
-        return `204{"uid": "${username}"}`;
+        return `204{"uid": "${uid}"}`;
     } catch (error) {
         console.error('Error during login:', error);
         return '404{}';
     }
 }
 
-async function handleGetPeers(msg: string) {
+async function handleGetPeers(msg) {
     try {
         const list = await db.getPeersList();
         return `202{${list}}`;
@@ -76,16 +80,16 @@ async function handleGetPeers(msg: string) {
     }
 }
 
-export async function handleAddUser(msg: string) {
+export async function handleAddUser(msg) {
     try {
-        const { username, password, uid, addresses } = JSON.parse(removeCodeFromMsg(msg));
+        const { username, password} = JSON.parse(removeCodeFromMsg(msg));
 
         const userExists = db.doesUserExist(username);
         if (userExists) {
             return '404{}';
         }
 
-        const userAdded = db.addNewUser(username, password, uid, addresses);
+        const userAdded = db.addNewUser(username, password, generateUid(), 'None');
         if (userAdded) {
             return '204{}';
         } else {

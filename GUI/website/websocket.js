@@ -1,15 +1,16 @@
 import { WebSocketServer } from 'ws';
 import { handleRequest } from './Handler.js';
-import { json } from 'stream/consumers';
 
 let wss;
 const connectionsMap = new Map();
 
-function startListening() {
+function startListening() 
+{
   try {
     wss = new WebSocketServer({ port: 8881 });
     console.log('WebSocket server started on port 8881');
-  } catch (error) 
+  } 
+  catch (error) 
   {
     console.error('Error starting WebSocket server:', error);
     return;
@@ -56,7 +57,6 @@ function startListening() {
     {
       closeSocket(connectionId)
     });
-
     
   });
 }

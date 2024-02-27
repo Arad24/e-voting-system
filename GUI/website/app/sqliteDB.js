@@ -77,9 +77,9 @@ class SqliteDatabase implements IDatabase {
       return this.sendQuery(this.dbHandle, updateStatement);
     }
 
-    async getUidByUsername(username: string): Promise<string | null> {
+    async getUserUid(username, password): Promise<string | null> {
       try {
-          const sqlStatement = `SELECT UID FROM USERS WHERE NAME = '${username}';`;
+          const sqlStatement = `SELECT UID FROM USERS WHERE NAME = '${username}' AND PASSWORD = '${password}';`;
           const result = await this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
           return result !== "" ? result : null; // Return the UID if found, otherwise null
       } catch (error) {
