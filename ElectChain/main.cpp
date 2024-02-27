@@ -19,16 +19,19 @@ int main()
     // Create a blockchain
     std::shared_ptr<Blockchain> blockchain = std::make_shared<Blockchain>();
     BlockchainUtils::_bcCopy = blockchain;
-    blockchain->loadFromFile(BLOCKCHAIN_FILENAME);
+    blockchain->loadFromFile();
 
 
     bool login = false;
-    std::shared_ptr<net::io_context> ioc_web = std::make_shared<net::io_context>();
+    std::shared_ptr<net::io_context> ioc = std::make_shared<net::io_context>();
     std::shared_ptr<Communicator> cm;
+    std::shared_ptr<Peer> peer;
 
     try
     {
-        cm = std::make_shared<Communicator>("localhost", WEB_PORT, ioc_web);
+        peer = std::make_shared<Peer>(ioc, blockchain);
+        cm = std::make_shared<Communicator>("localhost", WEB_PORT, ioc, peer->getBlockRequetHandler());
+        
     }
     catch (const std::exception& e)
     {
@@ -36,13 +39,9 @@ int main()
         return 1;
     }
 
-    /*
-        TODO: Create peer
-    */
-
     while (!login)
     {
-        login = Login(cm, "123:123");
+        login = Login(cm, peer->getPeerAddress());
     }
 
     if (!loadKeys())
@@ -51,7 +50,7 @@ int main()
     }
 
 
-    ioc_web->run();
+    ioc->run();
     return 0;
 }
 

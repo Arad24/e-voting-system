@@ -1,5 +1,6 @@
 import { WebSocketServer } from 'ws';
 import { handleRequest } from './Handler.js';
+import { json } from 'stream/consumers';
 
 let wss;
 const connectionsMap = new Map();
@@ -16,20 +17,39 @@ function startListening() {
 
   wss.on('connection', function connection(ws) 
   {
-    const connectionId = '123';
-    connectionsMap.set(connectionId, ws);
+    let connectionId = '';
+    
     console.log(`New connection established `);
     ws.on('error', console.error);
 
     ws.on('message', function message(data) 
     {
       data = convertDataToString(data);
+      var res;
       if (typeof data === 'string')
       {
-        console.log(`received from connection ${connectionId}: ${data}`);
-        var res = handleRequest(data)
+        
+        console.log(`data: ${data}`);
+        
+        res = handleRequest(data);
+
+        if (res.startWith(process.env.LOGIN_SUCCEEDED_CODE))
+        {
+          
+          var jsonRes = JSON.parse(data)
+          connectionId = jsonRes.uid;
+          connectionsMap.set(connectionId, ws);
+        }
+        else if (connectionsMap.has(connectionId))
+        {
+          ws.send(res)
+        }
+        else
+        {
+          ws.send(`${process.env.LOGIN_FAILED_CODE}{"message":"You need to login first"}`)
+        } 
       }
-      ws.send('404{}');
+      ws.send(res);
     });
     
     ws.on('close', function close() 

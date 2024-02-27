@@ -30,8 +30,11 @@ class Serializer;
 class Peer
 {
     public:
-        Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint);
+        Peer(boost::asio::io_context& io_context, std::shared_ptr<Blockchain> bc);
         void startAccept();
+
+        std::shared_ptr<BlockRequestHandler> getBlockRequetHandler();
+        std::string getPeerAddress();
 
         void startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& endpoint);
 

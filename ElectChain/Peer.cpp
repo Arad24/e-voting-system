@@ -1,13 +1,15 @@
 #include "Peer.h"
 
-Peer::Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint)
-    : _io_context(io_context), _acceptor(io_context, endpoint), _port(endpoint.port())
+Peer::Peer(boost::asio::io_context& io_context, std::shared_ptr<Blockchain> bc)
+    : _io_context(io_context), _acceptor(io_context, tcp::endpoint(tcp::v4(), 0))
 {
     _blockchain = std::make_shared<Blockchain>();
     _blockchain->loadFromFile();
 
     _blockRequestHandler = std::make_shared<BlockRequestHandler>(std::shared_ptr<Peer>(this), _blockchain);
     BlockchainUtils::_bcCopy = _blockchain;
+
+    _port = _acceptor.local_endpoint().port();
 }
 
 void Peer::startAccept()
@@ -31,6 +33,18 @@ void Peer::createConnectionSocket(std::shared_ptr<tcp::socket> socket)
 {
     auto sharedSocket = std::make_shared<tcp::socket>(std::move(*socket));
     std::thread(&Peer::startRead, this, sharedSocket, sharedSocket->remote_endpoint()).detach();
+}
+
+std::shared_ptr<BlockRequestHandler> Peer::getBlockRequetHandler()
+{
+    return this->_blockRequestHandler;
+}
+
+std::string Peer::getPeerAddress()
+{
+    std::string ip_address = _acceptor.local_endpoint().address().to_string();
+
+    return ip_address + ":" + std::to_string(_port);
 }
 
 void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& endpoint)
@@ -57,8 +71,6 @@ void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& e
         }
         });
 }
-
-
 
 std::string Peer::getMessage(std::shared_ptr<boost::asio::streambuf> buffer)
 {

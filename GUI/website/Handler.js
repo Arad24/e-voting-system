@@ -15,7 +15,10 @@ function getMsgCode(msg)
 function isRequestRelevant(req)
 {
     var code = getMsgCode(req)
-    return code >= '100'/*Code*/ && code <= '100'/*Code*/;
+    return (req.id >= ADD_BLOCK_CODE && req.id <= LOGIN_CODE) ||
+           (req.id >= PEERS_LIST_SUCCEEDED_CODE && req.id <= LOGIN_SUCCEEDED_CODE) ||
+           (req.id >= ADD_VOTE_CODE && req.id <= COUNT_VOTES_CODE) ||
+           (req.id >= SUCCESS_ADD_VOTE && req.id <= SUCCESS_COUNT_VOTES);
 }
 
 export function handleRequest(req)

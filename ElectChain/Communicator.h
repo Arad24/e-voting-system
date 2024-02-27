@@ -20,13 +20,14 @@ using tcp = boost::asio::ip::tcp;
 class Communicator
 {
 	public:
-		Communicator(std::string host, std::string port, std::shared_ptr<net::io_context> ioc);
+		Communicator(std::string host, std::string port, std::shared_ptr<net::io_context> new_ioc, std::shared_ptr<BlockRequestHandler> brh);
 		std::string loginRequest(std::string username, std::string password, std::string peerAddress);
 		void startHandleRequests();
 
 	private:
 		std::shared_ptr<websocket::stream<tcp::socket>> ws;
 		std::shared_ptr<net::io_context> ioc;
+		std::shared_ptr<BlockRequestHandler> _blockRequestHandler;
 
 		void createWsConnection(std::string host, std::string port);
 		std::string readMsg();
