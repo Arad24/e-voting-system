@@ -1,8 +1,6 @@
-import IDatabase from './IDatabase'; // Assuming you have IDatabase interface in a separate file
-import sqlite3 from 'sqlite3';
-import { access } from 'fs/promises'; // Importing from the promise-based version of fs
-import { promisify } from 'util'; // Importing promisify from util
-import 'StringUtils';
+const sqlite3 = require('sqlite3');
+const { access } = require('fs').promises;
+const StringUtils = require('./StringUtils');
 
 const DB_NAME = 'election.db';
 
@@ -18,239 +16,217 @@ const CREATE_SURVEYS = `CREATE TABLE IF NOT EXISTS SURVEYS(
                         USERS TEXT NOT NULL
                         );`;
 
-interface UserRow {
-  NAME: string;
+async function openDatabase() {
+    try {
+        await access(DB_NAME);
+        await execAsync(CREATE_USERS);
+        await execAsync(CREATE_SURVEYS);
+        return new sqlite3.Database(DB_NAME);
+    } catch (err) {
+        console.error("Error accessing or creating DB:", err);
+        return null;
+    }
 }
 
-
-class SqliteDatabase implements IDatabase {
-    private dbHandle: sqlite3.Database;
-
-    constructor() {
-      this.dbHandle = new sqlite3.Database(DB_NAME);
-      this.open();
-  }
-
-  async open(): Promise<boolean> {
+function closeDatabase(db) {
     try {
-        await access(DB_NAME); // Await the result of the access function
-        await this.execAsync(CREATE_USERS);
-        await this.execAsync(CREATE_SURVEYS);
+        db.close();
+        return true;
+    } catch (e) {
+        console.error("Error closing DB:", e);
+        return false;
+    }
+}
+
+async function doesUserExist(db, name) {
+    const sqlStatement = `SELECT * FROM USERS WHERE NAME = '${name}';`;
+    const user = await sendQueryAndGetAns(db, sqlStatement);
+    return user !== "";
+}
+
+async function doesPasswordMatch(db, name, password) {
+    const sqlStatement = `SELECT * FROM USERS WHERE NAME = '${name}' AND PASSWORD = '${password}';`;
+    return await sendQueryAndGetAns(db, sqlStatement) !== "";
+}
+
+async function addNewUser(db, name, password, uid, addresses) {
+    const usersStatement = `INSERT INTO USERS(NAME, PASSWORD, UID, ADDRESSES) VALUES('${name}', '${password}', '${uid}', '${addresses}');`;
+    return sendQuery(db, usersStatement);
+}
+
+async function addUserToSurvey(db, surveyId, user) {
+    const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
+    let existingUsers = await sendQueryAndGetAns(db, sqlStatement);
+    existingUsers += `,${user}`;
+    const updateStatement = `UPDATE SURVEYS SET USERS = '${existingUsers}' WHERE SURVEY_ID = '${surveyId}';`;
+    return sendQuery(db, updateStatement);
+}
+
+async function getUidByUsername(db, username) {
+    try {
+        const sqlStatement = `SELECT UID FROM USERS WHERE NAME = '${username}';`;
+        const result = await sendQueryAndGetAns(db, sqlStatement);
+        return result !== "" ? result : null;
+    } catch (error) {
+        console.error('Error getting UID:', error);
+        return null;
+    }
+}
+
+async function getUsersList(db) {
+    const sqlStatement = "SELECT NAME FROM USERS;";
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject("Database handle is null");
+            return;
+        }
+        db.all(sqlStatement, [], (err, rows) => {
+            if (err) {
+                console.error("Error executing SQL statement:", err);
+                reject(err);
+            } else {
+                const users = rows.map(row => row.NAME);
+                resolve(users);
+            }
+        });
+    });
+}
+async function getNodeListForSurvey(db, surveyId) {
+    const sqlStatement = `SELECT P2P_NODES FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
+    return await sendQueryAndGetAns(db, sqlStatement);
+}
+
+async function doesSurveyExist(db, surveyName) {
+    const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_NAME = '${surveyName}';`;
+    const survey = await sendQueryAndGetAns(db, sqlStatement);
+    return survey !== "";
+}
+
+async function doesIdExist(db, surveyId) {
+    const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
+    const survey = await sendQueryAndGetAns(db, sqlStatement);
+    return survey !== "";
+}
+
+async function createNewSurvey(db, users) {
+    const string = generateUniqueSurveyId(db);
+    const surveyStatement = `INSERT INTO SURVEYS(SURVEY_ID, USERS) VALUES('${string}', '${users}');`;
+    return sendQuery(db, surveyStatement);
+}
+
+async function isNewSurveyByUid(db, uid) {
+    const sqlStatement = `SELECT * FROM SURVEYS WHERE USERS LIKE '%${uid}%';`;
+    const survey = await sendQueryAndGetAns(db, sqlStatement);
+    return survey !== "";
+}
+
+async function getPeerByUid(db, uid) {
+    const sqlStatement = `SELECT ADDRESSES FROM USERS WHERE UID = '${uid}';`;
+    return await sendQueryAndGetAns(db, sqlStatement);
+}
+
+async function getPeersList(db) {
+    try {
+        const sqlStatement = "SELECT ADDRESSES FROM USERS;";
+        const peers = await sendQueryAndGetAns(db, sqlStatement);
+        const peersArray = peers.split(',');
+        let formattedPeers = '';
+        for (let i = 0; i < peersArray.length; i++) {
+            formattedPeers += `${i + 1}: "${peersArray[i]}", `;
+        }
+        formattedPeers = formattedPeers.slice(0, -2);
+        return formattedPeers;
+    } catch (error) {
+        console.error('Error getting peers list:', error);
+        return '';
+    }
+}
+
+async function changePeerByUid(db, uid, newPeer) {
+    if (!isValidPeerFormat(newPeer)) {
+        console.error("Invalid format for the new peer.");
+        return false;
+    }
+    const sqlStatement = `UPDATE USERS SET ADDRESSES = '${newPeer}' WHERE UID = '${uid}';`;
+    return sendQuery(db, sqlStatement);
+}
+
+function sendQuery(db, sqlStatement) {
+    try {
+        db.exec(sqlStatement);
         return true;
     } catch (err) {
-        console.error("Error accessing or creating DB:", err); // Log any errors during file access
-        return false; // Return false if an error occurred
+        console.error(err.message);
+        return false;
     }
 }
 
-    close(): boolean {
-        try {
-            this.dbHandle.close();
-            return true;
-        } catch (e) {
-            console.error("Error closing DB:", e);
-            return false;
-        }
-    }
 
-    doesUserExist(name: string): boolean {
-      const sqlStatement = `SELECT * FROM USERS WHERE NAME = '${name}';`;
-      const user = this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
-      return user !== "";
-    }
-
-    doesPasswordMatch(name: string, password: string): boolean {
-      const sqlStatement = `SELECT * FROM USERS WHERE NAME = '${name}' AND PASSWORD = '${password}';`;
-      return this.sendQueryAndGetAns(this.dbHandle, sqlStatement) !== "";
-    }
-
-    addNewUser(name: string, password: string, uid: string, addresses: string): boolean {
-      const usersStatement = `INSERT INTO USERS(NAME, PASSWORD, UID, ADDRESSES) VALUES('${name}', '${password}', '${uid}', '${addresses}');`;
-      return this.sendQuery(this.dbHandle, usersStatement);
-    }
-
-    addUserToSurvey(surveyId: string, user: string): boolean {
-      const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
-      let existingUsers = this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
-      existingUsers += `,${user}`;
-      const updateStatement = `UPDATE SURVEYS SET USERS = '${existingUsers}' WHERE SURVEY_ID = '${surveyId}';`;
-      return this.sendQuery(this.dbHandle, updateStatement);
-    }
-
-    async getUidByUsername(username: string): Promise<string | null> {
-      try {
-          const sqlStatement = `SELECT UID FROM USERS WHERE NAME = '${username}';`;
-          const result = await this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
-          return result !== "" ? result : null; // Return the UID if found, otherwise null
-      } catch (error) {
-          console.error('Error getting UID:', error);
-          return null; // Return null if there was an error getting the UID
-      }
-  }
-
-getUsersList(): Promise<string[]> {
-  const sqlStatement = "SELECT NAME FROM USERS;";
-  return new Promise((resolve, reject) => {
-    if (!this.dbHandle) {
-      reject("Database handle is null");
-      return;
-    }
-    this.dbHandle.all(sqlStatement, [], (err, rows: UserRow[]) => {
-      if (err) {
-        console.error("Error executing SQL statement:", err);
-        reject(err);
-      } else {
-        const users = rows.map(row => row.NAME);
-        resolve(users);
-      }
+async function sendQueryAndGetAns(db, sqlStatement) {
+    let ans = "";
+    return new Promise((resolve, reject) => {
+        db.all(sqlStatement, [], (err, rows) => {
+            if (err) {
+                console.error("Error with sendQueryAndGetAns:", err);
+                reject(err);
+            } else {
+                for (const row of rows) {
+                    for (const value of Object.values(row)) {
+                        ans += value;
+                    }
+                }
+                resolve(ans);
+            }
+        });
     });
-  });
 }
 
-
-getNodeListForSurvey(surveyId: string): string {
-  const sqlStatement = `SELECT P2P_NODES FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
-  return this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
+async function generateUniqueSurveyId(db) {
+    let surveyId;
+    do {
+        surveyId = generateRandomSurveyId();
+    } while (await doesIdExist(db, surveyId));
+    return surveyId;
 }
 
-
-doesSurveyExist(surveyName: string): boolean {
-  const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_NAME = '${surveyName}';`;
-  const survey = this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
-
-  return survey !== "";
+function generateRandomSurveyId() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 5; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
 }
 
-
-doesIdExist(surveyId: string): boolean {
-  const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
-  const survey = this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
-
-  return survey !== "";
+async function execAsync(db, sqlStatement) {
+    return new Promise((resolve, reject) => {
+        db.exec(sqlStatement, (err) => {
+            if (err) reject(err);
+            else resolve();
+        });
+    });
 }
 
-
-async createNewSurvey(users: string): Promise<boolean> {
-  const string = this.generateUniqueSurveyId();
-  const surveyStatement = `INSERT INTO SURVEYS(SURVEY_ID, USERS) VALUES('${string}', '${users}');`;
-  return this.sendQuery(this.dbHandle, surveyStatement);
+function isValidPeerFormat(peer) {
+    const pattern = /^\(\d+:\d+,\s*\d+:\d+\)$/;
+    return pattern.test(peer);
 }
 
-async isNewSurveyByUid(uid: string): Promise<boolean> {
-  const sqlStatement = `SELECT * FROM SURVEYS WHERE USERS LIKE '%${uid}%';`;
-  const survey = await this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
-  return survey !== "";
-}
-
-async getPeerByUid(uid: string): Promise<string> {
-  const sqlStatement = `SELECT ADDRESSES FROM USERS WHERE UID = '${uid}';`;
-  return await this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
-}
-
-async getPeersList(): Promise<string> {
-  try {
-      const sqlStatement = "SELECT ADDRESSES FROM USERS;";
-      const peers = await this.sendQueryAndGetAns(this.dbHandle, sqlStatement);
-
-      // Split the peers string into an array
-      const peersArray = peers.split(',');
-
-      // Create a formatted string with the peers
-      let formattedPeers = '';
-      for (let i = 0; i < peersArray.length; i++) {
-          formattedPeers += `${i + 1}: "${peersArray[i]}", `;
-      }
-
-      // Remove the trailing comma and space
-      formattedPeers = formattedPeers.slice(0, -2);
-
-      return formattedPeers;
-  } catch (error) {
-      console.error('Error getting peers list:', error);
-      return ''; // Return an empty string if there was an error
-  }
-}
-
-async changePeerByUid(uid: string, newPeer: string): Promise<boolean> {
-  // Check if the new peer string is in the correct format
-  if (!this.isValidPeerFormat(newPeer)) {
-      console.error("Invalid format for the new peer.");
-      return false;
-  }
-
-  const sqlStatement = `UPDATE USERS SET ADDRESSES = '${newPeer}' WHERE UID = '${uid}';`;
-  return this.sendQuery(this.dbHandle, sqlStatement);
-}
-
-sendQuery(db: sqlite3.Database, sqlStatement: string): boolean {
-  try {
-      db.exec(sqlStatement);
-      return true; // Return true if the query is executed successfully
-  } catch (err: any) {
-      console.error(err.message);
-      return false; // Return false if there's an error
-  }
-}
-
-
-sendQueryAndGetAns(db: sqlite3.Database, sqlStatement: string): string {
-  let ans = "";
-
-  // Execute the SQL statement
-  db.all(sqlStatement, [], (err: Error | null, rows: any[]) => {
-      if (err) {
-          console.error("Error with sendQueryAndGetAns:", err);
-          return;
-      }
-
-      // Process the rows returned by the query
-      for (const row of rows) {
-          for (const value of Object.values(row)) {
-              ans += value;
-          }
-      }
-  });
-
-  return ans;
-}
-
-async generateUniqueSurveyId(): Promise<string> {
-  let surveyId: string;
-  do {
-      surveyId = this.generateRandomSurveyId();
-  } while (await this.doesIdExist(surveyId));
-  return surveyId;
-}
-
-generateRandomSurveyId(): string {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < 5; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-}
-
-
-
-private isValidPeerFormat(peer: string): boolean {
-  // Define a regex pattern to match the required format
-  const pattern = /^\(\d+:\d+,\s*\d+:\d+\)$/;
-
-  // Test if the peer string matches the pattern
-  return pattern.test(peer);
-}
-
-private async execAsync(sqlStatement: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-      this.dbHandle.exec(sqlStatement, (err) => {
-          if (err) reject(err);
-          else resolve();
-      });
-  });
-}
-
-
-
-}
-export default SqliteDatabase;
+module.exports = {
+    openDatabase,
+    closeDatabase,
+    doesUserExist,
+    doesPasswordMatch,
+    addNewUser,
+    addUserToSurvey,
+    getUidByUsername,
+    getUsersList,
+    getNodeListForSurvey,
+    doesSurveyExist,
+    doesIdExist,
+    createNewSurvey,
+    isNewSurveyByUid,
+    getPeerByUid,
+    getPeersList,
+    changePeerByUid
+};
