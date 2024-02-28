@@ -12,7 +12,7 @@ class Block
 {
     public:
         // Ctor
-        Block(std::string prevHash, std::string hash, std::string data, std::string timestamp, int nonce);
+        Block(std::string prevHash, std::string hash, std::string data, int index, int nonce);
         Block();
         Block(std::string data);
 
@@ -22,23 +22,27 @@ class Block
         std::string getData();
         std::string getHash();
         std::string getPrevHash();
-        std::string getTimeStamp();
+        int getIndex();
+        int getNonce();
 
         // Setters
         void setPrevHash(std::string prevHash);
         void setData(std::string data);
+        void setHash(std::string hash);
+        void setIndex(int index);
+        void setNonce(int nonce);
 
         // Hash
         void mineHash();
+
+
 
     private:
         std::string _prevHash;
         std::string _hash;
         std::string _data;
-        std::string _timestamp;
+        int _index;
         int _nonce;
 
         std::string blockToStr();
-
-        std::string getCurrentTimestamp();
 };

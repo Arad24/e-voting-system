@@ -1,10 +1,11 @@
 # include "Communicator.h"
 
 
-Communicator::Communicator(std::string host, std::string port, std::shared_ptr<net::io_context> new_ioc)
+Communicator::Communicator(std::string host, std::string port, std::shared_ptr<net::io_context> new_ioc, std::shared_ptr<BlockRequestHandler> brh)
 {
     ioc = new_ioc;
     createWsConnection(host, port);
+    _blockRequestHandler = brh;
 }
 
 void Communicator::createWsConnection(std::string host, std::string port)
@@ -76,6 +77,7 @@ void Communicator::startHandleRequests()
         {
             std::string webMsg = readMsg();
 
+            auto res = _blockRequestHandler->handleRequest();
             /*
                 TODO: Call the handler and send the response to the server
             */

@@ -7,8 +7,10 @@
 #include <mutex>
 #include <atomic>
 #include "Block.h"
-#include "Serializer.h"
 # include "BlockRequestHandler.h"
+
+#define RESET   "\033[0m"
+#define YELLOW  "\033[33m"
 
 using boost::asio::ip::tcp;
 
@@ -22,12 +24,17 @@ struct PeerStruct
 
 class BlockRequestHandler;
 class IRequestHandler;
+class Deserializer;
+class Serializer;
 
 class Peer
 {
     public:
-        Peer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint);
+        Peer(boost::asio::io_context& io_context, std::shared_ptr<Blockchain> bc);
         void startAccept();
+
+        std::shared_ptr<BlockRequestHandler> getBlockRequetHandler();
+        std::string getPeerAddress();
 
         void startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& endpoint);
 
@@ -50,9 +57,6 @@ class Peer
         void sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<boost::asio::streambuf> buffer);
         std::shared_ptr<boost::asio::streambuf> convertMsgIntoBuffer(std::string msg);
         std::string getMsg();
-
-        void sendBlock(std::shared_ptr<tcp::socket> socket, const Block& block);
-        Block receiveBlock(std::shared_ptr<tcp::socket> socket);
 
         void closeOpenSockets();
        // RequestInfo msgToReqInfo(std::string msg);

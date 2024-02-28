@@ -4,8 +4,14 @@
 #include <iostream>
 
 # define INVALID_REQUEST_ERROR "Invalid Request"
+# define ERROR_RESPONSE "Error accured in the server"
+# define SUCCESS_RESPONSE "Success"
 
 class Peer;
+class Blockchain;
+class Block;
+struct Message;
+
 
 class BlockRequestHandler : public IRequestHandler
 {
@@ -18,7 +24,17 @@ class BlockRequestHandler : public IRequestHandler
     private:
         RequestResult handleShareKey(Block blockToAdd);
         RequestResult handleAddBlock(Block blockToAdd);
-        RequestResult handleGetBlockchain(std::vector<Block> blocksList);
+        RequestResult handleGetBlockchainRes(std::vector<Block> blocksList);
+        RequestResult handleGetBlockchainReq(Message& req);
+
+        std::vector<Block> getBlocksFromHash(std::string hash);
+
+        // Web
+        RequestResult handleAddVote(Message& req);
+        std::string createVoteData(std::string vote, std::string survey_uid);
+
+        RequestResult handleCountVotes(Message& req);
+        RequestResult handlePeersList(Message& req);
         void shareBlockInTheNetwork(Block block);
         
 

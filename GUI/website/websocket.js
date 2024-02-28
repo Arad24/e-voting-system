@@ -4,11 +4,13 @@ import { handleRequest } from './Handler.js';
 let wss;
 const connectionsMap = new Map();
 
-function startListening() {
+function startListening() 
+{
   try {
     wss = new WebSocketServer({ port: 8881 });
     console.log('WebSocket server started on port 8881');
-  } catch (error) 
+  } 
+  catch (error) 
   {
     console.error('Error starting WebSocket server:', error);
     return;
@@ -16,27 +18,45 @@ function startListening() {
 
   wss.on('connection', function connection(ws) 
   {
-    const connectionId = generateUniqueId();
-    connectionsMap.set(connectionId, ws);
-    console.log(`New connection established with id ${connectionId}`);
+    let connectionId = '';
+    
+    console.log(`New connection established `);
     ws.on('error', console.error);
 
     ws.on('message', function message(data) 
     {
       data = convertDataToString(data);
+      var res;
       if (typeof data === 'string')
       {
-        console.log(`received from connection ${connectionId}: ${data}`);
-        var res = handleRequest(data)
+        
+        console.log(`data: ${data}`);
+        
+        res = handleRequest(data);
+
+        if (res.startWith(process.env.LOGIN_SUCCEEDED_CODE))
+        {
+          
+          var jsonRes = JSON.parse(data)
+          connectionId = jsonRes.uid;
+          connectionsMap.set(connectionId, ws);
+        }
+        else if (connectionsMap.has(connectionId))
+        {
+          ws.send(res)
+        }
+        else
+        {
+          ws.send(`${process.env.LOGIN_FAILED_CODE}{"message":"You need to login first"}`)
+        } 
       }
-      ws.send('404{}');
+      ws.send(res);
     });
     
     ws.on('close', function close() 
     {
       closeSocket(connectionId)
     });
-
     
   });
 }
@@ -54,11 +74,6 @@ function closeSocket(connectionId)
 {
   console.log(`Connection ${connectionId} closed`);
       connectionsMap.delete(connectionId);
-}
-
-function generateUniqueId() 
-{
-  return Math.random().toString(36).substring(2, 10); // Example of a simple unique ID
 }
 
 export default startListening;

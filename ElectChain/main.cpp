@@ -1,25 +1,37 @@
 # include "Peer.h"
 # include "Communicator.h"
-#include "Blockchain.h"
+# include "Blockchain.h"
 # include "StringUtils.h"
 # include <iostream>
+# include <fstream>
 
 # define LOCAL_IP "localhost"
-# define PORT "8881"
+# define WEB_PORT "8881"
+# define BLOCKCHAIN_FILENAME "bcCopy.csv"
 
 bool Login(std::shared_ptr<Communicator> cm, std::string peer_address);
+bool loadKeys();
 
 static std::string g_userUid = "";
 
 int main()
 {
+    // Create a blockchain
+    std::shared_ptr<Blockchain> blockchain = std::make_shared<Blockchain>();
+    BlockchainUtils::_bcCopy = blockchain;
+    blockchain->loadFromFile();
+
+
     bool login = false;
-    std::shared_ptr<net::io_context> ioc_web = std::make_shared<net::io_context>();
+    std::shared_ptr<net::io_context> ioc = std::make_shared<net::io_context>();
     std::shared_ptr<Communicator> cm;
+    std::shared_ptr<Peer> peer;
 
     try
     {
-        cm = std::make_shared<Communicator>("localhost", PORT, ioc_web);
+        peer = std::make_shared<Peer>(ioc, blockchain);
+        cm = std::make_shared<Communicator>("localhost", WEB_PORT, ioc, peer->getBlockRequetHandler());
+        
     }
     catch (const std::exception& e)
     {
@@ -27,27 +39,18 @@ int main()
         return 1;
     }
 
-    /*
-        TODO: Create peer - load ip and port from json file if exist
-    */
-    
-    /*
-        TODO: create peer
-        Save in json file
-        peer ip,
-        peer port,
-
-        save in {uid}.pem
-        private key
-        public key
-    */
-    
     while (!login)
     {
-        login = Login(cm, "123:123");
+        login = Login(cm, peer->getPeerAddress());
     }
-    
-    ioc_web->run();
+
+    if (!loadKeys())
+    {
+        BlockchainUtils::generateKeys();
+    }
+
+
+    ioc->run();
     return 0;
 }
 
@@ -69,15 +72,17 @@ bool Login(std::shared_ptr<Communicator> cm, std::string peer_address)
     }
     else if (res.rfind(LOGIN_SUCCEEDED_CODE, 0) == 0)
     {
-        /*nlohmann::json jsonData = StringUtils::strToJson(res.substr(3, res.length()));
-        if (jsonData.find("uid") != jsonData.end())
-        {
-            g_userUid = jsonData['uid'];
-            return true;
-        }*/
+        g_userUid = BlockchainUtils::_userUid;
 
         return true;
     }
 
-    return true;
+    return false;
+}
+
+
+bool loadKeys()
+{
+    std::string fileName = g_userUid + ".pem";
+    return BlockchainUtils::loadKeysFromFile(fileName);
 }

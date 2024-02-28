@@ -2,6 +2,7 @@
 
 std::shared_ptr<KeyPair> BlockchainUtils::_pKeys;
 std::shared_ptr<Blockchain> BlockchainUtils::_bcCopy;
+std::string BlockchainUtils::_userUid;
 
 std::string BlockchainUtils::calculateHash(const std::string& data)
 {
@@ -85,62 +86,111 @@ RSA* BlockchainUtils::strToPK(std::string pk)
 
 	return rsaKey;
 }
-
 bool handleGenerateKeys(std::shared_ptr<KeyPair> pairKeys)
 {
-	bool	ret = true;
-	RSA* r = NULL;
-	BIGNUM* bne = NULL;
-	BIO* bpPublic = NULL, * bpPrivate = NULL;
-	unsigned long	e = RSA_F4;
+	RSA* private_key = NULL;
+	RSA* public_key = NULL;
 
-	ret = (generateRsaKeys(&r, &bne, e));
-	if (!ret) goto free_all;
+	if (!generateRsaKeys(&public_key, &private_key))
+		return false;
 
-	ret = (saveKeys(&bpPublic, &bpPrivate, r));
-	if (!ret) goto free_all;
+	if (!saveKeys(public_key, private_key)) {
+		RSA_free(public_key);
+		RSA_free(private_key);
+		return false;
+	}
 
-	pairKeys->privateKey = PEM_read_bio_RSAPrivateKey(bpPrivate, NULL, NULL, NULL);
-	pairKeys->publicKey = PEM_read_bio_RSA_PUBKEY(bpPublic, NULL, NULL, NULL);
+	if (!private_key || !public_key) return false;
 
-free_all:
-	freeAllRsa(bpPublic, bpPrivate, r, bne);
-
-	return ret;
-}
-
-bool generateRsaKeys(RSA** r, BIGNUM** bne, unsigned long	e)
-{
-	int ret = 0;
-	*bne = BN_new();
-	ret = BN_set_word(*bne, e);
-	if (ret != 1) return false;
-
-	*r = RSA_new();
-	ret = RSA_generate_key_ex(*r, KEY_BITS, *bne, NULL);
-	if (ret != 1) return false;
+	pairKeys->privateKey = private_key;
+	pairKeys->publicKey = public_key;
 
 	return true;
 }
 
-bool saveKeys(BIO** bp_public, BIO** bp_private, RSA* r)
+bool generateRsaKeys(RSA** public_key, RSA** private_key)
 {
-	int ret = 0;
+	BIGNUM* bne = NULL;
+	RSA* r = RSA_new();
+	if (!r) return false;
 
-	// Save public key
-	*bp_public = BIO_new_file("public.pem", "w+");
-	ret = PEM_write_bio_RSAPublicKey(*bp_public, r);
-	if (ret != 1) return false;
+	bne = BN_new();
+	if (!bne) {
+		RSA_free(r);
+		return false;
+	}
 
-	// Save private key
-	*bp_private = BIO_new_file("private.pem", "w+");
-	ret = PEM_write_bio_RSAPrivateKey(*bp_private, r, NULL, NULL, 0, NULL, NULL);
-	if (ret != 1) return false;
+	if (!BN_set_word(bne, RSA_F4)) {
+		BN_free(bne);
+		RSA_free(r);
+		return false;
+	}
 
-	// Rewind the BIOs before reading
-	BIO_reset(*bp_public);
-	BIO_reset(*bp_private);
+	if (!RSA_generate_key_ex(r, KEY_BITS, bne, NULL)) {
+		BN_free(bne);
+		RSA_free(r);
+		return false;
+	}
 
+	*public_key = RSAPublicKey_dup(r);
+	*private_key = RSAPrivateKey_dup(r);
+
+	BN_free(bne);
+	RSA_free(r);
+
+	if (!*public_key || !*private_key)
+		return false;
+
+	return true;
+}
+
+bool saveKeys(RSA* public_key, RSA* private_key)
+{
+	if (!public_key || !private_key) return false;
+
+	if (BlockchainUtils::_userUid.empty()) return false;
+
+	std::string filename = BlockchainUtils::_userUid + ".pem";
+	BIO* bp = BIO_new_file(filename.c_str(), "w+");
+	
+	if (!bp) return false;
+
+	int ret = 1;
+	ret &= PEM_write_bio_RSAPublicKey(bp, public_key);
+	ret &= PEM_write_bio_RSAPrivateKey(bp, private_key, NULL, NULL, 0, NULL, NULL);
+
+	BIO_free(bp);
+
+	return ret == 1;
+}
+
+bool BlockchainUtils::loadKeysFromFile(std::string fileName)
+{
+	BlockchainUtils::_pKeys = std::make_shared<KeyPair>();
+	RSA* pk = BlockchainUtils::_pKeys->publicKey;
+	RSA* sk = BlockchainUtils::_pKeys->privateKey;
+
+	BIO* bp = BIO_new_file(fileName.c_str(), "r");
+
+	if (!bp) return false;
+
+	pk = PEM_read_bio_RSAPublicKey(bp, NULL, NULL, NULL);
+
+	if (!pk) 
+	{
+		BIO_free(bp);
+		return false;
+	}
+
+	sk = PEM_read_bio_RSAPrivateKey(bp, NULL, NULL, NULL);
+	if (!sk) 
+	{
+		RSA_free(pk); // Free the previously allocated public key
+		BIO_free(bp);
+		return false;
+	}
+
+	BIO_free(bp);
 	return true;
 }
 
@@ -158,14 +208,14 @@ std::string BlockchainUtils::signMessage(const std::string message, const RSA* p
 	if (!_pKeys) throw std::runtime_error("Private key is not available.");
 	else if (!_pKeys->privateKey) throw std::runtime_error("Private key is not available.");
 
-	// Hash the message (SHA-256 for example)
 	std::string hashMsg = calculateHash(message);
 
 	// Sign the hash
 	unsigned char* signature = new unsigned char[RSA_size(privateKey)];
 	unsigned int sigLen;
 	if (!RSA_sign(NID_sha256, reinterpret_cast<const unsigned char*>(hashMsg.c_str()), hashMsg.length(),
-		signature, &sigLen, const_cast<RSA*>(privateKey))) {
+		signature, &sigLen, const_cast<RSA*>(privateKey))) 
+	{
 		// Error occurred while signing
 		delete[] signature;
 		throw std::runtime_error("Failed to sign the message.");
@@ -173,7 +223,7 @@ std::string BlockchainUtils::signMessage(const std::string message, const RSA* p
 
 	// Convert the signature to a string
 	std::string signatureStr(reinterpret_cast<char*>(signature), sigLen);
-	delete[] signature; // Free the memory allocated for the signature buffer
+	delete[] signature; 
 
 	return signatureStr;
 
@@ -200,7 +250,7 @@ RSA* findPublicKey(std::string uid, Blockchain bc)
 
 bool BlockchainUtils::verifySignature(const std::string& message, const std::string& signMsg, std::string uid)
 {
-	RSA* publicKey = findPublicKey(uid, *_bcCopy);
+	RSA* publicKey = (uid == BlockchainUtils::_userUid) ? (BlockchainUtils::_pKeys->publicKey) : findPublicKey(uid, *_bcCopy);
 
 	if (!publicKey) {
 		throw std::runtime_error("Public key is not available.");
@@ -217,7 +267,7 @@ bool BlockchainUtils::verifySignature(const std::string& message, const std::str
 	return result == 1;
 }
 
-std::map<std::string, int> BlockchainUtils::countVotes(Blockchain& blockchain)
+std::map<std::string, int> BlockchainUtils::countVotes(Blockchain& blockchain, std::string survey_uid)
 {
 	std::map<std::string, int> votes;
 	auto blocks = blockchain.getBlocks();
@@ -226,16 +276,23 @@ std::map<std::string, int> BlockchainUtils::countVotes(Blockchain& blockchain)
 	{
 		for (auto block : blocks)
 		{
-			nlohmann::json blockData = nlohmann::json::parse(block.getData());
-			std::string candidate = blockData["candidate"];
+			if (isVoteBlock(block))
+			{
+				nlohmann::json blockData = nlohmann::json::parse(block.getData());
+				if (blockData["survey_uid"] == survey_uid)
+				{
+					std::string candidate = blockData["vote"];
 
-			(votes.find(candidate) != votes.end()) ? (votes[candidate]++) : (votes[candidate] = 1);
+					(votes.find(candidate) != votes.end()) ? (votes[candidate]++) : (votes[candidate] = 1);
+				}
+			}
 		}
 
 	}
 	catch (const std::exception& e)
 	{
 		std::cerr << "Error parsing block data: " << e.what() << std::endl;
+		throw e;
 	}
 
 	return votes;
@@ -257,16 +314,16 @@ std::vector<Block> getUserBlocks(Blockchain bc, std::string uid)
 }
 
 
-bool BlockchainUtils::isAlreadyVote(Blockchain bc, std::string uid)
+bool BlockchainUtils::isAlreadyVote(Blockchain bc, std::string user_uid, std::string survey_uid)
 {
-	std::vector<Block> userBlocks = getUserBlocks(bc, uid);
+	std::vector<Block> userBlocks = getUserBlocks(bc, user_uid);
 
 	for (auto block : userBlocks)
 	{
 		nlohmann::json jsonData = nlohmann::json::parse(block.getData());
-		if (jsonData.find("vote") != jsonData.end())
+		if (jsonData.find("survey_uid") != jsonData.end())
 		{
-			return true;
+			if (jsonData["survey_uid"] == survey_uid) return true;
 		}
 	}
 
@@ -289,18 +346,37 @@ bool BlockchainUtils::isAlreadySharePK(Blockchain bc, std::string uid)
 	return false;
 }
 
-std::string BlockchainUtils::getUidFromBlock(Block block)
+std::string BlockchainUtils::getUserUidFromBlock(Block block)
 {
 	std::string uid = "";
 	nlohmann::json jsonData = nlohmann::json::parse(block.getData());
-	if (jsonData.find("uid") != jsonData.end())
+	if (jsonData.find("user_uid") != jsonData.end())
 	{
-		uid = jsonData["uid"];
+		uid = jsonData["user_uid"];
 	}
 
 	return uid;
 }
 
+std::string BlockchainUtils::getSurveyUidFromBlock(Block block)
+{
+	std::string uid = "";
+	nlohmann::json jsonData = nlohmann::json::parse(block.getData());
+	if (jsonData.find("survey_uid") != jsonData.end())
+	{
+		uid = jsonData["survey_uid"];
+	}
+
+	return uid;
+}
+
+nlohmann::json BlockchainUtils::dataToJson(std::string data)
+{
+
+	nlohmann::json jsonData = nlohmann::json::parse(data);
+
+	return jsonData;
+}
 
 bool BlockchainUtils::isVoteBlock(Block block)
 {
@@ -314,12 +390,22 @@ bool BlockchainUtils::isShareKeyBlock(Block block)
 
 bool BlockchainUtils::isValidVoteBlock(Block block)
 {
+	nlohmann::json jsonData = BlockchainUtils::dataToJson(block.getData());
+	std::string userUid = "", surveyUid = "", vote = "", signVote = "";
+	if (jsonData.find("survey_uid") != jsonData.end()) surveyUid = jsonData["survey_uid"];
+	if (jsonData.find("user_uid") != jsonData.end()) userUid = jsonData["user_uid"];
+	if (jsonData.find("vote") != jsonData.end()) vote = jsonData["vote"];
+	if (jsonData.find("sign_vote") != jsonData.end()) signVote = jsonData["sign_vote"];
+
+	if (userUid == "" || surveyUid == "" || vote == "" || signVote == "") return false;
+
 	return (_bcCopy->validateBlock(block) &&
-		!BlockchainUtils::isAlreadyVote(*_bcCopy, BlockchainUtils::getUidFromBlock(block))); /* add check is signature valid */
+		!BlockchainUtils::isAlreadyVote(*_bcCopy, userUid, surveyUid) &&
+		BlockchainUtils::verifySignature(vote, signVote, userUid));
 }
 
 bool BlockchainUtils::isValidShareKeyBlock(Block block)
 {
 	return (_bcCopy->validateBlock(block)
-		&& !BlockchainUtils::isAlreadySharePK(*_bcCopy, BlockchainUtils::getUidFromBlock(block)));
+		&& !BlockchainUtils::isAlreadySharePK(*_bcCopy, BlockchainUtils::getUserUidFromBlock(block)));
 }
