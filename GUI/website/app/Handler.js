@@ -1,8 +1,5 @@
-import IDatabase from './IDatabase';
-import SqliteDatabase from './sqliteDB';
-
 const codeLen = 3;
-const db = new SqliteDatabase();
+//const db = openDatabase();
 
 function removeCodeFromMsg(msg)
 {
@@ -30,11 +27,11 @@ export function handleRequest(req)
         let reqCode = getMsgCode(req);
         if (reqCode == '100'/*Login code*/)
         {
-            handleLogin(req);
+            //handleLogin(req);
         }
         else if(reqCode = '102')
         {
-            handleGetPeers(req);
+            //handleGetPeers(req);
         }
     }
     else
@@ -43,26 +40,26 @@ export function handleRequest(req)
     }
 
 }
-async function handleLogin(msg) {
+/*async function handleLogin(msg) {
     try {
         const { username, password, peer_address } = JSON.parse(removeCodeFromMsg(msg));
 
-        const userExists = db.doesUserExist(username);
+        const userExists = await doesUserExist(db, username);
         if (!userExists) {
             return '404{}';
         }
 
-        const passwordMatches = db.doesPasswordMatch(username, password);
+        const passwordMatches = await doesPasswordMatch(db, username, password);
         if (!passwordMatches) {
             return '404{}';
         }
 
-        const uid = await db.getUserUid(username, password);
+        const uid = await getUserUid(db, username, password);
         if (!uid) {
             return '404{}';
         }
 
-        await db.changePeerByUid(uid, peer_address);
+        await changePeerByUid(db, uid, peer_address);
         return `204{"uid": "${uid}"}`;
     } catch (error) {
         console.error('Error during login:', error);
@@ -72,7 +69,7 @@ async function handleLogin(msg) {
 
 async function handleGetPeers(msg) {
     try {
-        const list = await db.getPeersList();
+        const list = await getPeersList(db);
         return `202{${list}}`;
     } catch (error) {
         console.error('Error getting peers:', error);
@@ -84,12 +81,12 @@ export async function handleAddUser(msg) {
     try {
         const { username, password} = JSON.parse(removeCodeFromMsg(msg));
 
-        const userExists = db.doesUserExist(username);
+        const userExists = await doesUserExist(db, username);
         if (userExists) {
             return '404{}';
         }
 
-        const userAdded = db.addNewUser(username, password, generateUid(), 'None');
+        const userAdded = await addNewUser(db, username, password, generateUid(), 'None');
         if (userAdded) {
             return '204{}';
         } else {
@@ -100,3 +97,4 @@ export async function handleAddUser(msg) {
         return '404{}';
     }
 }
+*/

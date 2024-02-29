@@ -1,5 +1,16 @@
 /** @type {import('next').NextConfig} */
-import startListening from './websocket.js';
+import startListening from '../website/app/websocket.js';
+
+export const config = {
+  experimental: {
+    api: {
+      bodyParser: {
+        sizeLimit: '1mb',
+      },
+      externalResolver: true,
+    },
+  },
+};
 
 const nextConfig = 
 {
