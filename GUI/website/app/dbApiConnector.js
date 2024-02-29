@@ -37,7 +37,12 @@ export async function getUidByUsername(username) {
     const sqlStatement = `SELECT UID FROM USERS WHERE NAME = '${username}';`;
     try {
         const response = await sendQueryAndGetRes(sqlStatement);
-        return response.result.length > 0 ? response.res[0].UID : null;
+        console.log(response)
+        if (response.result.length > 0 && response.result) {
+            return response.result[0].UID;
+        } else {
+            return null;
+        }
     } catch (error) {
         console.error('Error getting UID by username:', error);
         return null;
@@ -48,7 +53,7 @@ export async function getUsersList() {
     const sqlStatement = "SELECT NAME FROM USERS;";
     try {
         const response = await sendQueryAndGetRes(sqlStatement);
-        return response.res.map(row => row.NAME);
+        return response.result.map(row => row.NAME);
     } catch (error) {
         console.error('Error getting users list:', error);
         return [];
@@ -59,7 +64,7 @@ export async function getNodeListForSurvey(surveyId) {
     const sqlStatement = `SELECT P2P_NODES FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
     try {
         const response = await sendQueryAndGetRes(sqlStatement);
-        return response.result.length > 0 ? response.res[0].P2P_NODES : null;
+        return response.result.length > 0 ? response.result[0].P2P_NODES : null;
     } catch (error) {
         console.error('Error getting node list for survey:', error);
         return null;
@@ -137,7 +142,7 @@ export async function getPeerByUid(uid) {
     const sqlStatement = `SELECT ADDRESSES FROM USERS WHERE UID = '${uid}';`;
     try {
         const response = await sendQueryAndGetRes(sqlStatement);
-        return response.result.length > 0 ? response.res[0].ADDRESSES : null;
+        return response.result.length > 0 ? response.result[0].ADDRESSES : null;
     } catch (error) {
         console.error('Error getting peer by UID:', error);
         return null;
@@ -145,13 +150,14 @@ export async function getPeerByUid(uid) {
 }
 
 export async function getPeersList() {
-    const sqlStatement = "SELECT ADDRESSES FROM USERS;";
+    const sqlStatement = "SELECT ADDRESSES FROM USERS WHERE ADDRESSES NOT LIKE 'None';";
     try {
         const response = await sendQueryAndGetRes(sqlStatement);
-        return response.res.map(row => row.ADDRESSES).join(', ');
+        const addresses = response.result.map(row => row.ADDRESSES);
+        return { peers: addresses };
     } catch (error) {
         console.error('Error getting peers list:', error);
-        return null;
+        return { peers: [] };
     }
 }
 
@@ -212,7 +218,6 @@ export async function generateUniqueUserId() {
 export async function sendQueryAndGetRes(query) {
     try {
         const response = await handleExecuteQuery(query);
-        console.log('Response:', response);
         if (response.error) throw new Error(response.error);
         return response;
     } catch (error) {

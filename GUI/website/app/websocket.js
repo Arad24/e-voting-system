@@ -1,10 +1,13 @@
 import { WebSocketServer } from 'ws';
 import { handleRequest } from './Handler.js';
+import {
+  changePeerByUid
+} from './dbApiConnector.js';
 
 let wss;
 const connectionsMap = new Map();
 
-function startListening() 
+export default async function startListening() 
 {
   try {
     wss = new WebSocketServer({ port: 8881 });
@@ -61,6 +64,24 @@ function startListening()
   });
 }
 
+export async function sendMsgToWs(ws, msg)
+{
+  if (ws !== null)
+  {
+    ws.send(msg)
+
+    ws.on('message', function message(data) 
+    {
+      data = convertDataToString(data);
+      if (typeof data === 'string')
+      {
+        return data;
+      }
+    });
+  }
+  else return '';
+}
+
 function convertDataToString(data)
 {
   if (Buffer.isBuffer(data)) 
@@ -70,10 +91,9 @@ function convertDataToString(data)
   return data;
 }
 
-function closeSocket(connectionId)
+async function closeSocket(connectionId)
 {
   console.log(`Connection ${connectionId} closed`);
-      connectionsMap.delete(connectionId);
+  connectionsMap.delete(connectionId);
+  await changePeerByUid(connectionId, 'None');
 }
-
-export default startListening;

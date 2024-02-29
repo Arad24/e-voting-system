@@ -1,5 +1,24 @@
+import {
+    doesUserExist,
+    doesPasswordMatch,
+    addUserToSurvey,
+    getUidByUsername,
+    getUsersList,
+    getNodeListForSurvey,
+    doesSurveyExist,
+    doesSurveyIdExist,
+    doesUserIdExist,
+    addNewUser,
+    createNewSurvey,
+    isNewSurveyByUid,
+    getPeerByUid,
+    getPeersList,
+    changePeerByUid,
+    generateUniqueSurveyId,
+    generateUniqueUserId
+  } from './dbApiConnector.js';
+
 const codeLen = 3;
-//const db = openDatabase();
 
 function removeCodeFromMsg(msg)
 {
@@ -14,10 +33,10 @@ function getMsgCode(msg)
 function isRequestRelevant(req)
 {
     var code = getMsgCode(req)
-    return (req.id >= ADD_BLOCK_CODE && req.id <= LOGIN_CODE) ||
-           (req.id >= PEERS_LIST_SUCCEEDED_CODE && req.id <= LOGIN_SUCCEEDED_CODE) ||
-           (req.id >= ADD_VOTE_CODE && req.id <= COUNT_VOTES_CODE) ||
-           (req.id >= SUCCESS_ADD_VOTE && req.id <= SUCCESS_COUNT_VOTES);
+    return (req.id >= process.env.ADD_BLOCK_CODE && req.id <= process.env.LOGIN_CODE) ||
+           (req.id >= process.env.PEERS_LIST_SUCCEEDED_CODE && req.id <= process.env.LOGIN_SUCCEEDED_CODE) ||
+           (req.id >= process.env.ADD_VOTE_CODE && req.id <= process.env.COUNT_VOTES_CODE) ||
+           (req.id >= process.env.SUCCESS_ADD_VOTE && req.id <= process.env.SUCCESS_COUNT_VOTES);
 }
 
 export function handleRequest(req)
@@ -25,41 +44,37 @@ export function handleRequest(req)
     if (isRequestRelevant(req))
     {
         let reqCode = getMsgCode(req);
-        if (reqCode == '100'/*Login code*/)
+        if (reqCode == process.env.LOGIN_CODE)
         {
-            //handleLogin(req);
+            handleLogin(req);
         }
         else if(reqCode = '102')
         {
-            //handleGetPeers(req);
+            handleGetPeers(req);
         }
-    }
-    else
-    {
-        // Close socket
     }
 
 }
-/*async function handleLogin(msg) {
+async function handleLogin(msg) {
     try {
         const { username, password, peer_address } = JSON.parse(removeCodeFromMsg(msg));
 
-        const userExists = await doesUserExist(db, username);
+        const userExists = await doesUserExist(username);
         if (!userExists) {
             return '404{}';
         }
 
-        const passwordMatches = await doesPasswordMatch(db, username, password);
+        const passwordMatches = await doesPasswordMatch(username, password);
         if (!passwordMatches) {
             return '404{}';
         }
 
-        const uid = await getUserUid(db, username, password);
+        const uid = await getUserUid(username, password);
         if (!uid) {
             return '404{}';
         }
 
-        await changePeerByUid(db, uid, peer_address);
+        await changePeerByUid(uid, peer_address);
         return `204{"uid": "${uid}"}`;
     } catch (error) {
         console.error('Error during login:', error);
@@ -69,32 +84,10 @@ export function handleRequest(req)
 
 async function handleGetPeers(msg) {
     try {
-        const list = await getPeersList(db);
-        return `202{${list}}`;
+        const list = await getPeersList();
+        return `202${JSON.stringify({ peers: list })}`;
     } catch (error) {
         console.error('Error getting peers:', error);
         return '404{}';
     }
 }
-
-export async function handleAddUser(msg) {
-    try {
-        const { username, password} = JSON.parse(removeCodeFromMsg(msg));
-
-        const userExists = await doesUserExist(db, username);
-        if (userExists) {
-            return '404{}';
-        }
-
-        const userAdded = await addNewUser(db, username, password, generateUid(), 'None');
-        if (userAdded) {
-            return '204{}';
-        } else {
-            return '404{}';
-        }
-    } catch (error) {
-        console.error('Error adding user:', error);
-        return '404{}';
-    }
-}
-*/

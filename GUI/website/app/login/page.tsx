@@ -5,22 +5,34 @@ import Logo from "../../logo.png";
 import { useRouter } from 'next/navigation';
 import {
   doesUserExist,
-  doesPasswordMatch
+  doesPasswordMatch,
+  getUidByUsername
 } from '../dbApiConnector.js';
+import { useGlobalState } from '../globals';
 
 const LoginForum = () => {
   const [user_name, setName] = React.useState('');
   const [user_password, setPassword] = React.useState('');
+  const [global_username, setGUsername] = useGlobalState("username");
+  const [global_uid, setGUid] = useGlobalState("uid");
   const router = useRouter();
 
   const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    handleLogin(user_name, user_password).then((result) => {
+    handleLogin(user_name, user_password).then(async (result) => {
        if (result)
        {
-        alert('Login succeded'); 
-        router.push('./');
+        try {
+          alert('Login succeeded');
+          setGUsername(user_name);
+          localStorage.setItem('username', user_name);
+          const uid = await getUidByUsername(user_name);
+          setGUid(uid);
+          router.push('./');
+        } catch (error) {
+          console.error('Error setting global UID:', error);
+        }
        } 
        else alert('Invalid password or username')
       });
