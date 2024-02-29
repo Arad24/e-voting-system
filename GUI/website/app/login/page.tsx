@@ -3,19 +3,34 @@ import React from 'react';
 import Image from 'next/image';
 import Logo from "../../logo.png";
 import { useRouter } from 'next/navigation';
-
+import {
+  doesUserExist,
+  doesPasswordMatch
+} from '../dbApiConnector.js';
 
 const LoginForum = () => {
   const [user_name, setName] = React.useState('');
   const [user_password, setPassword] = React.useState('');
   const router = useRouter();
 
+  const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    handleLogin(user_name, user_password).then((result) => {
+       if (result)
+       {
+        alert('Login succeded'); 
+        router.push('./');
+       } 
+       else alert('Invalid password or username')
+      });
+  };
 
   return (
     <nav className="flex items-center justify-center min-h-screen">
       <div className="text-center bg-white p-14 shadow-md rounded-md sm:max-w-lg mx-16">
         <h2 className="text-3xl">Log in</h2>
-        <form >
+        <form onSubmit={handleSumbit}>
           <input
             type="text"
             placeholder="Enter your username"
@@ -47,32 +62,21 @@ const LoginForum = () => {
   );
 };
 
-/*function handleMsg(msg : string, user_name : string, password : string, setUsername : Function, setGPass : Function) : Promise<boolean>
-{
-  
-  return sendMsg(loginCode!.charAt(0), msg)
-  .then((response : any) => 
-  {
-    const jsonRes = getJsonResponse(response);
-    if (jsonRes.status == succesCode) 
-    {
-      setUsername(user_name);
-      localStorage.setItem('username', user_name);
+export async function handleLogin(username: string, password: string) {
+  try {
+      const userExists = await doesUserExist(username);
+      if (!userExists) 
+      {
+        return false;
+      }
 
-      setGPass(password);
-      localStorage.setItem('password', password);
-
-      return true;
-    } else {
-      alert(jsonRes.message);
+      const match = await doesPasswordMatch(username, password);
+      return match;
+  } catch (error) {
+      console.error('Error adding user:', error);
       return false;
-    }
-  })
-  .catch((error : any) => {
-    alert(error);
-    return false;
-  });
-}*/
+  }
+}
 
 const HomeBarLink = () => {
   return (

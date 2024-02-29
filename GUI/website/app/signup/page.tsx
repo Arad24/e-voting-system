@@ -28,7 +28,6 @@ import {
 const LoginForum = () => {
   const [user_name, setName] = React.useState('');
   const [user_password, setPassword] = React.useState('');
-  const [db, setDb] = React.useState(null);
   const router = useRouter();
   
   const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
