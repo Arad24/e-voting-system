@@ -10,7 +10,7 @@ BlockRequestHandler::BlockRequestHandler(std::shared_ptr <Peer> peer, std::share
     _blockchain = blockchain;
 }
 
-bool BlockRequestHandler::isRequestRelevant(Message& req)
+bool BlockRequestHandler::isRequestRelevant(Message req)
 {
     return (req.id >= ADD_BLOCK_CODE && req.id <= LOGIN_CODE) ||
            (req.id >= PEERS_LIST_SUCCEEDED_CODE && req.id <= LOGIN_SUCCEEDED_CODE) ||
@@ -18,7 +18,7 @@ bool BlockRequestHandler::isRequestRelevant(Message& req)
            (req.id >= SUCCESS_ADD_VOTE && req.id <= SUCCESS_COUNT_VOTES);
 }
 
-RequestResult BlockRequestHandler::handleRequest(Message& req) 
+RequestResult BlockRequestHandler::handleRequest(Message req) 
 {
     Block block;
     std::string reqCode = req.id;
@@ -139,7 +139,7 @@ RequestResult BlockRequestHandler::handlePeersList(Message& req)
 
         for (auto& peer : reqData.peers)
         {
-            _peer->connect(peer.peerEndpoint);
+            if (_peer->getPeerAddress() != peer.toString()) _peer->connect(peer.peerEndpoint);
         }
 
         Response res = { SUCCESS_RESPONSE };
@@ -147,6 +147,7 @@ RequestResult BlockRequestHandler::handlePeersList(Message& req)
     }
     catch (const std::exception& e)
     {
+        std::cout << e.what();
         Response res = { ERROR_RESPONSE };
         return { Serializer::serializeMessage(res, DONT_SEND_CODE) };
     }

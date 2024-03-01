@@ -31,4 +31,5 @@ class Communicator
 
 		void createWsConnection(std::string host, std::string port);
 		std::string readMsg();
+		Message convertToStructMessage(std::string msg);
 };

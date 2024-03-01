@@ -154,10 +154,10 @@ export async function getPeersList() {
     try {
         const response = await sendQueryAndGetRes(sqlStatement);
         const addresses = response.result.map(row => row.ADDRESSES);
-        return { peers: addresses };
+        return addresses;
     } catch (error) {
         console.error('Error getting peers list:', error);
-        return { peers: [] };
+        return []; // Return an empty array on error
     }
 }
 
@@ -174,6 +174,12 @@ export async function changePeerByUid(uid, newPeer) {
         console.error('Error changing peer by UID:', error);
         return false;
     }
+}
+
+function isValidPeerFormat(peer) {
+    // Regular expression to match IP address and port combination in the format ip:port
+    const ipPortRegex = /^((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\d{1,5})$/;
+    return ipPortRegex.test(peer) || peer == 'None';
 }
 
 function generateRandomUid(size) {
@@ -227,7 +233,7 @@ export async function sendQueryAndGetRes(query) {
 
 async function handleExecuteQuery(query) {
     try {
-        const response = await fetch('/api/db', {
+        const response = await fetch('http://localhost:3000/api/db', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

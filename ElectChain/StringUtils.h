@@ -2,8 +2,9 @@
 # include <iostream>
 # include <vector>
 # include <sstream>
-# include <algorithm>
-# include <cctype>
+#include <algorithm> 
+#include <cctype>
+#include <locale>
 # include <string>
 # include "json.hpp"
 
@@ -14,8 +15,11 @@ class StringUtils
         static std::string charToString(char* charArr);
         static char* stringToChar(std::string str);
         static nlohmann::json strToJson(std::string str);
-        std::string toLower(const std::string& text);
-        std::vector<unsigned char> strToVec(const std::string& text);
+        static std::string toLower(const std::string& text);
+        static std::vector<unsigned char> strToVec(std::string text);
+        static std::string removeSquareBrackets(std::string input);
+        static void removeFirstCharacter(std::string& str);
+        static void removeLastCharacter(std::string& str);
 
 
 };

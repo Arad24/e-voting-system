@@ -2,7 +2,7 @@
 
 nlohmann::json getJSON(std::vector<unsigned char> buffer)
 {
-    std::string data(buffer.begin(), buffer.end());
+    std::string data(buffer.begin() + 3, buffer.end());
 
     return nlohmann::json::parse(data);
 }
@@ -120,13 +120,23 @@ GetPeersRequest Deserializer::deserializeGetPeers(const std::vector<unsigned cha
     nlohmann::json jsonMsg = getJSON(buffer);
     std::vector<PeerStruct> peers;
 
-    for (const auto& peer : jsonMsg["peers"]) 
+    for (auto peer : jsonMsg["peers"])
     {
-        std::string strPeer = peer.dump();
-        std::string ip = strPeer.substr(0, strPeer.find(":"));
-        int port = stoi(strPeer.substr(strPeer.find(":") + 1, strPeer.length()));
-        PeerStruct newPeer(ip, port);
-        peers.push_back(newPeer);
+        
+        std::string fixedPeer = StringUtils::removeSquareBrackets(peer.dump());
+        
+        if (fixedPeer[0] == '"') StringUtils::removeFirstCharacter(fixedPeer);
+        if (fixedPeer[fixedPeer.length() - 1] == '"') StringUtils::removeLastCharacter(fixedPeer);
+
+        size_t colonPos = fixedPeer.find(":");
+
+        if (colonPos != std::string::npos)
+        {
+            std::string ip = std::string(fixedPeer.substr(0, colonPos));
+            int port = std::stoi(fixedPeer.substr(colonPos + 1));
+            PeerStruct ps(ip, port);
+            peers.emplace_back(ps);
+        }
     }
 
     GetPeersRequest req(peers);

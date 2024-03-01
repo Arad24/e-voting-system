@@ -29,7 +29,7 @@ int main()
 
     try
     {
-        peer = std::make_shared<Peer>(ioc, blockchain);
+        peer = std::make_shared<Peer>(*ioc, blockchain);
         cm = std::make_shared<Communicator>("localhost", WEB_PORT, ioc, peer->getBlockRequetHandler());
         
     }
@@ -48,6 +48,12 @@ int main()
     {
         BlockchainUtils::generateKeys();
     }
+    
+
+    std::thread p2pThread(&Peer::startAccept, peer.get());
+    p2pThread.detach();
+    std::thread serverThread(&Communicator::startHandleRequests, cm.get());
+    serverThread.join();
 
 
     ioc->run();
@@ -72,6 +78,9 @@ bool Login(std::shared_ptr<Communicator> cm, std::string peer_address)
     }
     else if (res.rfind(LOGIN_SUCCEEDED_CODE, 0) == 0)
     {
+        std::cout << res.substr(3);
+        auto jsonMsg = nlohmann::json::parse(res.substr(3));
+        BlockchainUtils::_userUid = jsonMsg["uid"];
         g_userUid = BlockchainUtils::_userUid;
 
         return true;
@@ -83,6 +92,10 @@ bool Login(std::shared_ptr<Communicator> cm, std::string peer_address)
 
 bool loadKeys()
 {
-    std::string fileName = g_userUid + ".pem";
-    return BlockchainUtils::loadKeysFromFile(fileName);
+    if (g_userUid != "")
+    {
+        std::string fileName = g_userUid + ".pem";
+        return BlockchainUtils::loadKeysFromFile(fileName);
+    }
+    return false;
 }

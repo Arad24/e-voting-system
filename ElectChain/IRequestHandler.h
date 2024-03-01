@@ -23,6 +23,6 @@ struct RequestInfo
 class IRequestHandler
 {
 	public:
-		virtual bool isRequestRelevant(Message& request) = 0;
-		virtual RequestResult handleRequest(Message& request) = 0;
+		virtual bool isRequestRelevant(Message request) = 0;
+		virtual RequestResult handleRequest(Message request) = 0;
 };

@@ -51,25 +51,30 @@ void Peer::startRead(std::shared_ptr<tcp::socket> socket, const tcp::endpoint& e
 {
     auto buffer = std::make_shared<boost::asio::streambuf>();
 
-    boost::asio::async_read_until(*socket, *buffer, '\n', [this, socket, buffer, endpoint](const boost::system::error_code& ec, std::size_t /*bytes_transferred*/) {
+    boost::asio::async_read_until(*socket, *buffer, '\n', [this, socket, buffer, endpoint](const boost::system::error_code& ec, std::size_t ) {
         if (!ec)
         {
             std::string msg = getMessage(buffer);
             std::cout << YELLOW << "Received message from " << endpoint << ": " << msg << RESET << std::endl;
 
-            // Process the received message
-            //Message structMsg(msg.substr(0, 3), msg.substr(3, msg.length()));
-            //_blockRequestHandler->handleRequest(structMsg);
+            auto res = _blockRequestHandler->handleRequest(convertToStructMessage(msg));
+
+            if (res.response[0] != DONT_SEND_CODE[0]) sendMsgToSocket(socket, convertMsgIntoBuffer(res.response));
 
             // Continue reading
             startRead(socket, endpoint);
         }
         else if (ec != boost::asio::error::operation_aborted)
         {
-            // Error occurred, but not due to operation cancellation
             std::cerr << YELLOW << "Error reading from " << endpoint << ": " << ec.message() << RESET << std::endl;
         }
         });
+}
+
+Message& Peer::convertToStructMessage(std::string msg)
+{
+    Message structMsg(msg.substr(0, 3), StringUtils::strToVec(msg));
+    return structMsg;
 }
 
 std::string Peer::getMessage(std::shared_ptr<boost::asio::streambuf> buffer)
@@ -104,15 +109,6 @@ void Peer::connect(const tcp::endpoint& endpoint)
         });
 }
 
-void Peer::sendMsg(std::shared_ptr<tcp::socket> socket)
-{
-    std::string message = getMsg();
-
-    auto buffer = convertMsgIntoBuffer(message);
-
-    sendMsgToSocket(socket, buffer);
-}
-
 
 std::shared_ptr<boost::asio::streambuf> Peer::convertMsgIntoBuffer(std::string msg)
 {
@@ -121,15 +117,6 @@ std::shared_ptr<boost::asio::streambuf> Peer::convertMsgIntoBuffer(std::string m
     os << msg << '\n';
 
     return buffer;
-}
-std::string Peer::getMessage(std::shared_ptr<tcp::socket> socket)
-{
-    boost::asio::streambuf buffer;
-    boost::asio::read_until(*socket, buffer, '\n');
-    std::istream is(&buffer);
-    std::string message;
-    std::getline(is, message);
-    return message;
 }
 
 void Peer::sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<boost::asio::streambuf> buffer)
@@ -172,16 +159,6 @@ void Peer::sendBroadcastMsg(std::string msg)
         {
             sendMsgToSocket(socket, bufferMsg);
         }
-    }
-}
-
-void Peer::sharePublicKey() 
-{
-    if (BlockchainUtils::_pKeys) 
-    {
-        std::string publicKeyString = BlockchainUtils::publicKeyToString(BlockchainUtils::_pKeys->publicKey);
-
-        sendBroadcastMsg(publicKeyString);
     }
 }
 

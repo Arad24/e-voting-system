@@ -35,7 +35,7 @@ void Communicator::createWsConnection(std::string host, std::string port)
 std::string Communicator::loginRequest(std::string username, std::string password, std::string peerAddress)
 {
     std::string retMsg = "";
-    std::string message = std::string(LOGIN_CODE) + "{'username':'" + username + "','password':'" + password + "','peer_address':'" + peerAddress + "'}";
+    std::string message = std::string(LOGIN_CODE) + "{\"username\":\"" + username + "\",\"password\":\"" + password + "\",\"peer_address\":\"" + peerAddress + "\"}";
 
     try
     {
@@ -43,6 +43,8 @@ std::string Communicator::loginRequest(std::string username, std::string passwor
         {
             ws->write(net::buffer(message));
             retMsg = readMsg();
+            std::cout << retMsg;
+            return retMsg;
         }
 
     }
@@ -73,18 +75,26 @@ void Communicator::startHandleRequests()
 {
     try
     {
+        const std::string getPeersMsg = std::string(GET_PEERS_LIST) + "{}";
+        ws->write(net::buffer(getPeersMsg));
         while (true)
         {
             std::string webMsg = readMsg();
 
-            auto res = _blockRequestHandler->handleRequest();
-            /*
-                TODO: Call the handler and send the response to the server
-            */
+            
+            auto res = _blockRequestHandler->handleRequest(convertToStructMessage(webMsg));
+            
+            if (res.response[0] != DONT_SEND_CODE[0]) ws->write(net::buffer(res.response));
         }
     }
     catch (const std::exception& e)
     {
         std::cerr << e.what();
     }
+}
+
+Message Communicator::convertToStructMessage(std::string msg)
+{
+    Message structMsg(msg.substr(0, 3), StringUtils::strToVec(msg));
+    return structMsg;
 }

@@ -16,10 +16,16 @@ using boost::asio::ip::tcp;
 
 struct PeerStruct
 {
-    tcp::endpoint peerEndpoint;
+    boost::asio::ip::tcp::endpoint peerEndpoint;
 
     PeerStruct(std::string ip, int port)
         : peerEndpoint(boost::asio::ip::address::from_string(ip), port) {}
+
+    std::string toString() const {
+        std::string ip = peerEndpoint.address().to_string();
+        int port = peerEndpoint.port();
+        return ip + ":" + std::to_string(port);
+    }
 };
 
 class BlockRequestHandler;
@@ -40,12 +46,10 @@ class Peer
 
         void connect(const tcp::endpoint& endpoint);
 
-        void sendMsg(std::shared_ptr<tcp::socket> socket);
         void findPeer(const PeerStruct& peerEndpoints);
 
         void sendBroadcastMsg(std::string msg);
         void createConnectionSocket(std::shared_ptr<tcp::socket> socket);
-        void sharePublicKey();
         std::shared_ptr<Blockchain> getBlockchain();
 
         void closePeer();
@@ -56,10 +60,9 @@ class Peer
         std::shared_ptr<tcp::socket> getSocketByEndpoints(PeerStruct peer);
         void sendMsgToSocket(std::shared_ptr<tcp::socket> socket, std::shared_ptr<boost::asio::streambuf> buffer);
         std::shared_ptr<boost::asio::streambuf> convertMsgIntoBuffer(std::string msg);
-        std::string getMsg();
+        Message& convertToStructMessage(std::string msg);
 
         void closeOpenSockets();
-       // RequestInfo msgToReqInfo(std::string msg);
 
         boost::asio::io_context& _io_context;
         tcp::acceptor _acceptor;
