@@ -1,21 +1,9 @@
 import {
     doesUserExist,
     doesPasswordMatch,
-    addUserToSurvey,
     getUidByUsername,
-    getUsersList,
-    getNodeListForSurvey,
-    doesSurveyExist,
-    doesSurveyIdExist,
-    doesUserIdExist,
-    addNewUser,
-    createNewSurvey,
-    isNewSurveyByUid,
-    getPeerByUid,
     getPeersList,
     changePeerByUid,
-    generateUniqueSurveyId,
-    generateUniqueUserId
   } from './dbApiConnector.js';
 
 const codeLen = 3;

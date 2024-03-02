@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "websocket.js", "Handler.js", "sqliteDB.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "websocket.js", "Handler.js", "sqliteDB.js", "app/globals.tsx", "app/websocket.js"],
   "exclude": ["node_modules"]
 }

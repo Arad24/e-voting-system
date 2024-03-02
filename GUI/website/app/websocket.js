@@ -1,9 +1,10 @@
 import { WebSocketServer } from 'ws';
 import { handleRequest } from './Handler.js';
 import { changePeerByUid } from './dbApiConnector.js';
+import connectionsMap from './Connections.js';
 
 let wss;
-const connectionsMap = new Map();
+
 
 export default async function startListening() {
   try {
@@ -16,7 +17,7 @@ export default async function startListening() {
 
   wss.on('connection', function connection(ws) {
     let connectionId = '';
-
+    
     console.log(`New connection established `);
     ws.on('error', console.error);
 
@@ -77,10 +78,12 @@ function convertDataToString(data) {
   return data;
 }
 
-async function closeSocket(connectionId) {
+async function closeSocket(connectionId) 
+{
   console.log(`Connection ${connectionId} closed`);
-  connectionsMap.delete(connectionId);
+  
   try {
+    connectionsMap.delete(connectionId);
     await changePeerByUid(connectionId, 'None');
   } catch (error) {
     console.error('Error closing socket:', error);

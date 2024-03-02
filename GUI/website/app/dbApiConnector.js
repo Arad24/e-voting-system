@@ -20,15 +20,46 @@ export async function doesPasswordMatch(name, password) {
     }
 }
 
-export async function addUserToSurvey(surveyId, user) {
-    const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
+export async function doesSurveyExist(surveyName) {
+    const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_NAME = '${surveyName}';`;
     try {
-        let existingUsers = await sendQueryAndGetRes(sqlStatement);
-        existingUsers += `,${user}`;
-        const updateStatement = `UPDATE SURVEYS SET USERS = '${existingUsers}' WHERE SURVEY_ID = '${surveyId}';`;
-        return await sendQueryAndGetRes(updateStatement);
+        const response = await sendQueryAndGetRes(sqlStatement);
+        return response.result.length > 0;
     } catch (error) {
-        console.error('Error adding user to survey:', error);
+        console.error('Error checking survey existence:', error);
+        return false;
+    }
+}
+
+export async function addNewSurvey(surveyId, surveyName, surveyOptions) {
+    const sqlStatement = `INSERT INTO SURVEYS(SURVEY_ID, SURVEY_NAME, SURVEY_OPTIONS) VALUES ('${surveyId}', '${surveyName}', '${JSON.stringify(surveyOptions)}');`;
+    try {
+        await sendQueryAndGetRes(sqlStatement);
+        return true;
+    } catch (error) {
+        console.error('Error adding new survey:', error);
+        return false;
+    }
+}
+
+export async function getSurveyOptions(surveyId) {
+    const sqlStatement = `SELECT SURVEY_OPTIONS FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
+    try {
+        const response = await sendQueryAndGetRes(sqlStatement);
+        return response.result.length > 0 ? JSON.parse(response.result[0].SURVEY_OPTIONS) : null;
+    } catch (error) {
+        console.error('Error getting survey options:', error);
+        return null;
+    }
+}
+
+export async function updateSurveyOptions(surveyId, surveyOptions) {
+    const sqlStatement = `UPDATE SURVEYS SET SURVEY_OPTIONS = '${JSON.stringify(surveyOptions)}' WHERE SURVEY_ID = '${surveyId}';`;
+    try {
+        await sendQueryAndGetRes(sqlStatement);
+        return true;
+    } catch (error) {
+        console.error('Error updating survey options:', error);
         return false;
     }
 }
@@ -57,28 +88,6 @@ export async function getUsersList() {
     } catch (error) {
         console.error('Error getting users list:', error);
         return [];
-    }
-}
-
-export async function getNodeListForSurvey(surveyId) {
-    const sqlStatement = `SELECT P2P_NODES FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
-    try {
-        const response = await sendQueryAndGetRes(sqlStatement);
-        return response.result.length > 0 ? response.result[0].P2P_NODES : null;
-    } catch (error) {
-        console.error('Error getting node list for survey:', error);
-        return null;
-    }
-}
-
-export async function doesSurveyExist(surveyName) {
-    const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_NAME = '${surveyName}';`;
-    try {
-        const response = await sendQueryAndGetRes(sqlStatement);
-        return response.result.length > 0;
-    } catch (error) {
-        console.error('Error checking survey existence:', error);
-        return false;
     }
 }
 
@@ -111,18 +120,6 @@ export async function addNewUser(name, password, uid, addresses) {
         return true;
     } catch (error) {
         console.error('Error adding new user:', error);
-        return false;
-    }
-}
-
-export async function createNewSurvey(users) {
-    const surveyId = generateUniqueSurveyId();
-    const sqlStatement = `INSERT INTO SURVEYS(SURVEY_ID, USERS) VALUES ('${surveyId}', '${users}');`;
-    try {
-        await sendQueryAndGetRes(sqlStatement);
-        return true;
-    } catch (error) {
-        console.error('Error creating new survey:', error);
         return false;
     }
 }

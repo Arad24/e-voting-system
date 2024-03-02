@@ -1,3 +1,6 @@
 {
-  "/api/db/route": "app/api/db/route.js"
+  "/signup/page": "app/signup/page.js",
+  "/api/db/route": "app/api/db/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js"
 }

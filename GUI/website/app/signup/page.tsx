@@ -9,14 +9,13 @@ import {
   generateUniqueUserId,
   getUidByUsername
 } from '../dbApiConnector.js';
-import { useGlobalState } from '../globals';
+import { useGlobalStore } from '../globals';
 
 
 const LoginForum = () => {
   const [user_name, setName] = React.useState('');
   const [user_password, setPassword] = React.useState('');
-  const [global_username, setGUsername] = useGlobalState("username");
-  const [global_uid, setGUid] = useGlobalState("uid");
+  const {global_username, setUsername} = useGlobalStore();
   const router = useRouter();
   
   const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -27,10 +26,8 @@ const LoginForum = () => {
        {
         try {
           alert('Login succeeded');
-          setGUsername(user_name);
+          setUsername(user_name);
           localStorage.setItem('username', user_name);
-          const uid = await getUidByUsername(user_name);
-          setGUid(uid);
           router.push('./');
         } catch (error) {
           console.error('Error setting global UID:', error);

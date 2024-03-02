@@ -1,18 +1,22 @@
-import { createGlobalState } from 'react-hooks-global-state';
+import { create } from 'zustand';
 
-// Initialize storedUsername and storedUid from localStorage
-let storedUsername = '';
-let storedUid = '';
-
-if (typeof window !== "undefined") {
-  storedUsername = localStorage.getItem("username") || '';
+interface UsernameState {
+  global_username: string | null;
+  setUsername: (username: string | null) => void;
 }
 
-const initialState = {
-  username: storedUsername,
-  uid: storedUid,
-};
+export const useGlobalStore = create<UsernameState>((set) => {
+  // Check if localStorage is available (client-side)
+  const initialUsername = typeof window !== 'undefined' ? localStorage.getItem("username") : null;
 
-const { useGlobalState, setGlobalState } = createGlobalState(initialState);
-
-export { useGlobalState, setGlobalState };
+  return {
+    global_username: initialUsername,
+    setUsername: (newUsername) => {
+      // Set localStorage only if it's available
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("username", newUsername || ''); // Ensure newUsername is not null
+      }
+      set({ global_username: newUsername });
+    },
+  };
+});

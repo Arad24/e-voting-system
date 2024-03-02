@@ -1,5 +1,5 @@
 import sqlite3 from "sqlite3";
-import { open, Database } from "sqlite";
+import { open } from "sqlite";
 
 const DB_NAME = 'election.db';
 
@@ -12,7 +12,8 @@ const CREATE_USERS = `CREATE TABLE IF NOT EXISTS USERS(
 
 const CREATE_SURVEYS = `CREATE TABLE IF NOT EXISTS SURVEYS(
                         SURVEY_ID TEXT PRIMARY KEY NOT NULL,
-                        USERS TEXT NOT NULL
+                        SURVEY_NAME TEXT NOT NULL,
+                        SURVEY_OPTIONS TEXT NOT NULL
                         );`;
 
 

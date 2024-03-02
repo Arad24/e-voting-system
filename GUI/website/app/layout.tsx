@@ -1,9 +1,13 @@
 'use client'
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { useGlobalState } from './globals';
+import { useGlobalStore } from './globals';
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import {
+  getUidByUsername,
+  getPeerByUid
+} from './dbApiConnector'
 
 const inter = Inter({ subsets: ["latin"] });
 /*
@@ -20,17 +24,28 @@ export default function RootLayout({
 {
   const router = useRouter();
   const pathName = usePathname();
-  const [global_username, setUsername] = useGlobalState("username");
-  const [global_uid, setUid] = useGlobalState("uid");
+  const { global_username, setUsername } = useGlobalStore();
 
   useEffect(() => {
     const localUsername = localStorage.getItem('username');
     if (localUsername !== null) setUsername(localUsername);
     
-    if ((global_username === '' || global_uid === '') && (pathName.toLowerCase() !== '/signup' && pathName.toLowerCase() !== '/login' && pathName.toLowerCase() !== '/')) {
+    if ((global_username === '') && (pathName.toLowerCase() !== '/signup' && pathName.toLowerCase() !== '/login' && pathName.toLowerCase() !== '/')) {
       router.push('/login');
     }
-  }, [global_username, global_uid, pathName, router]);
+    else if ((global_username !== ''))
+    {
+      const fetchData = async () => {
+        const getUid = await getUidByUsername(global_username);
+        if (getUid != null) {
+          const peerResult = await getPeerByUid(getUid);
+          if(peerResult == null || peerResult == '') router.push('/');
+        }
+      };
+      fetchData();
+
+    }
+  }, [global_username]);
    
 
   return (

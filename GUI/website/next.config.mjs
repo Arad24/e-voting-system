@@ -40,7 +40,8 @@ const nextConfig =
       startListening();
     }
     return config;
-  }
+  },
+  pageExtensions: ['jsx', 'js', 'tsx', 'ts']
 };
 
 export default nextConfig;
