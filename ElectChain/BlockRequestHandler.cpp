@@ -71,7 +71,6 @@ RequestResult BlockRequestHandler::handleRequest(Message req)
 
 RequestResult BlockRequestHandler::handleAddVote(Message& req)
 {
-   
     try
     {
         auto blockData = Deserializer::deserializeAddVote(req.buffer);

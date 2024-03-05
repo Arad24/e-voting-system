@@ -91,7 +91,7 @@ AddVoteRequest Deserializer::deserializeAddVote(const std::vector<unsigned char>
 {
     nlohmann::json jsonMsg = getJSON(buffer);
 
-    AddVoteRequest req(jsonMsg["vote"], jsonMsg["survey_uid"]);
+    AddVoteRequest req(jsonMsg["survey_uid"], jsonMsg["vote"]);
 
     return req;
 }
