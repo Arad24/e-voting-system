@@ -54,10 +54,9 @@ export default function Page(props: PostView)
                 <h1 className='text-xl font-semibold mt-5 mb-10'>{surveyData.SURVEY_NAME}</h1>
                 <ul>
                     {parsedOptions.map((option, index) => (
-                        <li>
-                            <button className='bg-blue-500 my-2 py-2 px-5 rounded-md hover:bg-blue-400' key={index} onClick={() => handleButtonClick({option, surveyUid, global_username})}>{option}</button>
+                        <li key={index}>
+                            <button className='bg-blue-500 my-2 py-2 px-5 rounded-md hover:bg-blue-400' onClick={() => handleButtonClick({option, surveyUid, global_username})}>{option}</button>
                         </li>
-                        
                     ))}
                 </ul>
             </div>
@@ -65,6 +64,7 @@ export default function Page(props: PostView)
     );
 
 }
+
 const DefaultHeader = () => {
     return (
       <div className="bg-slate-100 p-8 text-center">
