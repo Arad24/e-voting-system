@@ -11,10 +11,15 @@ const CREATE_USERS = `CREATE TABLE IF NOT EXISTS USERS(
                       );`;
 
 const CREATE_SURVEYS = `CREATE TABLE IF NOT EXISTS SURVEYS(
-                        SURVEY_ID TEXT PRIMARY KEY NOT NULL,
+                        SURVEY_UID TEXT PRIMARY KEY NOT NULL,
                         SURVEY_NAME TEXT NOT NULL,
                         SURVEY_OPTIONS TEXT NOT NULL
                         );`;
+
+const CREATE_SOCKETS = `CREATE TABLE IF NOT EXISTS PEERS(
+                    SOCKETS TEXT PRIMARY KEY NOT NULL,
+                    PEER TEXT NOT NULL,
+    );`;
 
 
 
@@ -30,6 +35,7 @@ export async function openDatabase() {
         // Execute the CREATE TABLE statements for USERS and SURVEYS
         await database.exec(CREATE_USERS);
         await database.exec(CREATE_SURVEYS);
+        //await database.exec(CREATE_PEER);
         
         return database;
     } catch (error) {
@@ -45,7 +51,6 @@ export async function POST(req, res) {
   
     try {
         const { query } = await req.json();
-        console.log(query);
         
         const result = await getFromSql(query);
         
@@ -74,7 +79,6 @@ export async function POST(req, res) {
 async function getFromSql(query) {
     try {
         const result = await db.all(query);
-        console.log(result)
         return { res: result };
     } catch (error) {
         return { error: error.message };

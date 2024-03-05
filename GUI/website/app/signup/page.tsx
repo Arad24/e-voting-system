@@ -10,6 +10,7 @@ import {
   getUidByUsername
 } from '../dbApiConnector.js';
 import { useGlobalStore } from '../globals';
+import Link from 'next/link';
 
 
 const LoginForum = () => {
@@ -97,13 +98,13 @@ export async function handleAddUser(username: string, password: string) {
 
 const HomeBarLink = () => {
   return (
-    <div>
-      <a href="./">
-        <Image src={Logo} alt="My Image" width={100} height={100} className="cursor-pointer" />
-      </a>
+    <div className="bg-slate-100 p-8 text-center">
+      <Link href="/" legacyBehavior>
+        <a className="text-3xl hover:text-2xl">Election</a>
+      </Link>
     </div>
   );
-};
+}
 
 const MyNavBar = () => {
   return (

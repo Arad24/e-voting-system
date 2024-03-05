@@ -35,6 +35,4 @@ class Blockchain
 
 	private:
 		std::vector<Block> _blocks;
-
-		
 };

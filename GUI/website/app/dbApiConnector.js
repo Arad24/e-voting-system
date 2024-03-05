@@ -32,7 +32,7 @@ export async function doesSurveyExist(surveyName) {
 }
 
 export async function addNewSurvey(surveyId, surveyName, surveyOptions) {
-    const sqlStatement = `INSERT INTO SURVEYS(SURVEY_ID, SURVEY_NAME, SURVEY_OPTIONS) VALUES ('${surveyId}', '${surveyName}', '${JSON.stringify(surveyOptions)}');`;
+    const sqlStatement = `INSERT INTO SURVEYS(SURVEY_UID, SURVEY_NAME, SURVEY_OPTIONS) VALUES ('${sanitizeInput(surveyId)}', '${sanitizeInput(surveyName)}', '${sanitizeInput(JSON.stringify(surveyOptions))}');`;
     try {
         await sendQueryAndGetRes(sqlStatement);
         return true;
@@ -42,8 +42,13 @@ export async function addNewSurvey(surveyId, surveyName, surveyOptions) {
     }
 }
 
+function sanitizeInput(input)
+{
+    return input.replace(/'/g, "''");
+}
+
 export async function getSurveyOptions(surveyId) {
-    const sqlStatement = `SELECT SURVEY_OPTIONS FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
+    const sqlStatement = `SELECT SURVEY_OPTIONS FROM SURVEYS WHERE SURVEY_UID = '${surveyId}';`;
     try {
         const response = await sendQueryAndGetRes(sqlStatement);
         return response.result.length > 0 ? JSON.parse(response.result[0].SURVEY_OPTIONS) : null;
@@ -54,7 +59,7 @@ export async function getSurveyOptions(surveyId) {
 }
 
 export async function updateSurveyOptions(surveyId, surveyOptions) {
-    const sqlStatement = `UPDATE SURVEYS SET SURVEY_OPTIONS = '${JSON.stringify(surveyOptions)}' WHERE SURVEY_ID = '${surveyId}';`;
+    const sqlStatement = `UPDATE SURVEYS SET SURVEY_OPTIONS = '${JSON.stringify(surveyOptions)}' WHERE SURVEY_UID = '${surveyId}';`;
     try {
         await sendQueryAndGetRes(sqlStatement);
         return true;
@@ -92,10 +97,34 @@ export async function getUsersList() {
 }
 
 export async function doesSurveyIdExist(surveyId) {
-    const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_ID = '${surveyId}';`;
+    const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_UID = '${sanitizeInput(surveyId)}';`;
     try {
         const response = await sendQueryAndGetRes(sqlStatement);
         return response.result.length > 0;
+    } catch (error) {
+        console.error('Error checking survey ID existence:', error);
+        return false;
+    }
+}
+
+export async function getSocketByUid(userUid) 
+{
+    const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_UID = '${sanitizeInput(surveyId)}';`;
+    try {
+        const response = await sendQueryAndGetRes(sqlStatement);
+        return response.result.length > 0;
+    } catch (error) {
+        console.error('Error checking survey ID existence:', error);
+        return false;
+    }
+}
+
+export async function getAllSurveys() 
+{
+    const sqlStatement = `SELECT * FROM SURVEYS;`;
+    try {
+        const response = await sendQueryAndGetRes(sqlStatement);
+        return response.result;
     } catch (error) {
         console.error('Error checking survey ID existence:', error);
         return false;
@@ -124,14 +153,15 @@ export async function addNewUser(name, password, uid, addresses) {
     }
 }
 
-export async function isNewSurveyByUid(uid) {
-    const sqlStatement = `SELECT * FROM SURVEYS WHERE USERS LIKE '%${uid}%';`;
+export async function getSurveyByUid(uid) 
+{
+    const sqlStatement = `SELECT * FROM SURVEYS WHERE SURVEY_UID LIKE '${sanitizeInput(uid)}';`;
     try {
         const response = await sendQueryAndGetRes(sqlStatement);
-        return response.result.length > 0;
+        return response.result;
     } catch (error) {
         console.error('Error checking if survey is new by UID:', error);
-        return false;
+        return [];
     }
 }
 
@@ -243,7 +273,6 @@ async function handleExecuteQuery(query) {
         }
 
         const data = await response.json();
-        console.log('Data:', data);
         return data;
     } catch (error) {
         console.error('Error:', error);

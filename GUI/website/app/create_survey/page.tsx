@@ -2,13 +2,18 @@
 import { useEffect, useState } from 'react';
 import {
     addNewSurvey,
-    generateUniqueSurveyId
+    generateUniqueSurveyId,
 } from '../dbApiConnector'
+import { useGlobalStore } from '../globals';
+import Link from 'next/link';
+
 
 export default function Page() 
 {
   const [surveyName, setSurveyName] = useState('');
   const [surveyOptions, setSurveyOptions] = useState(['', '']); 
+  const { global_username } = useGlobalStore();
+
 
   const handleOptionChange = (index : any, value : any) => {
     const updatedOptions = [...surveyOptions];
@@ -36,6 +41,7 @@ export default function Page()
 
   return (
     <div className="text-center">
+      <DefaultHeader />
       <div className="bg-slate-100 m-16 p-5 rounded-md border-t-2 border-blue-500 text-center min-xl:mx-80 lg:mx-72">
         <div className="card-header">
           <h5>Create Survey</h5>
@@ -82,6 +88,16 @@ export default function Page()
   );
 }
 
+
+const DefaultHeader = () => {
+  return (
+    <div className="bg-slate-100 p-8 text-center">
+      <Link href="/" legacyBehavior>
+        <a className="text-3xl hover:text-2xl">Election</a>
+      </Link>
+    </div>
+  );
+}
 
 async function createSurvey(surveyName: string, surveyOptions: string[])
 {

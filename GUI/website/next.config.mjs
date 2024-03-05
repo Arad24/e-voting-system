@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
-import startListening from '../website/app/websocket.js';
+import { startListening } from './app/websocket.js';
+
 
 export const config = {
   experimental: {
@@ -14,8 +15,7 @@ export const config = {
 
 const nextConfig = 
 {
-  env: 
-  {
+  env: {
     ADD_BLOCK_CODE: "100",
     SHARE_KEY_CODE: "101",
     GET_PEERS_LIST_REQ: "102",
@@ -41,6 +41,7 @@ const nextConfig =
     }
     return config;
   },
+
   pageExtensions: ['jsx', 'js', 'tsx', 'ts']
 };
 

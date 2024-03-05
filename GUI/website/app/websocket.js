@@ -1,12 +1,12 @@
 import { WebSocketServer } from 'ws';
 import { handleRequest } from './Handler.js';
 import { changePeerByUid } from './dbApiConnector.js';
-import connectionsMap from './Connections.js';
 
 let wss;
+export const connectionsMap = new Map();
 
-
-export default async function startListening() {
+export async function startListening() 
+{
   try {
     wss = new WebSocketServer({ port: 8881 });
     console.log('WebSocket server started on port 8881');
@@ -21,28 +21,34 @@ export default async function startListening() {
     console.log(`New connection established `);
     ws.on('error', console.error);
 
-    ws.on('message', function message(data) {
+    ws.on('message', function message(data) 
+    {
       data = convertDataToString(data);
-      var res;
       if (typeof data === 'string') {
-        console.log(`data: ${data}`);
-        handleRequest(data)
+        if (data.startsWith('idiot')) handleSendMsgToSocket(data.substring('idiot'.length))
+        else
+        {
+          handleRequest(data)
           .then((result) => {
-            console.log(result);
             if (result && result.startsWith('204')) {
-              var jsonRes = JSON.parse(result.substring(3, result.length));
+              var jsonRes = JSON.parse(result.substring(3));
               connectionId = jsonRes.uid;
               connectionsMap.set(connectionId, ws);
               ws.send(result);
-            } else if (connectionsMap.has(connectionId)) {
+            } 
+            else if (connectionsMap.has(connectionId)) 
+            {
               ws.send(result);
-            } else {
+            } 
+            else {
               ws.send(`${process.env.LOGIN_FAILED_CODE}{"message":"You need to login first"}`);
             }
           })
           .catch((error) => {
             console.error('Error handling request:', error);
           });
+        }
+
       }
     });
 
@@ -52,8 +58,18 @@ export default async function startListening() {
   });
 }
 
-export async function sendMsgToWs(ws, msg) {
-  if (ws !== null) {
+async function handleSendMsgToSocket(msg)
+{
+  var jsonRes = JSON.parse(msg);
+  sendMsgToWs(jsonRes.uid, `${jsonRes.msg_code}${JSON.stringify(jsonRes.msg_json)}`);
+}
+
+export async function sendMsgToWs(uid, msg) 
+{
+  console.log(msg)
+  const ws = connectionsMap.get(uid);
+  if (ws) 
+  {
     ws.send(msg, (err) => {
       if (err) {
         console.error('Error sending message:', err);
@@ -81,7 +97,6 @@ function convertDataToString(data) {
 async function closeSocket(connectionId) 
 {
   console.log(`Connection ${connectionId} closed`);
-  
   try {
     connectionsMap.delete(connectionId);
     await changePeerByUid(connectionId, 'None');
