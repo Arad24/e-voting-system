@@ -2,35 +2,32 @@
 
 std::string Serializer::serializeMessageBlock(Block block)
 {
-    std::vector<unsigned char> message;
-    nlohmann::json jsMsg = {};
+    nlohmann::json jsMsg = {
+        {"prevHash", block.getPrevHash()},
+        {"hash", block.getHash()},
+        {"data", block.getData()},
+        {"index", block.getIndex()},
+        {"nonce", block.getNonce()}
+    };
 
-    jsMsg["prevHash"] = block.getPrevHash();
-    jsMsg["hash"] = block.getHash();
-    jsMsg["data"] = block.getData();
-    jsMsg["index"] = block.getIndex();
-    jsMsg["nonce"] = block.getNonce();
+    std::string jsonString = jsMsg.dump();
+    std::vector<unsigned char> message(jsonString.begin(), jsonString.end());
+    std::string str(message.begin(), message.end());
 
-    for (char c : nlohmann::to_string(jsMsg))
-    {
-        message.push_back(c);
-    }
-
-    return StringUtils::vecToString(message);
+    return str;
 }
 
 std::string Serializer::serializeMessage(Message msg)
 {
-    std::vector<unsigned char> message;
     nlohmann::json jsMsg = {};
     jsMsg["id"] = msg.id;
     jsMsg["buffer"] = msg.buffer;
 
-    for (char c : nlohmann::to_string(jsMsg))
-    {
-        message.push_back(c);
-    }
-    return StringUtils::vecToString(message);
+    std::string jsonString = jsMsg.dump();
+    std::vector<unsigned char> message(jsonString.begin(), jsonString.end());
+    std::string str(message.begin(), message.end());
+
+    return str;
 }
 
 std::string Serializer::serializeMessage(Response res, std::string code)
@@ -54,24 +51,21 @@ std::string Serializer::serializeMessage(Response res, std::string code)
 
 std::string Serializer::serializeMessage(SharePKData share)
 {
-    std::vector<unsigned char> message;
     nlohmann::json jsMsg = {};
 
     jsMsg["public_key"] = share.public_key;
     jsMsg["user_uid"] = share.user_uid;
 
 
-    for (char c : nlohmann::to_string(jsMsg))
-    {
-        message.push_back(c);
-    }
+    std::string jsonString = jsMsg.dump();
+    std::vector<unsigned char> message(jsonString.begin(), jsonString.end());
+    std::string str(message.begin(), message.end());
 
-    return StringUtils::vecToString(message);
+    return str;
 }
 
 std::string Serializer::serializeMessage(VoteBlockData vote_block)
 {
-    std::vector<unsigned char> message;
     nlohmann::json jsMsg = {};
 
     jsMsg["user_uid"] = vote_block.user_uid;
@@ -79,12 +73,11 @@ std::string Serializer::serializeMessage(VoteBlockData vote_block)
     jsMsg["vote"] = vote_block.vote;
     jsMsg["survey_uid"] = vote_block.survey_uid;
 
-    for (char c : nlohmann::to_string(jsMsg))
-    {
-        message.push_back(c);
-    }
+    std::string jsonString = jsMsg.dump();
+    std::vector<unsigned char> message(jsonString.begin(), jsonString.end());
+    std::string str(message.begin(), message.end());
 
-    return StringUtils::vecToString(message);
+    return str;
 }
 
 std::string Serializer::serializeMessage(CountVotesResponse res)

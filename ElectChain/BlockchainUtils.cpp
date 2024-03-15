@@ -1,7 +1,7 @@
 # include "BlockchainUtils.h"
 
 std::shared_ptr<KeyPair> BlockchainUtils::_pKeys;
-std::shared_ptr<Blockchain> BlockchainUtils::_bcCopy;
+std::shared_ptr<Blockchain> BlockchainUtils::_bcCopy = std::make_shared<Blockchain>();
 std::string BlockchainUtils::_userUid;
 
 std::string BlockchainUtils::calculateHash(const std::string& data)

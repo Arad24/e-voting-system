@@ -1,5 +1,7 @@
 #pragma once
 # include "Deserializer.h"
+#include <string>
+#include <iostream>
 
 // Forward declarations
 class Block;

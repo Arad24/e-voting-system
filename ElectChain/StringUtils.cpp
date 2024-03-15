@@ -7,7 +7,7 @@ std::string StringUtils::vecToString(std::vector<unsigned char> vec)
     // Format vector elements as string
     for (const auto& elem : vec)
     {
-        ss << elem << " ";
+        ss << elem << "";
     }
 
     return ss.str();

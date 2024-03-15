@@ -7,12 +7,18 @@ std::shared_ptr<Block> Blockchain::createNewBlock(std::string data)
 }
 
 
+Blockchain::Blockchain()
+{
+    _chainLength = 0;
+}
+
 void Blockchain::addBlock(Block block)
 {
 	if (validateBlock(block))
 	{
 		_blocks.push_back(block);
         appendToFile(block);
+        updateChainLength();
 	}
 }
 
@@ -20,6 +26,65 @@ int Blockchain::getLastIndex()
 {
     int lastIndex = (_blocks.empty()) ? (0) : (getLatestBlock().getIndex());
     return lastIndex;
+}
+
+int Blockchain::getChainLength()
+{
+    return _chainLength;
+}
+
+void Blockchain::updateChainLength()
+{
+    _chainLength = _blocks.size();
+}
+
+void Blockchain::updateChain(std::vector<Block> newChain)
+{
+    std::string first_hash = newChain.front().getPrevHash();
+    std::vector<Block> longestChain = isLongestChain(first_hash, newChain);
+    if (longestChain.size() > _blocks.size()) {
+        _blocks = longestChain;
+        updateChainLength();
+    }
+}
+
+std::vector<Block> Blockchain::isLongestChain(std::string hash, std::vector<Block> newChain)
+{
+    int flag = 0;
+    std::vector<Block> longestChain;
+    std::vector<Block> currentChain = getBlocks();
+
+    if (currentChain.empty()) {
+        return newChain;
+    }
+
+    for (auto& block : currentChain) {
+        if (block.getHash() != hash) {
+            longestChain.push_back(block);
+        }
+        if (block.getHash() == hash) {
+            longestChain.push_back(block);
+            flag = 1;
+            break;
+        }
+    }
+    if (flag)
+    {
+        longestChain.insert(longestChain.end(), newChain.begin(), newChain.end());
+    }
+    else
+    {
+        if (newChain.size() > currentChain.size())
+        {
+            longestChain = newChain;
+        }
+        else
+        {
+            longestChain = currentChain;
+        }
+    }
+
+    return longestChain;
 }
 
 Block Blockchain::getLatestBlock()

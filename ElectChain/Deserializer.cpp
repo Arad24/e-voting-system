@@ -9,7 +9,9 @@ nlohmann::json getJSON(std::vector<unsigned char> buffer)
 
 Block Deserializer::deserializeMessageBlock(std::vector<unsigned char> buffer)
 {
-    nlohmann::json jsonMsg = getJSON(buffer);
+    std::string jsonString(buffer.begin(), buffer.end());
+
+    nlohmann::json jsonMsg = nlohmann::json::parse(jsonString);
 
     Block block(jsonMsg["prevHash"], jsonMsg["hash"], jsonMsg["data"], jsonMsg["index"], jsonMsg["nonce"]);
 
@@ -91,7 +93,7 @@ AddVoteRequest Deserializer::deserializeAddVote(const std::vector<unsigned char>
 {
     nlohmann::json jsonMsg = getJSON(buffer);
 
-    AddVoteRequest req(jsonMsg["survey_uid"], jsonMsg["vote"]);
+    AddVoteRequest req(jsonMsg["vote"], jsonMsg["survey_uid"]);
 
     return req;
 }

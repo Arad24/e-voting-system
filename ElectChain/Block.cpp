@@ -1,5 +1,4 @@
 # include "Block.h"
-
 Block::Block(std::string prevHash, std::string hash, std::string data, int index, int nonce)
 {
 	this->_hash = hash;
