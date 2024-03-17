@@ -222,7 +222,6 @@ void Blockchain::loadFromFile()
             std::getline(ss, data, '|') &&
             ss >> index >> delimiter >> nonce)
         {
-            std::cout << data;
             Block newBlock(prevHash, hash, data, index, nonce);
             _blocks.push_back(newBlock);
         }

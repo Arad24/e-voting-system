@@ -6,6 +6,7 @@ import {
 } from '../dbApiConnector'
 import { useGlobalStore } from '../globals';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 
 export default function Page() 
@@ -13,6 +14,7 @@ export default function Page()
   const [surveyName, setSurveyName] = useState('');
   const [surveyOptions, setSurveyOptions] = useState(['', '']); 
   const { global_username } = useGlobalStore();
+  const router = useRouter();
 
 
   const handleOptionChange = (index : any, value : any) => {
@@ -27,9 +29,19 @@ export default function Page()
     }
   };
 
-  const handleCreateSurvey = () => 
+  const handleCreateSurvey = async () => 
   {
-    createSurvey(surveyName, surveyOptions);
+    var uid = await createSurvey(surveyName, surveyOptions);
+    if (uid == '')
+    {
+      alert('Error creating the survey');
+    }
+    else
+    {
+      alert('Survey created');
+      router.push(`./surveys/${uid}`);
+    }
+    
   };
 
   const removeOption = (index: number) => {
@@ -105,11 +117,15 @@ async function createSurvey(surveyName: string, surveyOptions: string[])
     {
         const surveyUid = await generateUniqueSurveyId();
         const survey = await addNewSurvey(surveyUid, surveyName, JSON.stringify(surveyOptions));
-        if (survey) alert('Survey created')
-        else alert('Error creating the survey')
+        if (survey)
+        {
+          return surveyUid;
+        }
+        else return '';
     }
     catch(e : any)
     {
         console.log(e);
+        return '';
     }
 }

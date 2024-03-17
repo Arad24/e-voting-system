@@ -15,7 +15,8 @@ bool BlockRequestHandler::isRequestRelevant(Message req)
     return (req.id >= ADD_BLOCK_CODE && req.id <= LOGIN_CODE) ||
            (req.id >= PEERS_LIST_SUCCEEDED_CODE && req.id <= LOGIN_SUCCEEDED_CODE) ||
            (req.id >= ADD_VOTE_CODE && req.id <= COUNT_VOTES_CODE) ||
-           (req.id >= SUCCESS_ADD_VOTE && req.id <= SUCCESS_COUNT_VOTES);
+           (req.id >= SUCCESS_ADD_VOTE && req.id <= SUCCESS_COUNT_VOTES) ||
+            req.id == ALREADY_VOTE_REQ;
 }
 
 RequestResult BlockRequestHandler::handleRequest(Message req) 
@@ -58,6 +59,10 @@ RequestResult BlockRequestHandler::handleRequest(Message req)
         else if (reqCode == COUNT_VOTES_CODE)
         {
             retRes = handleCountVotes(req);
+        }
+        else if (reqCode == ALREADY_VOTE_REQ)
+        {
+            retRes = handleIsAlreadyVote(req);
         }
         return retRes;
     }
@@ -126,6 +131,25 @@ RequestResult BlockRequestHandler::handleCountVotes(Message& req)
         CountVotesResponse votesRes(BlockchainUtils::countVotes(*BlockchainUtils::_bcCopy, reqData.survey_uid));
 
         return { Serializer::serializeMessage(votesRes) };
+    }
+    catch (const std::exception& e)
+    {
+        Response res = { ERROR_RESPONSE };
+        return { Serializer::serializeMessage(res, DONT_SEND_CODE) };
+    }
+}
+
+RequestResult BlockRequestHandler::handleIsAlreadyVote(Message& req)
+{
+    try
+    {
+        auto reqData = Deserializer::deserializeAlreadyVote(req.buffer);
+        
+        std::string code = (BlockchainUtils::isAlreadyVote(*_blockchain, reqData.user_uid, reqData.survey_uid)) ?
+            (ALREADY_VOTE_TRUE) : (ALREADY_VOTE_FALSE);
+        Response res("");
+
+        return { Serializer::serializeMessage(res, code) };
     }
     catch (const std::exception& e)
     {

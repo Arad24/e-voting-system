@@ -12,7 +12,8 @@ class BlockRequestHandler;
 struct Response
 {
     std::string message;
-};
+    Response(std::string msg) : message(msg);
+} typedef Response;
 
 struct Message
 {
@@ -79,6 +80,13 @@ struct GetBlocksRequest
     GetBlocksRequest(std::string last_hash1) : last_hash(last_hash1) {}
 } typedef GetBlocksRequest;
 
+struct AlreadyVoteRequest
+{
+    std::string user_uid;
+    std::string survey_uid;
+    AlreadyVoteRequest(std::string user_uid1, std::string survey_uid1) : user_uid(user_uid1), survey_uid(survey_uid1) {}
+} typedef AlreadyVoteRequest;
+
 struct GetBlocksResponse
 {
     std::vector<Block> blocks;
@@ -102,6 +110,9 @@ struct GetBlocksResponse
 # define SUCCESS_ADD_VOTE "500"
 # define ERROR_COUNT_VOTES "401"
 # define SUCCESS_COUNT_VOTES "501"
+# define ALREADY_VOTE_REQ "600"
+# define ALREADY_VOTE_TRUE "601"
+# define ALREADY_VOTE_FALSE "601"
 
 class Deserializer
 {
@@ -116,4 +127,5 @@ class Deserializer
         static CountVotesRequest deserializeCountVotes(const std::vector<unsigned char> buffer);
         static GetPeersRequest deserializeGetPeers(const std::vector<unsigned char> buffer);
         static GetBlocksRequest deserializeGetBlocksRequest(const std::vector<unsigned char> buffer);
+        static AlreadyVoteRequest deserializeAlreadyVote(const std::vector<unsigned char> buffer)
 };

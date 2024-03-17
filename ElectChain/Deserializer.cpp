@@ -30,7 +30,7 @@ ShareKeyRequest Deserializer::deserializeShareKey(const std::vector<unsigned cha
 
     nlohmann::json jsonMsg = getJSON(buffer);
 
-    ShareKeyRequest req(jsonMsg["uid"], jsonMsg["publicKey"]);
+    ShareKeyRequest req(jsonMsg["user_uid"], jsonMsg["public_key"]);
 
     return req;
 }
@@ -47,10 +47,10 @@ std::vector<Block> Deserializer::deserializeGetBlocksResponse(const std::vector<
         for (const auto& blockJson : jsonData)
         {
             Block block(blockJson["prevHash"].get<std::string>(),
-                blockJson["blockHash"].get<std::string>(),
+                blockJson["hash"].get<std::string>(),
                 blockJson["data"].get<std::string>(),
                 std::stoi(blockJson["index"].get<std::string>()),
-                std::stoi(blockJson["Nonce"].get<std::string>()));
+                std::stoi(blockJson["nonce"].get<std::string>()));
 
             blockchain.push_back(block);
         }
@@ -83,7 +83,16 @@ VoteBlockData Deserializer::deserializeVoteBlockData(const std::vector<unsigned 
 {
     nlohmann::json jsonMsg = getJSON(buffer);
 
-    VoteBlockData req(jsonMsg["sign_data"], jsonMsg["voter_id"], jsonMsg["candidate"], jsonMsg["survey_uid"]);
+    VoteBlockData req(jsonMsg["sign_vote"], jsonMsg["user_uid"], jsonMsg["vote"], jsonMsg["survey_uid"]);
+
+    return req;
+}
+
+AlreadyVoteRequest Deserializer::deserializeAlreadyVote(const std::vector<unsigned char> buffer)
+{
+    nlohmann::json jsonMsg = getJSON(buffer);
+
+    AlreadyVoteRequest req(jsonMsg["user_uid"], jsonMsg["survey_uid"]);
 
     return req;
 }

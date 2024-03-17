@@ -36,6 +36,7 @@ class BlockRequestHandler : public IRequestHandler
         RequestResult handleCountVotes(Message& req);
         RequestResult handlePeersList(Message& req);
         void shareBlockInTheNetwork(Block block);
+        RequestResult handleIsAlreadyVote(Message& req);
         
 
         std::shared_ptr<Peer> _peer;

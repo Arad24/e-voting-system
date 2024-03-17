@@ -44,30 +44,17 @@ std::shared_ptr<KeyPair> BlockchainUtils::generateKeys()
 std::string BlockchainUtils::publicKeyToString(RSA* publicKey)
 {
 	BIO* bio = BIO_new(BIO_s_mem());
-	if (!bio)
-		throw std::runtime_error("Failed to create memory BIO.");
+	char* buffer = nullptr;
 
-	// Write the RSA public key to the BIO in PEM format
-	if (!PEM_write_bio_RSA_PUBKEY(bio, publicKey)) {
-		BIO_free(bio);
-		throw std::runtime_error("Failed to write RSA public key to memory BIO.");
-	}
+	PEM_write_bio_RSA_PUBKEY(bio, publicKey);
 
-	// Get the data from the BIO
-	char* pkStr;
-	long keySize = BIO_get_mem_data(bio, &pkStr);
-	if (keySize <= 0) {
-		BIO_free(bio);
-		throw std::runtime_error("Failed to get public key data from memory BIO.");
-	}
+	size_t length = BIO_get_mem_data(bio, &buffer);
 
-	// Remove newline characters from the PEM string
-	std::string pemString(pkStr, keySize);
-	pemString.erase(std::remove(pemString.begin(), pemString.end(), '\n'), pemString.end());
+	std::string publicKeyString(buffer, length);
+	std::string base64Key = StringUtils::base64_encode(publicKeyString);
+
 	BIO_free(bio);
-
-	std::string base64Key = StringUtils::base64_encode(pemString);
-
+	
 	return base64Key;
 }
 
@@ -275,6 +262,7 @@ bool BlockchainUtils::verifySignature(const std::string& message, const std::str
 
 	return result == 1;
 }
+
 std::map<std::string, int> BlockchainUtils::countVotes(Blockchain& blockchain, std::string survey_uid)
 {
 	std::map<std::string, int> votes;
@@ -433,7 +421,9 @@ bool BlockchainUtils::isValidShareKeyBlock(Block block)
 std::string BlockchainUtils::createSharedKeyData()
 {
 	nlohmann::json data = {};
-	if (_pKeys->publicKey == NULL || _userUid == "") return "";
+	if (!_pKeys || !_pKeys->publicKey || _userUid.empty()) {
+		return ""; 
+	}
 
 	data["public_key"] = BlockchainUtils::publicKeyToString(_pKeys->publicKey);
 	data["user_uid"] = _userUid;
