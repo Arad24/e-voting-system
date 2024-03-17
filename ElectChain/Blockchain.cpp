@@ -22,6 +22,11 @@ void Blockchain::addBlock(Block block)
 	}
 }
 
+void Blockchain::addGenesisBlock()
+{
+    addBlock(*createNewBlock("Genesis Block"));
+}
+
 int Blockchain::getLastIndex()
 {
     int lastIndex = (_blocks.empty()) ? (0) : (getLatestBlock().getIndex());
@@ -146,63 +151,80 @@ void Blockchain::saveToFile()
         return;
     }
 
-    // Write header
-    file << "PreviousHash,Hash,Data,Index,Nonce\n";
+    try {
+        // Write header
+        file << "PreviousHash|Hash|Data|Index|Nonce\n";
 
-    // Write data
-    for (auto& block : _blocks) {
-        std::stringstream ss;
-        ss << block.getPrevHash() << "," << block.getHash() << "," << block.getData() << ","
-            << block.getIndex() << "," << block.getNonce() << "\n";
-        file << ss.str();
+        // Write data
+        for (auto block : _blocks) {
+            std::stringstream ss;
+            ss << block.getPrevHash() << "|" << block.getHash() << "|" << block.getData() << "|"
+                << block.getIndex() << "|" << block.getNonce() << "\n";
+            file << ss.str();
+        }
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Exception occurred while writing to file: " << e.what() << std::endl;
+        file.close();
+        return;
     }
 
     file.close();
 }
+
 
 void Blockchain::appendToFile(Block block) 
 {
     std::string filename = BLOCKCHAIN_FILENAME;
     std::ofstream file(filename, std::ios_base::app);
-    if (!file.is_open()) 
-    {
+    if (!file.is_open()) {
         std::cerr << "Failed to open file: " << filename << std::endl;
         return;
     }
 
     std::stringstream ss;
-    ss << block.getPrevHash() << "," << block.getHash() << "," << block.getData() << ","
-        << block.getIndex() << "," << block.getNonce() << "\n";
+    ss << block.getPrevHash() << "|" << block.getHash() << "|" << block.getData() << "|"
+        << block.getIndex() << "|" << block.getNonce() << "\n";
     file << ss.str();
 
     file.close();
 }
+
 
 void Blockchain::loadFromFile()
 {
     std::string filename = BLOCKCHAIN_FILENAME;
     std::ifstream file(filename);
     std::string line;
-    if (!file.is_open()) 
+    if (!file.is_open())
     {
-        std::ofstream newFile(filename); 
-        newFile << "PreviousHash,Hash,Data,Index,Nonce\n";
+        std::ofstream newFile(filename);
+        newFile << "PreviousHash|Hash|Data|Index|Nonce\n";
         newFile.close();
         return;
     }
 
-    // Read Blocks
+
+    bool isFirstLine = true;
     while (std::getline(file, line)) {
+        if (isFirstLine) {
+            isFirstLine = false;
+            continue;
+        }
+
         std::stringstream ss(line);
         std::string prevHash, hash, data;
         int index, nonce;
-        char comma;
+        char delimiter;
 
-        if (std::getline(ss, prevHash, ',') &&
-            std::getline(ss, hash, ',') &&
-            std::getline(ss, data, ',') &&
-            ss >> index >> comma >> nonce) {
-            _blocks.push_back({ prevHash, hash, data, index, nonce });
+        if (std::getline(ss, prevHash, '|') &&
+            std::getline(ss, hash, '|') &&
+            std::getline(ss, data, '|') &&
+            ss >> index >> delimiter >> nonce)
+        {
+            std::cout << data;
+            Block newBlock(prevHash, hash, data, index, nonce);
+            _blocks.push_back(newBlock);
         }
         else {
             std::cerr << "Error parsing line: " << line << std::endl;

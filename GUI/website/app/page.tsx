@@ -133,7 +133,7 @@ const LoginError = () => {
     <div className="bg-slate-100 align-top mt-16 mx-10 px-10 py-10 rounded md text-center border-t-4 border-blue-400 md:mx-20 lg:mx-30 xl:mx-40 xxl:mx-50">
       <h1 className="text-xl">Error</h1>
       <h2 className="mb-10">Error: You need to login first</h2>
-      <Link href="/surveys" legacyBehavior>
+      <Link href="/login" legacyBehavior>
         <a className="bg-blue-400 px-8 py-2 rounded-md text-white">Login</a>
       </Link>
       

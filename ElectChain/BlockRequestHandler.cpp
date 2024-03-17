@@ -99,18 +99,22 @@ std::string BlockRequestHandler::createVoteData(std::string vote, std::string su
     {
         throw std::exception("User already vote.");
     }
-    else if (BlockchainUtils::_pKeys->privateKey)
+    else if (BlockchainUtils::_pKeys && BlockchainUtils::_pKeys->privateKey) 
     {
-        voteData += "'survey_uid':'" + survey_uid + "',";
-        voteData += "'vote':'" + vote + "',";
-        voteData += "'sign_vote':'" + BlockchainUtils::signMessage(vote, BlockchainUtils::_pKeys->privateKey) + "',";
-        voteData += "'user_uid':'" + BlockchainUtils::_userUid + "'";
+        voteData += "\"survey_uid\":\"" + survey_uid + "\",";
+        voteData += "\"vote\":\"" + vote + "\",";
+        std::string signature = BlockchainUtils::signMessage(vote, BlockchainUtils::_pKeys->privateKey);
+        voteData += "\"sign_vote\":\"" + StringUtils::base64_encode(signature) + "\",";
+        voteData += "\"user_uid\":\"" + BlockchainUtils::_userUid + "\"";
         voteData += "}";
     }
     else
     {
         throw std::exception("public key doesn't exist.");
     }
+
+    std::cout << voteData;
+    return voteData;
 
 }
 
@@ -208,6 +212,13 @@ RequestResult BlockRequestHandler::handleAddBlock(Block blockToAdd)
 
     if (BlockchainUtils::isVoteBlock(blockToAdd) && BlockchainUtils::isValidVoteBlock(blockToAdd))
     {
+        if (!BlockchainUtils::isAlreadySharePK(*_blockchain, BlockchainUtils::_userUid))
+        {
+            std::string data = BlockchainUtils::createSharedKeyData();
+            if (data == "") throw std::exception("error creating share key block");
+            Block* shareKeyBlock = new Block(data);
+            handleShareKey(*shareKeyBlock);
+        }
         shareBlockInTheNetwork(blockToAdd);
         Response res = { SUCCESS_RESPONSE };
         return { Serializer::serializeMessage(res, DONT_SEND_CODE) };

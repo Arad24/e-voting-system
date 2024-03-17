@@ -66,6 +66,7 @@ class BlockchainUtils
 		static std::string publicKeyToString(RSA* publicKey);
 		static RSA* strToPK(std::string pk);
 		static bool loadKeysFromFile(std::string fileName);
+		static std::string createSharedKeyData();
 
 		// Votes
 		static std::map<std::string, int> countVotes(Blockchain& blockchain, std::string survey_uid);

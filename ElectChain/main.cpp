@@ -49,6 +49,11 @@ int main()
         BlockchainUtils::generateKeys();
     }
     
+    if (blockchain->getBlocks().empty())
+    {
+        blockchain->addGenesisBlock();
+    }
+    
 
     std::thread p2pThread(&Peer::startAccept, peer.get());
     p2pThread.detach();
@@ -88,6 +93,8 @@ bool Login(std::shared_ptr<Communicator> cm, std::string peer_address)
 
     return false;
 }
+
+
 
 
 bool loadKeys()

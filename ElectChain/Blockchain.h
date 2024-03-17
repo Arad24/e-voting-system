@@ -19,6 +19,7 @@ class Blockchain
 
 		void addBlock(Block block);
 		std::shared_ptr<Block> createNewBlock(std::string data);
+		void addGenesisBlock();
 
 		// Getters
 		Block getLatestBlock();
@@ -37,6 +38,7 @@ class Blockchain
 		void updateChainLength();
 		void updateChain(std::vector<Block> newChain);
 		std::vector<Block> isLongestChain(std::string hash, std::vector<Block> newChain);
+
 
 		void display();
 

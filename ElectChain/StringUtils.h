@@ -20,6 +20,8 @@ class StringUtils
         static std::string removeSquareBrackets(std::string input);
         static void removeFirstCharacter(std::string& str);
         static void removeLastCharacter(std::string& str);
+        static std::string base64_encode(std::string in);
+        static std::string base64_decode(std::string in);
 
 
 };
