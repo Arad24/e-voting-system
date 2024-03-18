@@ -171,6 +171,17 @@ void Peer::closePeer()
     _io_context.stop();
 }
 
+void Peer::sendLastHash()
+{
+    if (!this->_sockets.empty())
+    {
+        std::shared_ptr<tcp::socket> soc = this->_sockets.back();
+        std::string data = "103{lastblock:" + this->_blockchain->getLatestBlock().getHash() + "}";
+        std::shared_ptr<boost::asio::streambuf> buffer = this->convertMsgIntoBuffer(data);
+        sendMsgToSocket(soc, buffer);
+    }
+}
+
 void Peer::closeOpenSockets()
 {
     for (auto& socket : _sockets)
