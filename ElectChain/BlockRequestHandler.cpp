@@ -79,6 +79,14 @@ RequestResult BlockRequestHandler::handleAddVote(Message& req)
     try
     {
         auto blockData = Deserializer::deserializeAddVote(req.buffer);
+        if (!BlockchainUtils::isAlreadySharePK(*_blockchain, BlockchainUtils::_userUid))
+        {
+            std::string data = BlockchainUtils::createSharedKeyData();
+            if (data == "") throw std::exception("error creating share key block");
+            Block* shareKeyBlock = new Block(data);
+            handleShareKey(*shareKeyBlock);
+        }
+        
         auto block = _blockchain->createNewBlock(createVoteData(blockData.vote, blockData.survey_uid));
         auto res = handleAddBlock(*block); 
         if (res.response.find(INVALID_REQUEST_ERROR) != std::string::npos) return res;
@@ -236,13 +244,17 @@ RequestResult BlockRequestHandler::handleAddBlock(Block blockToAdd)
 
     if (BlockchainUtils::isVoteBlock(blockToAdd) && BlockchainUtils::isValidVoteBlock(blockToAdd))
     {
-        if (!BlockchainUtils::isAlreadySharePK(*_blockchain, BlockchainUtils::_userUid))
+        if (BlockchainUtils::isAlreadySharePK(*_blockchain, BlockchainUtils::_userUid))
         {
-            std::string data = BlockchainUtils::createSharedKeyData();
-            if (data == "") throw std::exception("error creating share key block");
-            Block* shareKeyBlock = new Block(data);
-            handleShareKey(*shareKeyBlock);
+            shareBlockInTheNetwork(blockToAdd);
+            Response res = { SUCCESS_RESPONSE };
+            return { Serializer::serializeMessage(res, DONT_SEND_CODE) };
         }
+        Response res = { "Need to share key first" };
+        return { Serializer::serializeMessage(res, ERROR_ADD_VOTE)};
+    }
+    else if (BlockchainUtils::isShareKeyBlock(blockToAdd) && BlockchainUtils::isValidShareKeyBlock(blockToAdd))
+    {
         shareBlockInTheNetwork(blockToAdd);
         Response res = { SUCCESS_RESPONSE };
         return { Serializer::serializeMessage(res, DONT_SEND_CODE) };

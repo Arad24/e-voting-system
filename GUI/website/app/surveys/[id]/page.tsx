@@ -29,7 +29,6 @@ export default function Page(props: PostView)
             {
                 const surveys = await getSurveyByUid(surveyUid);
                 const survey = surveys.length > 0 ? surveys[0] : null;
-                console.log("Fetched survey:", survey); // Log fetched survey for debugging
                 setSurveyData(survey); 
             } catch (error) {
                 console.error('Error fetching survey:', error);

@@ -12,7 +12,7 @@ class BlockRequestHandler;
 struct Response
 {
     std::string message;
-    Response(std::string msg) : message(msg);
+    Response(std::string msg) : message(msg) {}
 } typedef Response;
 
 struct Message
@@ -127,5 +127,5 @@ class Deserializer
         static CountVotesRequest deserializeCountVotes(const std::vector<unsigned char> buffer);
         static GetPeersRequest deserializeGetPeers(const std::vector<unsigned char> buffer);
         static GetBlocksRequest deserializeGetBlocksRequest(const std::vector<unsigned char> buffer);
-        static AlreadyVoteRequest deserializeAlreadyVote(const std::vector<unsigned char> buffer)
+        static AlreadyVoteRequest deserializeAlreadyVote(const std::vector<unsigned char> buffer);
 };

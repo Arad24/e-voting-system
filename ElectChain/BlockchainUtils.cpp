@@ -298,20 +298,21 @@ std::vector<Block> getUserBlocks(Blockchain bc, std::string uid)
 {
 	std::vector<Block> userBlocks;
 
-	for (auto block : bc.getBlocks())
+	for (auto& block : bc.getBlocks()) 
 	{
 		nlohmann::json jsonData;
 		try 
 		{
-			nlohmann::json jsonData = nlohmann::json::parse(block.getData());
+			jsonData = nlohmann::json::parse(block.getData());
 		}
-		catch (const nlohmann::json::parse_error&) {
-			jsonData = NULL;
-		}
-		
-		if ((jsonData != NULL) && (BlockchainUtils::isVoteBlock(block) || BlockchainUtils::isShareKeyBlock(block)))
+		catch (const nlohmann::json::parse_error&) 
 		{
-			if (jsonData["user_uid"] == uid)
+			continue;
+		}
+
+		if ((jsonData.contains("user_uid")) && (BlockchainUtils::isVoteBlock(block) || BlockchainUtils::isShareKeyBlock(block))) 
+		{
+			if (jsonData["user_uid"] == uid) 
 			{
 				userBlocks.push_back(block);
 			}
