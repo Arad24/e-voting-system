@@ -39,7 +39,11 @@ export default function RootLayout({
         const getUid = await getUidByUsername(global_username);
         if (getUid != null) {
           const peerResult = await getPeerByUid(getUid);
-          if(peerResult == null || peerResult == 'None' || peerResult == '') router.push('/');
+          console.log('peerResult:', peerResult);
+          if (peerResult === null || peerResult === 'None' || peerResult === '') {
+            console.log('Redirecting to home page');
+            router.push('/');
+          }
         }
       };
       fetchData();

@@ -112,7 +112,7 @@ struct GetBlocksResponse
 # define SUCCESS_COUNT_VOTES "501"
 # define ALREADY_VOTE_REQ "600"
 # define ALREADY_VOTE_TRUE "601"
-# define ALREADY_VOTE_FALSE "601"
+# define ALREADY_VOTE_FALSE "602"
 
 class Deserializer
 {

@@ -8,19 +8,19 @@ import {
 } from './dbApiConnector.js';
 
 
+let nameUid = '';
 
 export default function Home({ data } : {data : any}) 
 {
   const { global_username, setUsername } = useGlobalStore();
   const [peer, setPeer] = useState('None');
-  const [nameUid, setNameUid] = useState('');
 
 
   useEffect(() => {
-    const fetchData = async (global_username: string | null, setNameUid: Function, setPeer: Function) => {
+    const fetchData = async (global_username: string | null, setPeer: Function) => {
       if (global_username) {
         const uid = await getUidByUsername(global_username);
-        setNameUid(uid);
+        nameUid = uid;
         if (uid != null) {
           const peerResult = await getPeerByUid(uid);
           setPeer(peerResult);
@@ -28,16 +28,11 @@ export default function Home({ data } : {data : any})
       }
     };
 
-    fetchData(global_username, setNameUid, setPeer);
+    fetchData(global_username, setPeer);
   }, [global_username]);
 
 
-  const handleUpdatePeer = async () => {
-    if (nameUid !== '') {
-      const peerResult = await getPeerByUid(nameUid);
-      setPeer(peerResult);
-    }
-  };
+  
 
 
   return (
@@ -51,7 +46,7 @@ export default function Home({ data } : {data : any})
       {global_username !== '' && peer === 'None' && 
         <div>
           <DefaultHeader/>
-          <PeerError updatePeer={handleUpdatePeer}/>
+          <PeerError updatePeer={setPeer}/>
           
         </div>
       }
@@ -64,6 +59,14 @@ export default function Home({ data } : {data : any})
     </div>
   );
 }
+
+async function handleUpdatePeer(setPeer: Function)
+ {
+  if (nameUid !== '') {
+    const peerResult = await getPeerByUid(nameUid);
+    setPeer(peerResult);
+  }
+};
 
 const UserHeader = ({ username, setUser }: { username: string | null , setUser: (username: string | null) => void }) => {
   
@@ -141,12 +144,17 @@ const LoginError = () => {
   );
 }
 
-const PeerError = ({ updatePeer }: { updatePeer: () => void }) => { 
+const PeerError = ({ updatePeer }: { updatePeer: Function }) => { 
+  const handleClick = async () => 
+  {
+    await handleUpdatePeer(updatePeer);
+  };
+
   return (
     <div className="bg-slate-100 align-top mt-16 mx-10 px-10 py-10 rounded md text-center border-t-4 border-blue-400 md:mx-20 lg:mx-30 xl:mx-40 xxl:mx-50">
       <h1 className="text-xl">Error</h1>
       <h2 className="mb-10">Error: You need to open the peer program first</h2>
-      <button onClick={updatePeer} className="text-blue-900">Try again</button>
+      <button onClick={handleClick} className="text-blue-900">Try again</button>
     </div>
   );
 }

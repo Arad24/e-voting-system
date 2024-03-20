@@ -37,10 +37,10 @@ export async function handleRequest(req) {
                 return handleGetPeers(req);
             }
         }
-        return '404{}'; // Request is not relevant
+        return '0{}'; // Request is not relevant
     } catch (error) {
         console.error('Error handling request:', error);
-        return '404{}'; // Generic error response
+        return '404{"error handling request"}'; // Generic error response
     }
 }
 

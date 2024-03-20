@@ -21,11 +21,15 @@ export async function startListening()
     console.log(`New connection established `);
     ws.on('error', console.error);
 
-    ws.on('message', function message(data) 
+    ws.on('message', async function message(data) 
     {
       data = convertDataToString(data);
       if (typeof data === 'string') {
-        if (data.startsWith('idiot')) handleSendMsgToSocket(data.substring('idiot'.length))
+        if (data.startsWith('TOSERVER'))
+        {
+          var dataToSend = await handleSendMsgToSocket(data.substring('TOSERVER'.length));
+          if (dataToSend != '') ws.send(dataToSend);
+        } 
         else
         {
           handleRequest(data)
@@ -38,10 +42,10 @@ export async function startListening()
             } 
             else if (connectionsMap.has(connectionId)) 
             {
-              ws.send(result);
+              if (!result.startsWith('0')) ws.send(result);
             } 
             else {
-              ws.send(`${process.env.LOGIN_FAILED_CODE}{"message":"You need to login first"}`);
+              if (!result.startsWith('0')) ws.send(`${process.env.LOGIN_FAILED_CODE}{"message":"You need to login first"}`);
             }
           })
           .catch((error) => {
@@ -58,32 +62,43 @@ export async function startListening()
   });
 }
 
-async function handleSendMsgToSocket(msg)
+export function sendMsgToWs(uid, msg) 
 {
-  var jsonRes = JSON.parse(msg);
-  sendMsgToWs(jsonRes.uid, `${jsonRes.msg_code}${JSON.stringify(jsonRes.msg_json)}`);
+  return new Promise((resolve, reject) => 
+  {
+      const ws = connectionsMap.get(uid);
+      if (!ws) {
+          reject(new Error('WebSocket connection not found'));
+          return;
+      }
+
+      ws.send(msg, (err) => {
+          if (err) {
+              console.error('Error sending message:', err);
+              reject(err);
+              return;
+          }
+      });
+
+      ws.once('message', function message(data) {
+          data = convertDataToString(data);
+          resolve(data);
+      });
+  });
 }
 
-export async function sendMsgToWs(uid, msg) 
+async function handleSendMsgToSocket(msg) 
 {
-  console.log(msg)
-  const ws = connectionsMap.get(uid);
-  if (ws) 
+  try 
   {
-    ws.send(msg, (err) => {
-      if (err) {
-        console.error('Error sending message:', err);
-      }
-    });
-
-    ws.on('message', function message(data) {
-      data = convertDataToString(data);
-      if (typeof data === 'string') {
-        return data;
-      }
-    });
-  } else {
-    return '';
+      var jsonReq = JSON.parse(msg);
+      var res = await sendMsgToWs(jsonReq.uid, `${jsonReq.msg_code}${JSON.stringify(jsonReq.msg_json)}`);
+      return res;
+  } 
+  catch (error) 
+  {
+      console.error('Error handling message to socket:', error);
+      return '';
   }
 }
 
@@ -104,3 +119,5 @@ async function closeSocket(connectionId)
     console.error('Error closing socket:', error);
   }
 }
+
+

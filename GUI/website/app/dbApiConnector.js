@@ -73,7 +73,6 @@ export async function getUidByUsername(username) {
     const sqlStatement = `SELECT UID FROM USERS WHERE NAME = '${username}';`;
     try {
         const response = await sendQueryAndGetRes(sqlStatement);
-        console.log(response)
         if (response.result.length > 0 && response.result) {
             return response.result[0].UID;
         } else {
