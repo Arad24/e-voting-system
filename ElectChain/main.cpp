@@ -54,6 +54,15 @@ int main()
         blockchain->addGenesisBlock();
     }
     
+    try {
+
+        peer->sendLastHash();
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << e.what();
+        return 1;
+    }
 
     std::thread p2pThread(&Peer::startAccept, peer.get());
     p2pThread.detach();

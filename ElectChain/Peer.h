@@ -54,6 +54,7 @@ class Peer
 
         void closePeer();
 
+        void sendLastHash();
     private:
         std::string getMessage(std::shared_ptr<boost::asio::streambuf> buffer);
         std::string getMessage(std::shared_ptr<tcp::socket> socket);
