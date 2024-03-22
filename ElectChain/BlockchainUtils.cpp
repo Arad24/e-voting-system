@@ -389,7 +389,17 @@ nlohmann::json BlockchainUtils::dataToJson(std::string data)
 
 bool BlockchainUtils::isVoteBlock(Block block)
 {
-	return (block.getData().find("vote") != 0);
+	nlohmann::json jsonData;
+	try 
+	{
+		jsonData = nlohmann::json::parse(block.getData());
+	}
+	catch (const std::exception& e) 
+	{
+		return false;
+	}
+
+	return (jsonData.contains("vote"));
 }
 
 bool BlockchainUtils::isShareKeyBlock(Block block)
