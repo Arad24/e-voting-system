@@ -25,6 +25,8 @@ export default function Page(props: PostView)
     const surveyUid = props.params.id;
     const { global_username } = useGlobalStore();
     const [alreadyVote, setAlreadyVote] = useState(false);
+    const [surveyRes, setSurveyRes] = useState({});
+    const [clickOption, setClickOption] = useState(1);
     let userUid = '';
 
 
@@ -48,10 +50,9 @@ export default function Page(props: PostView)
                 if (surveyUid && userUid)
                 {
                     const answer = await sendQueryAndGetRes(userUid, "600", `{"user_uid":"${userUid}", "survey_uid" : "${surveyUid}"}`);
-                    console.log(answer);
-                    if (answer.startsWith('601')) setAlreadyVote(true);
-                    else if (answer.startsWith('602')) setAlreadyVote(false);
-                    console.log(alreadyVote)
+                    if (String(answer).startsWith('601')) setAlreadyVote(true);
+                    else if (String(answer).startsWith('602')) setAlreadyVote(false);
+                    
                 }
                 
             } catch (error) {
@@ -70,12 +71,17 @@ export default function Page(props: PostView)
     async function handleShowResults() {
         try 
         {
-            if (!userUid) userUid = await getUidByUsername(global_username);
+            if (!userUid || userUid =='') userUid = await getUidByUsername(global_username);
             if (surveyUid && userUid != '')
             {
                 console.log(2)
-                const answer = await sendQueryAndGetRes(userUid, "301", `{"survey_uid" : "${surveyUid}"}`);
-                console.log(answer)
+                const answer : string = String(await sendQueryAndGetRes(userUid, "301", `{"survey_uid" : "${surveyUid}"}`));
+                if (answer.startsWith("501"))
+                {
+                    const jsonString = answer.substring(answer.indexOf('{'));
+                    const parsedRes = JSON.parse(jsonString);
+                    setSurveyRes(parsedRes);
+                } 
             }
             
         } catch (error) {
@@ -89,25 +95,86 @@ export default function Page(props: PostView)
 
     return (
         <div>
+
             <DefaultHeader />       
-            <div className='text-center'>
-                <h1 className='text-xl font-semibold mt-5 mb-10'>{surveyData.SURVEY_NAME}</h1>
-                {alreadyVote ? (
+            
+            <div className='mx-20 mt-20'>
+                {clickOption == 1 ? (
                     <div>
-                        <h1>User - '{global_username}' already vote</h1>
-                        <button onClick={handleShowResults} className='bg-blue-500 my-2 py-2 px-5 rounded-md hover:bg-blue-400' >Show Results</button>
+                        <button className='text-blue-600 mr-6 border-b-blue-600 border-b-2' onClick={() =>setClickOption(1)}>Survey Info</button>
+                        {alreadyVote && <button onClick={() =>setClickOption(2)}>Survey Results</button>}
+                        <hr className='border-b mt-2'/>
+
+                        <div className='flex justify-between mx-10'>
+                            <div>
+                                <h2 className='font-bold text-xl'>Question</h2>
+                                <h3>{surveyData.SURVEY_NAME}</h3>
+                            </div>
+
+                            <div className='flex items-end'>
+                                <div className='flex flex-col'>
+                                    <h2 className='font-bold text-xl'>Options</h2>
+                                    {parsedOptions.map((option, index) => (
+                                    <p key={index} value={option}>> {option}</p>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className='mx-10'>
+                            <div>
+                                <h2 className='font-bold text-xl'>Status</h2>
+                                <h3>{alreadyVote ? ('Got your vote') : ('Waiting for your vote')}</h3>
+                            </div>
+
+                        </div>
+
+                        
                     </div>
                     
                 ) : (
-                <ul>
-                    {parsedOptions.map((option, index) => (
-                        <li key={index}>
-                            <button className='bg-blue-500 my-2 py-2 px-5 rounded-md hover:bg-blue-400' onClick={() => handleButtonClick({option, surveyUid, userUid})}>{option}</button>
-                        </li>
-                    ))}
-                </ul>
-            )}
+                    <div>
+                        <button className='mr-6' onClick={() =>setClickOption(1)}>Survey Info</button>
+                        {alreadyVote && <button className='text-blue-600 border-b-blue-600 border-b-2' onClick={() =>setClickOption(2)}>Survey Results</button>}
+
+                        {(surveyRes && Object.keys(surveyRes).length > 0) ? (
+                        <div className='text-center'>
+                            <h2>Vote Results</h2>
+                            <ul>
+                                {Object.entries(surveyRes).map(([key, value]) => (
+                                <li key={key}>{key} : {value} votes</li>
+                                ))}
+                            </ul>
+                        </div>
+                        ):
+                        (
+                            <div className='text-center'>
+                                <button onClick={handleShowResults} className='bg-blue-500 my-2 py-2 px-5 rounded-md hover:bg-blue-400'>Show Results</button>
+                            </div>
+                        )}
+                    </div> 
+                )}
             </div>
+
+            <div className='text-center mt-24'>
+                {alreadyVote ? (
+                    <div>
+                        <h1>User - '{global_username}' already voted</h1>
+                    </div>
+                ) : (
+                    <ul>
+                        <select className="mx-auto block appearance-none w-1/2 bg-white border border-gray-300 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500 text-center" >
+                            {parsedOptions.map((option, index) => (
+                                <option key={index} value={option}>{option}</option>
+                            ))}
+                        </select>
+                        <button onClick={() => handleButtonClick({ option: document.querySelector('select').value, surveyUid, userUid, setAlreadyVote, global_username })} className='bg-blue-500 my-2 py-2 px-5 rounded-md hover:bg-blue-400'>Submit</button>
+                    </ul>
+                )}
+            </div>
+
+            
+
         </div>
     );
 
@@ -124,11 +191,12 @@ const DefaultHeader = () => {
     );
   }
 
-async function handleButtonClick({option, surveyUid, userUid, setAlreadyVote} : {option: string, surveyUid: string, userUid: string, setAlreadyVote: Function})
+async function handleButtonClick({option, surveyUid, userUid, setAlreadyVote, global_username} : {option: string, surveyUid: string, userUid: string, setAlreadyVote: Function, global_username: string})
 {
     try {
+        if (!userUid || userUid =='') userUid = await getUidByUsername(global_username);
         const res = await sendQueryAndGetRes(userUid, '300', `{"vote":"${option}","survey_uid":"${surveyUid}"}`);
-        if (res.startWith('500'))
+        if (String(res).startsWith('500'))
         {
             setAlreadyVote(true);
             alert('Vote added')

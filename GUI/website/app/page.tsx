@@ -46,7 +46,7 @@ export default function Home({ data } : {data : any})
       {global_username !== '' && peer === 'None' && 
         <div>
           <DefaultHeader/>
-          <PeerError updatePeer={setPeer}/>
+          <PeerError updatePeer={setPeer} setUser={setUsername}/>
           
         </div>
       }
@@ -144,10 +144,14 @@ const LoginError = () => {
   );
 }
 
-const PeerError = ({ updatePeer }: { updatePeer: Function }) => { 
+const PeerError = ({ updatePeer, setUser }: { updatePeer: Function , setUser: (username: string | null) => void}) => { 
   const handleClick = async () => 
   {
     await handleUpdatePeer(updatePeer);
+  };
+
+  const handleLogout = () => {
+    Logout(setUser);
   };
 
   return (
@@ -155,6 +159,8 @@ const PeerError = ({ updatePeer }: { updatePeer: Function }) => {
       <h1 className="text-xl">Error</h1>
       <h2 className="mb-10">Error: You need to open the peer program first</h2>
       <button onClick={handleClick} className="text-blue-900">Try again</button>
+      <br />
+      <button onClick={handleLogout} className="text-blue-900 mt-5">Logout</button>
     </div>
   );
 }

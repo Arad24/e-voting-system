@@ -88,8 +88,8 @@ std::string Serializer::serializeMessage(CountVotesResponse res)
         jsonObj[votePair.first] = votePair.second;
     }
 
-    std::string retString = SUCCESS_COUNT_VOTES + std::string("{") + jsonObj.dump(4) + std::string("}");
-    return retString;
+
+    return SUCCESS_COUNT_VOTES + jsonObj.dump(4);
 }
 
 

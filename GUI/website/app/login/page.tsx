@@ -90,7 +90,7 @@ export async function handleLogin(username: string, password: string) {
 
 const HomeBarLink = () => {
   return (
-    <div className="bg-slate-100 p-8 text-center">
+    <div className="text-center">
       <Link href="/" legacyBehavior>
         <a className="text-3xl hover:text-2xl">Election</a>
       </Link>
@@ -101,7 +101,7 @@ const HomeBarLink = () => {
 const MyNavBar = () => {
   return (
     <div className="bg-white sticky shadow-md border-blue-500">
-      <div className="flex justify-center items-center h-16">
+      <div className="flex justify-center items-center h-24">
         <HomeBarLink />
       </div>
     </div>
