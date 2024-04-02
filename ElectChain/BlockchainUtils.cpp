@@ -243,7 +243,8 @@ RSA* findPublicKey(std::string uid, Blockchain bc)
 	return pk;
 }
 
-bool BlockchainUtils::verifySignature(const std::string& message, const std::string& signMsg, std::string uid) {
+bool BlockchainUtils::verifySignature(const std::string& message, const std::string& signMsg, std::string uid) 
+{
 	RSA* publicKey = (uid == BlockchainUtils::_userUid) ? (BlockchainUtils::_pKeys->publicKey) : findPublicKey(uid, *_bcCopy);
 
 	if (!publicKey) {
@@ -257,8 +258,6 @@ bool BlockchainUtils::verifySignature(const std::string& message, const std::str
 	int result = RSA_verify(NID_sha256, reinterpret_cast<const unsigned char*>(hashMsg.c_str()), hashMsg.length(),
 		reinterpret_cast<const unsigned char*>(decodedSignMsg.c_str()), decodedSignMsg.length(), publicKey);
 
-	// Free the public key
-	RSA_free(publicKey);
 
 	return result == 1;
 }
