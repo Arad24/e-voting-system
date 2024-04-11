@@ -19,9 +19,9 @@ The Peer-to-Peer (P2P) communication will allow nodes in the network to interact
 ## Usage
 1. Clone the repository from GitHub.
 2. Install necessary dependencies for both the C++ blockchain implementation and the Next.js web interface:
-   - Next.js
-   - OpenSSL
-   - Boost
+   - [Next.js](https://tailwindcss.com/docs/guides/nextjs)
+   - [OpenSSL](https://slproweb.com/products/Win32OpenSSL.html)
+   - [Boost](https://www.boost.org/users/download/)
 3. Run the web system using `npm run dev` command.
 4. Run the blockchain system using the provided scripts.
 
