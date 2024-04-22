@@ -1,4 +1,4 @@
-# E-Voting System based on Blockchain
+# [Electchain] E-Voting System based on Blockchain
 
 ## Overview
 This project aims to create an electronic voting system leveraging blockchain technology. The system will utilize C++ for the blockchain implementation and Next.js for the web interface. The blockchain system will be built from scratch with P2P communication using Boost library. Cryptographic tools using OpenSSL library will be employed for ensuring the security and implementation of the blockchain system, including digital signatures and SHA256 hashing. 
